@@ -1,0 +1,152 @@
+<div>
+	<fieldset
+		style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+		<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+			<b translate="vnm.stock_view_info.label.stock"></b>
+		</legend>
+
+		<div class="form-group">
+			<label class="control-label col-md-2" translate="vnm.stock_view_info.label.stock" />
+			<div class="col-md-3">
+				<ui-select ng-model="model.currentStock" class="" ng-click="onChooseCurrentStock()" style="width: 100%;"> <ui-select-match>{{$select.selected.code}}</ui-select-match>
+				<ui-select-choices repeat="x in lstCurrentStock | filter:$select.search"> {{x.code}} - {{x.name}} </ui-select-choices> </ui-select>
+			</div>
+			<div class="col-md-5">
+				<input type="text" class="form-control" ng-model="model.currentStockName" disabled="disabled" />
+			</div>
+		</div>
+
+
+	</fieldset>
+
+	<fieldset
+		style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+		<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+			<b translate="vnm.stock_view_info.label.stock.info"></b>
+		</legend>
+		<div class="tabbable-custom ">
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab_5_1">
+					<fieldset
+						style="border: 1px groove #ddd !important; padding: 0em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+						<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+							<b translate="vnm.stock_view_info.label.filter"></b>
+
+						</legend>
+
+						<div class="form-group" style="padding-bottom: 10px;">
+							<div class="col-md-6" align="center">
+								<label><input type="radio" ng-model="model.stockTypeSearch" value="all" ng-change='stockTypeChangeFn(model.stockTypeSearch)' /><span
+									class="label-radio-button" translate="vnm.stock_view_info.label.all.item"></span></label>
+							</div>
+
+							<div class="col-md-6" align="center">
+								<label><input type="radio" ng-model="model.stockTypeSearch" value="exists" ng-change='stockTypeChangeFn(model.stockTypeSearch)' /><span
+									class="label-radio-button" translate="vnm.stock_view_info.label.item.in.stock"></span></label>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-md-2"><span translate="vnm.stock_view_info.label.source.stock"></span></label>
+							<div class="col-md-3">
+								<ui-select ng-model="model.resourceCode" class="" on-select="onChooseResourceCode()" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+								<ui-select-choices repeat="x in lstGoodsResource | filter:$select.search"> {{x.code}} - {{x.name}} </ui-select-choices> </ui-select>
+							</div>
+
+							<label class="control-label col-md-2"><span translate="vnm.stock_view_info.label.good.type"></span></label>
+							<div class="col-md-3">
+								<ui-select ng-model="model.stockInternalType" class="" on-select="onChooseInternalStock()" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+								<ui-select-choices repeat="x in lstInternalStock | filter:$select.search"> {{x.code}} - {{x.name}} </ui-select-choices> </ui-select>
+							</div>
+
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-md-2"><span translate="vnm.stock_view_info.label.good.code"></span></label>
+							<div class="col-md-3">
+								<input type="text" class="form-control" ng-model="model.goodCode" ng-keyup="filterGoods()" name="GoodCode" />
+							</div>
+
+							<label class="control-label col-md-2"><span translate="vnm.stock_view_info.label.good.name"></span></label>
+							<div class="col-md-3">
+								<input type="text" class="form-control" ng-model="model.goodName" ng-keyup="filterGoods()" name="GoodName" />
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<div class="tab-pane active" id="tab_5_1">
+					<fieldset
+						style="border: 1px groove #ddd !important; padding: 0em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+						<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+							<b translate="vnm.stock_view_info.label.lg.goods"></b>
+						</legend>
+
+						<div class="form-group">
+							<div class="col-md-12">
+								<table id="tableItem" class="table-bordered" style="width: 100%">
+									<thead class="ng-table-sort-header">
+										<tr>
+											<th width="14%" translate="vnm.common_table.column.goods.code"></th>
+											<th width="14%" translate="vnm.common_table.column.goods.name"></th>
+											<th width="14%" translate="vnm.common_table.column.goods.group"></th>
+											<th width="15%" translate="vnm.common_table.column.unit"></th>
+											<th width="15%" translate="vnm.common_table.column.serial"></th>
+											<th width="14%" translate="vnm.common_table.column.warranty"></th>
+											<th width="14%" translate="vnm.common_table.column.notes"></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<div class="tab-pane active" id="tab_5_1">
+					<fieldset
+						style="border: 1px groove #ddd !important; padding: 0em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+						<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+							<b translate="vnm.stock_view_info.label.lg.quantity"></b>
+						</legend>
+						<div class="form-group">
+							<div class="col-md-12">
+								<table id="tableQuantity" class="table-bordered" style="width: 100%">
+									<thead class="ng-table-sort-header">
+										<tr>
+											<th width="25%" translate="vnm.common_table.column.state"></th>
+											<th width="25%" translate="vnm.common_table.column.quantity.request"></th>
+											<th width="25%" translate="vnm.common_table.column.quantity.effect"></th>
+											<th width="25%" translate="vnm.common_table.column.quantity.issue"></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-2"><span translate="vnm.stock_view_info.label.total"></span></label>
+					<div class="col-md-7">
+						<input type="text" class="form-control" ng-model="model.total" name="total" disabled="disabled" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+
+	<div class="form-group">
+		<div class="col-md-12" style="text-align: center;">
+			<button type="button" name="btnDetail" style="width: 100px" ng-disabled="disableBtnDetail" class="btn btn-primary" ng-click="btnDetailOnClick()">
+				<i class="fa fa-info"></i> <label translate="vnm.stock_view_info.label.btn.detail"></label>
+			</button>
+
+			<button type="button" name="btnSave" style="width: 100px" ng-disabled="disableBtnInput" class="btn btn-primary" ng-click="btnSaveOnClick()">
+				<i class="fa fa-edit"></i> <label translate="vnm.stock_view_info.label.btn.input"></label>
+			</button>
+
+			<button type="button" name="btnBack" style="width: 100px" data-dismiss="modal" class="btn btn-primary">
+				<i class="fa fa-rotate-left"></i> <label translate="vnm.common.label.btn.back"></label>
+			</button>
+		</div>
+	</div>
+
+
+</div>

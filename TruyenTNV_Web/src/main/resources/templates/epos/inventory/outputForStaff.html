@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+
+		<script src="/views/epos/inventory/outputForStaff.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-outputForStaff" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.output_for_staff.page.title"></b>
+						</legend>
+						<form name="frm_stockExportToCenter" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.stock_export_to_center.label.receipt"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.stock_export_to_center.label.receipt.code"> </label>
+													<div class="col-md-4">
+														<input type="text" class="form-control" id="fReceiptCode" ng-disabled="disableAfterSave" ng-model="model.receiptCode" />
+													</div>
+
+													<label class="control-label col-md-1" style="margin-left: 20px" translate="vnm.output_for_staff.label.stock.staff"></label>
+
+													<div class="col-md-1p9" style="margin-left: 15px">
+														<input type="text" class="form-control" ng-model="model.fStockCode" id="fStockCode" data-toggle="tooltip" data-placement="top" title=""
+															ng-disabled="disableAfterSave" ng-blur="onblurStockCode()"/>
+													</div>
+													<div class="col-md-2p9">
+														<input type="text" class="form-control" ng-model="model.fStockName" id="fStockName" ng-disabled="true" data-toggle="tooltip" data-placement="top"
+															title="" />
+													</div>
+													<div class="col-md-1p9">
+														<button type="button" name="viewStockStaff" style="margin-left: 15px" class="btn btn-primary btn-primary-100" ng-click="viewStockStaff()"
+															ng-disabled="disableViewStockStaff">
+															<i class="fa fa-search"></i> <label translate="vnm.stock_export_to_center.label.button.view.stock.staff"></label>
+														</button>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.stock_export_to_center.label.reason"></label>
+
+													<div class="col-md-1">
+														<input type="text" class="form-control" id="fReasonCode" ng-model="model.reasonCode" ng-disabled="true" />
+													</div>
+													<div class="col-md-3">
+														<input type="text" class="form-control" id="fReasonName" ng-model="model.reasonName" ng-disabled="true" />
+													</div>
+
+													<label class="control-label col-md-1" style="margin-left: 20px" translate="vnm.common.label.note"></label>
+													<div class="col-xs-4" style="margin-left: 15px">
+														<input type="text" class="form-control" ng-disabled="disableAfterSave" ng-model="model.note" />
+													</div>
+
+												</div>
+											</fieldset>
+
+
+											<div class="form-group">
+												<div class="col-md-6 md-height-450">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b translate="vnm.stock_export_to_center.label.list.good"></b>
+														</legend>
+														<div class="form-group">
+															<div class="col-md-12">
+																<div class="table-scrollable">
+																	<table id="tableGoodsForm" class="table-bordered" style="width: 100%">
+																		<thead class="ng-table-sort-header">
+																			<tr>
+																				<th width="20%" translate="vnm.common_table.column.goods.code"></th>
+																				<th width="20%" translate="vnm.common_table.column.goods.name"></th>
+																				<th width="20%" translate="vnm.common_table.column.state"></th>
+																				<th width="20%" translate="vnm.common_table.column.unit"></th>
+																				<th width="20%" translate="vnm.common_table.column.quantity"></th>
+																			</tr>
+																		</thead>
+																	</table>
+																</div>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+
+												<div class="col-md-6 md-height-450">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b translate="vnm.stock_export_to_center.label.input.detail"></b>
+														</legend>
+
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.stock_export_to_center.label.good.type"></label>
+
+															<div class="col-md-10">
+																<ui-select ng-model="model.stockInternalTypeForm" class="" ng-disabled="disableAddx" on-select="onChooseInternalStockForm()"
+																	style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match> <ui-select-choices
+																	repeat="x in lstInternalStockForm | filter:$select.search"> {{x.code}} - {{x.name}} </ui-select-choices> </ui-select>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.stock_export_to_center.label.good"></label>
+
+															<div class="col-md-3">
+																<ui-select ng-model="model.goodsForm" class="" ng-disabled="disableAddChooseGoods" id="goodsForm" on-select="onChooseGoodsForm()"
+																	style="width: 100%;"> <ui-select-match>{{$select.selected.goodsCode}}</ui-select-match> <ui-select-choices
+																	repeat="x in lstGoodsForm | filter:$select.search | limitTo: limitCbb"> {{x.goodsCode}} - {{x.name}} </ui-select-choices> </ui-select>
+															</div>
+
+															<div class="col-md-5">
+																<input type="text" class="form-control" ng-disabled="true" ng-model="model.goodsFormName" />
+															</div>
+
+															<div class="col-md-2">
+																<button type="button" name="viewStock" style="width: 100%" class="btn btn-primary" ng-click="viewStockForm()">
+																	<i class="fa fa-search"></i> <label translate="vnm.stock_export_to_center.label.button.view.stock"></label>
+																</button>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.stock_export_to_center.label.good.status"></label>
+
+															<div class="col-md-3">
+																<ui-select ng-model="model.statesForm" class="" ng-disabled="disableAdd" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices repeat="x in lstStatesForm | filter:$select.search"> {{x.stateId}} - {{x.name}} </ui-select-choices> </ui-select>
+															</div>
+
+															<label class="control-label col-md-2" translate="vnm.stock_export_to_center.label.good.quantity"></label>
+
+															<div class="col-md-3">
+																<input type="text" class="form-control" id="goodsQuantity" ng-disabled="disableAdd" ng-model="model.goodQuantity"
+																	onkeypress="return valid_numbers(event)" />
+															</div>
+
+															<div class="col-md-2">
+																<button type="button" name="viewDetail" ng-disabled="disableAddViewDetail" style="width: 100%" class="btn btn-primary" ng-click="viewDetail()">
+																	<i class="fa fa-info"></i> <label translate="vnm.stock_export_to_center.label.button.view.detail"></label>
+																</button>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.stock_export_to_center.label.good.note"></label>
+
+															<div class="col-md-10">
+																<textarea name="Text1" style="width: 100%;" rows="15" ng-disabled="disableAdd" ng-model="model.goodNote"></textarea>
+															</div>
+														</div>
+
+														<div class="form-group" style="padding-top: 10px">
+															<div class="col-md-12" style="text-align: center;" id="pnlButtonAction">
+																<button type="button" name="btnAdd" ng-disabled="isDisabledBtnAdd" class="btn btn-primary btn-primary-70" ng-click="btnAddOnclick()">
+																	<i class="fa fa-plus-circle"></i> <label translate="vnm.common.btn.add"></label>
+																</button>
+																<button type="button" name="btnEdit" ng-disabled="isDisabledBtnEdit" class="btn btn-primary btn-primary-70" ng-click="btnEditOnclick()">
+																	<i class="fa fa-edit"></i> <label translate="vnm.common.btn.edit"></label>
+																</button>
+
+																<button type="button" name="btnDelete" ng-disabled="isDisabledBtnDelete" class="btn btn-primary btn-primary-70" ng-click="btnDeleteOnclick()">
+																	<i class="fa fa-trash"></i> <label translate="vnm.common.btn.delete"></label>
+																</button>
+															</div>
+
+															<div class="col-md-12" style="text-align: center;" id="pnlButtonOK">
+																<button type="button" name="btnOk" class="btn btn-primary btn-primary-100" ng-click="btnOkOnclick()">
+																	<i class="fa fa-thumbs-o-up"></i> <label translate="vnm.common.btn.approve"></label>
+																</button>
+																<button type="button" name="btnCancel" class="btn btn-primary btn-primary-100" ng-click="btnCancelOnclick()">
+																	<i class="fa fa-long-arrow-left"></i> <label translate="vnm.common.btn.cancel"></label>
+																</button>
+															</div>
+														</div>
+
+
+													</fieldset>
+
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-12" style="text-align: center; margin-bottom: 12px" id="pnlButtonOKBeforeSave">
+								<button type="button" name="btnFSave" class="btn btn-primary btn-primary-70" ng-click="btnFSaveOnclick()">
+									<i class="fa fa-save"></i> <label translate="vnm.common.btn.save"></label>
+								</button>
+								<button type="button" name="btnFPrint" class="btn btn-primary btn-primary-70" ng-disabled="true">
+									<i class="fa fa-print"></i> <label translate="vnm.common.btn.print"></label>
+								</button>
+							</div>
+
+							<div class="col-md-12" style="text-align: center; margin-bottom: 12px" id="pnlButtonOKAfterSave">
+								<button type="button" name="btnFSave" class="btn btn-primary btn-primary-70" ng-disabled="true">
+									<i class="fa fa-save"></i> <label translate="vnm.common.btn.save"></label>
+								</button>
+								<button type="button" name="btnFReInput" class="btn btn-primary btn-primary-70" ng-click="btnFReInputOnclick()">
+									<i class="fa fa-refresh"></i> <label translate="vnm.common.btn.reinput"></label>
+								</button>
+								<button type="button" name="btnFPrint" class="btn btn-primary btn-primary-70" ng-click="btnFPrintOnclick()">
+									<i class="fa fa-print"></i> <label translate="vnm.common.btn.print"></label>
+								</button>
+							</div>
+
+
+							<div class="modal fade" id="modalStockInfo" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.view.stock.info"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/stockViewInfo'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalSerialList" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 900px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.serials"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/serialList'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalStockDetail" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="btnBackSerial()">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.out.serials"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogStockDetail'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalAddSerial" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 800px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.input.goods"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogButtonDetail'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalListShop" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="dialogListShopActionBack()"></button>
+											<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListShop'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

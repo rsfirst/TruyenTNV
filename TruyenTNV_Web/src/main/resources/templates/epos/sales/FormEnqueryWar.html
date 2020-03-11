@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Tra cứu phiếu bảo hành</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+.selectRow {
+	background-color: gray;
+}
+</style>
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/sales/FormEnqueryWar.js" type="text/javascript"></script>
+		<div ng-controller="FormEnqueryWarController" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<!-- <div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.ExportToInferior.page.title"></span>
+					</div>
+				</div> -->
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.FormEnqueryWar.page.title"></b>
+						</legend>
+						<form name="frm_prepaid" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+
+									<div class="tab-content" style="margin-right: 4px;">
+
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.FormEnqueryWar.fieldset.title.search"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.FormEnqueryWar.label.warrantyno"> </label>
+
+													<div class="col-md-4">
+														<input type="text" class="form-control" ng-model="model.txtWarrantyNo" id="fShopCode" data-toggle="tooltip" data-placement="top"
+															title="" />
+
+													</div>
+													<div class="col-md-1"></div>
+													<div class="col-md-1">
+
+														<label class="control-label col-md-1" translate="vnm.FormEnqueryWar.label.serial"> </label>
+													</div>
+
+													<div class="col-md-4">
+														<input type="text" class="form-control" ng-model="model.txtSerial" id="serial" data-toggle="tooltip" data-placement="top" title="" />
+
+													</div>
+
+												</div>
+												<div class="form-group">
+													<div class="col-md-12" style="text-align: center;">
+
+														<button style="width: 100px" class="btn btn-primary" ng-click="onSearch()">
+															<span class="glyphicon glyphicon-search"></span> <label translate="vnm.ExportToDealer.label.btn.search"></label>
+														</button>
+
+
+														<button style="width: 100px" class="btn btn-primary" ng-disabled="disabledPrint" ng-click="onPrint()">
+															<span class="glyphicon glyphicon-print"></span> <label translate="vnm.FormEnqueryWar.label.btn.print"></label>
+														</button>
+
+
+													</div>
+												</div>
+
+
+											</fieldset>
+
+
+											<div class="form-group">
+												<div class="col-md-5 md-height-700">
+													<fieldset class="fieldset-primary-1 ">
+														<legend class="lengend-primary">
+															<b translate="vnm.FormEnqueryWar.fieldset.title.information"></b>
+
+														</legend>
+
+														<div class="form-group">
+															<div class="table-scrollable ">
+																<table id="tableOnSearch" class="table table-bordered" style="width: 100%;">
+																	<thead class="ng-table-sort-header">
+																		<tr>
+																			<th id="thth" width="11%"><label translate="vnm.FormEnqueryWar.label.warrantyno"> </label></th>
+																			<th id="thth" width="11%"><label translate="vnm.FormEnqueryWar.label.serial"> </label></th>
+																			<th id="thth" width="12%"><label translate="vnm.FormEnqueryWar.label.date.ok"> </label></th>
+																			<th id="thth" width="11%"><label translate="vnm.FormEnqueryWar.label.status"> </label></th>
+																			<th id="thth" width="11%"><label translate="vnm.FormEnqueryWar.label.serial1"> </label></th>
+																			<th id="thth" width="11%"><label translate="vnm.FormEnqueryWar.label.serial2"> </label></th>
+																			<th id="thth" width="11%"><label translate="vnm.FormEnqueryWar.label.serial3"> </label></th>
+																			<th id="thth" width="11%"><label translate="vnm.FormEnqueryWar.label.serial4"> </label></th>
+																			<th id="thth" width="11%"><label translate="vnm.FormEnqueryWar.label.serial5"> </label></th>
+
+																		</tr>
+																	</thead>
+																	<tbody>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+
+													</fieldset>
+												</div>
+												<div class="form-group col-md-7 md-height-700">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b translate="vnm.FormEnqueryWar.fieldset.title.infordetail"></b>
+														</legend>
+														<div class=" form-group col-md-12 md-height-200" style="padding-left: 9px; padding-top: 20px;">
+															<fieldset class="fieldset-primary-1">
+																<legend class="lengend-primary">
+																	<b translate="vnm.FormEnqueryWar.label.infor"></b>
+																</legend>
+																<div class="form-group">
+																	<label class="control-label col-md-2" translate="vnm.FormEnqueryWar.label.enquerygoods"> </label>
+																	<div class="col-md-3">
+																		<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.enqueryGoods.goodsCode" id="fShopCode"
+																			data-toggle="tooltip" data-placement="top" title="" />
+																	</div>
+																	<div class="col-md-7">
+																		<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.enqueryGoods.name" id="fShopCode"
+																			data-toggle="tooltip" data-placement="top" title="" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2" translate="vnm.FormEnqueryWar.label.unit"> </label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.unitName" id="fShopCode" data-toggle="tooltip"
+																			data-placement="top" title="" />
+																	</div>
+																	<label class="control-label col-md-2" translate="vnm.FormEnqueryWar.label.timewar"> </label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.warPeriod" id="fShopCode" data-toggle="tooltip"
+																			data-placement="top" title="" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2" translate="vnm.FormEnqueryWar.label.goodswarranty"> </label>
+																	<div class="col-md-4">
+																		<textarea class="form-control" ng-disabled="disabledDetail" ng-model="model.goodsWarranty" id="fShopCode" data-toggle="tooltip"
+																			data-placement="top" title="" rows="" cols=""></textarea>
+																		<!-- <input type="text" class="form-control"  ng-disabled="disabledDetail" ng-model="model.goodsWarranty" id="fShopCode" data-toggle="tooltip" data-placement="top" title="" /> -->
+																	</div>
+																	<label class="control-label col-md-2" translate="vnm.FormEnqueryWar.label.goodsdescription"> </label>
+																	<div class="col-md-4">
+																		<textarea class="form-control" ng-disabled="disabledDetail" ng-model="model.goodsDescription" id="fShopCode" data-toggle="tooltip"
+																			data-placement="top" title="" rows="" cols=""></textarea>
+																		<!-- <input type="text" class="form-control"  ng-disabled="disabledDetail" ng-model="model.goodsDescription" id="fShopCode" data-toggle="tooltip" data-placement="top" title="" /> -->
+																	</div>
+																</div>
+															</fieldset>
+														</div>
+														<div class="form-group col-md-12 md-height-300" style="padding-left: 9px; padding-top:10px;">
+															<fieldset class="fieldset-primary-1">
+																<legend class="lengend-primary">
+																	<b translate="vnm.FormEnqueryWar.fieldset.title.detailhistory"></b>
+																</legend>
+																<div class="form-group">
+																	<div class="table-scrollable ">
+																		<table id="tableWarrantyHistory" class="table table-bordered" style="width: 100%;margin: 0 auto;clear: both;border-collapse: collapse;table-layout: fixed; word-wrap:break-word;">
+																			<thead class="ng-table-sort-header">
+																				<tr>
+																					<th width="17%"><label translate="vnm.FormEnqueryWar.label.date.to"> </label></th>
+																					<th width="17%"><label translate="vnm.FormEnqueryWar.label.staff.to"> </label></th>
+																					<th width="16%"><label translate="vnm.FormEnqueryWar.label.customer"> </label></th>
+																					<th width="16%"><label translate="vnm.FormEnqueryWar.label.level"> </label></th>
+																					<th width="17%"><label translate="vnm.FormEnqueryWar.label.date.affter"> </label></th>
+																					<th width="17%"><label translate="vnm.FormEnqueryWar.label.date"> </label></th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																			</tbody>
+																		</table>
+																	</div>
+																</div>
+
+															</fieldset>
+														</div>
+														<div class=" form-group col-md-12 " style="padding-left: 9px;padding-top:10px; ">
+															<fieldset class="fieldset-primary-1">
+																<legend class="lengend-primary">
+																	<b translate="vnm.FormEnqueryWar.fieldset.title.detailhistory2"></b>
+																</legend>
+																<div class="form-group">
+																	<label class="control-label col-md-2" translate="vnm.FormEnqueryWar.label.receip"> </label>
+																	<div class="col-md-10">
+																		<textarea class="form-control" ng-disabled="disabledDetail" ng-model="model.txtReceipt" id="fShopCode" data-toggle="tooltip"
+																			data-placement="top" title="" rows="" cols=""></textarea>
+																		<!-- <input type="text" class="form-control"  ng-disabled="disabledDetail" ng-model="model.txtReceipt"/> -->
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2" translate="vnm.FormEnqueryWar.label.staff.process"> </label>
+																	<div class="col-md-2">
+																		<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.assignStaff.code" />
+																	</div>
+																	<div class="col-md-3">
+																		<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.assignStaff.name" />
+																	</div>
+																	<label class="control-label col-md-2" translate="vnm.FormEnqueryWar.label.date.process"> </label>
+
+																	<div class="col-md-3">
+																		<input ng-model="model.dtProcessDate" ng-disabled="disabledDetail" id="fromDate" ng-blur="onBlurCheckDate()" name="searchFromDate"
+																			datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" />
+																	</div>
+																</div>
+																<div class="form-group">
+
+																	<label class="control-label col-md-2" translate="vnm.FormEnqueryWar.label.result"> </label>
+																	<div class="col-md-4">
+																		<textarea class="form-control" ng-disabled="disabledDetail" ng-model="model.result" id="fShopCode" data-toggle="tooltip"
+																			data-placement="top" title="" rows="" cols=""></textarea>
+																		<!-- <input type="text" class="form-control"  ng-disabled="disabledDetail" ng-model="model.result" id="fShopCode" data-toggle="tooltip" data-placement="top" title="" /> -->
+																	</div>
+																	<label class="control-label col-md-2" translate="vnm.FormEnqueryWar.label.note"> </label>
+																	<div class="col-md-4">
+																		<textarea class="form-control" ng-disabled="disabledDetail" ng-model="model.note" id="fShopCode" data-toggle="tooltip"
+																			data-placement="top" title="" rows="" cols=""></textarea>
+																		<!-- <input type="text" class="form-control"  ng-disabled="disabledDetail" ng-model="model.note" id="fShopCode" data-toggle="tooltip" data-placement="top" title="" /> -->
+																	</div>
+																</div>
+															</fieldset>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 1190 modal xem thong tin kho -->
+							<div class="modal fade" id="modalListShop" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListShop'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalListStaff" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListStaff'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 1190 modal xem thong tin kho -->
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

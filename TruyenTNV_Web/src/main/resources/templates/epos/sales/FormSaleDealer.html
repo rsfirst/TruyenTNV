@@ -1,0 +1,385 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/sales/FormSaleDealer.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-FormSaleDealer" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+
+					<form name="frm_FormSaleDealer" class="form-horizontal  form-bordered" method="post">
+						<div class="form-body">
+							<fieldset class="fieldset-primary-3">
+								<legend class="lengend-primary">
+									<b translate="vnm.form_sale_dealer.page.title"></b>
+								</legend>
+								<fieldset class="fieldset-primary-3">
+									<legend class="lengend-primary">
+										<b translate="vnm.form_sale_dealer.label.agent.info"></b>
+									</legend>
+
+									<div class="form-group">
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.transaction.type"> </label>
+										<div class="col-md-3">
+											<ui-select ng-model="model.fTransType" class="" id="fTransType" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+											<ui-select-choices repeat="x in TransTypeSource | filter:$select.search | limitTo: limitCbb"> {{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.agent"></label>
+										<div class="col-md-1">
+											<input type="text" class="form-control" ng-model="model.fAgentCode" data-toggle="tooltip" data-placement="top"
+													title="" id="fAgent" ng-keyup="onF9FAgent($event)" ng-blur="onblurShopCode()" />
+											<!-- <div class="input-group">
+												<input type="text" class="form-control no-border-right" ng-model="model.fAgentCode" data-toggle="tooltip" data-placement="top"
+													title="" id="fAgent" ng-keyup="onF9FAgent($event)" ng-blur="onblurShopCode()" />
+												<div class="input-group-addon fa fa-caret-down"></div>
+											</div> -->
+										</div>
+										<div class="col-md-3">
+											<input type="text" class="form-control" id="fAgentName" ng-model="model.fAgentName" ng-disabled="true" data-toggle="tooltip" data-placement="top"
+												title="" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.receipt.code"></label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fReceiptCode" ng-disabled="true" />
+										</div>
+									</div>
+								</fieldset>
+
+								<fieldset class="fieldset-primary-3">
+									<legend class="lengend-primary">
+										<b translate="vnm.form_sale_dealer.label.transaction.info"></b>
+									</legend>
+
+									<div class="form-group">
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.payment.method"> </label>
+										<div class="col-md-3">
+											<ui-select ng-model="model.fPaymentMethod" class="" ng-click="onChangePaymentMethod()" id="fPaymentMethod" style="width: 100%;"
+												ng-disabled="disablePayMethod"> <ui-select-match>{{$select.selected.name}}</ui-select-match> <ui-select-choices
+												repeat="x in PaymentMethodSource | filter:$select.search | limitTo: limitCbb"> {{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.rate"></label>
+										<div class="col-md-3">
+											<input type="text" class="form-control text-right" ng-model="model.fRate" ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.card.no"></label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fCardNo" />
+										</div>
+										<div class="col-md-1">
+											<button type="button" name="fViewCardNo" style="width: 60%; margin-left: 15px" class="btn btn-primary" ng-click="fViewCardNo()">
+												<i class=""></i><label translate="..."></label>
+											</button>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.trans.staff"></label>
+										<div class="col-md-3">
+											<input type="text" class="form-control" id="fStaffCode" ng-model="model.fStaffCode" ng-disabled="true" />
+										</div>
+										<div class="col-md-4">
+											<input type="text" class="form-control" id="fStaffName" ng-model="model.fStaffName" ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.trans.date"></label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fTransDate" id="fTransDate" />
+										</div>
+									</div>
+								</fieldset>
+
+								<fieldset class="fieldset-primary-3">
+									<legend class="lengend-primary">
+										<b translate="vnm.form_sale_dealer.label.input.goods.trans"></b>
+									</legend>
+
+									<div class="form-group">
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.goods"> </label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fGoodsCode" data-toggle="tooltip" data-placement="top"
+												title="" id="fGoods" ng-keyup="onF9FGoods($event)" ng-blur="onblurGoodsCode()" />
+										</div>
+										<div class="col-md-3">
+											<input type="text" class="form-control" id="fGoodsName" ng-model="model.fGoodsName" data-toggle="tooltip" data-placement="top" title=""
+												ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.quantity"> </label>
+										<div class="col-md-1">
+											<input type="text" class="form-control text-right" ng-model="model.fQuantity" onkeypress="return valid_numbers(event)" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.price"></label>
+										<div class="col-md-1">
+											<ui-select ng-model="model.fPrice" class="" id="fPrice" style="width: 100%;" ng-click="getFPriceName()" data-toggle="tooltip" data-placement="top"
+												title=""> <ui-select-match>{{$select.selected.price}}</ui-select-match> <ui-select-choices
+												repeat="x in PriceSource | filter:$select.search | limitTo: limitCbb"> {{x.price}} - {{x.name}} </ui-select-choices></ui-select>
+										</div>
+										<div class="col-md-2">
+											<input type="text" class="form-control" id="fPriceName" ng-model="model.fPriceName" ng-disabled="true" data-toggle="tooltip" data-placement="top"
+												title="" />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.promotion"> </label>
+										<div class="col-md-2">
+											<ui-select ng-model="model.fPromotion" class="" id="fPromotion" style="width: 100%;" ng-click="getFPromotionName()" data-toggle="tooltip"
+												data-placement="top" title=""> <ui-select-match>{{$select.selected.promProgramCode}}</ui-select-match> <ui-select-choices
+												repeat="x in PromotionSource | filter:$select.search | limitTo: limitCbb"> {{x.promProgramCode}} - {{x.name}} </ui-select-choices></ui-select>
+										</div>
+										<div class="col-md-3">
+											<input type="text" class="form-control" id="fPromotionName" ng-model="model.fPromotionName" ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.discount"> </label>
+										<div class="col-md-1">
+											<input type="text" class="form-control text-right" ng-model="model.fDiscount" ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.vat"></label>
+										<div class="col-md-1">
+											<input type="text" class="form-control" ng-model="model.fVat" ng-disabled="true" />
+										</div>
+										<div class="col-md-2">
+											<button type="button" name="fInputList" style="width: 80%; margin-left: 20px" class="btn btn-primary" ng-click="btnFAddGoods()">
+												<i class="fa fa-plus-circle"></i><label translate="vnm.form_sale_dealer.button.input.list"></label>
+											</button>
+										</div>
+									</div>
+								</fieldset>
+
+								<div class="form-group">
+									<div class="col-md-8">
+										<fieldset class="fieldset-primary-3">
+											<legend class="lengend-primary">
+												<b translate="vnm.form_sale_dealer.label.list.goods"></b>
+											</legend>
+
+											<div class="form-group">
+												<div class="col-md-12 md-height-350">
+													<table id="tableFGoodsService" class="table-bordered" style="width: 100%">
+														<thead class="ng-table-sort-header">
+															<tr>
+																<th width="15%" translate="vnm.common_table.column.goods"></th>
+																<th width="14%" translate="vnm.common_table.column.quantity"></th>
+																<th width="14%" translate="vnm.common_table.column.price"></th>
+																<th width="14%" translate="vnm.common_table.column.discount"></th>
+																<th width="14%" translate="vnm.common_table.column.promotion"></th>
+																<th width="14%" translate="vnm.common_table.column.unit"></th>
+																<th width="15%" translate="vnm.common_table.column.total"></th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+
+												<div class="col-md-12" style="text-align: center; margin-top: 12px">
+													<button type="button" name="btnFDelete" class="btn btn-primary btn-primary-70" ng-click="btnFDeleteOnclick()">
+														<i class="fa fa-trash"></i> <label translate="vnm.common.btn.delete"></label>
+													</button>
+												</div>
+											</div>
+										</fieldset>
+									</div>
+									<div class="col-md-4">
+										<fieldset class="fieldset-primary-3">
+											<legend class="lengend-primary">
+												<b translate="vnm.form_sale_dealer.label.goods.detail"></b>
+											</legend>
+
+											<div class="form-group">
+												<div class="col-md-12 md-height-350">
+													<table id="tableFGoodsSerial" class="table-bordered" style="width: 100%">
+														<thead class="ng-table-sort-header">
+															<tr>
+																<th width="50%" translate="vnm.common_table.column.serial"></th>
+																<th width="50%" translate="vnm.common_table.column.input.date"></th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+
+												<div class="col-md-12" style="text-align: center; margin-top: 12px">
+													<button type="button" name="btnFEdit" class="btn btn-primary btn-primary-70" ng-click="btnFEditOnclick()">
+														<i class="fa fa-edit"></i> <label translate="vnm.common.btn.edit"></label>
+													</button>
+												</div>
+											</div>
+										</fieldset>
+									</div>
+								</div>
+
+								<fieldset class="fieldset-primary-3">
+									<legend class="lengend-primary">
+										<b translate="vnm.form_sale_dealer.label.total.transaction.info"></b>
+									</legend>
+
+									<div class="form-group">
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.money.no.tax"> </label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fMoneyNoTax" ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.promotion"> </label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fMoneyProm" ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.discount"> </label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fMoneyDiscount" ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.money.input"> </label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fTotalPaid" id="fTotalPaid" ng-blur="onChangeMoneyInput()"
+												onkeypress="return valid_numbers(event)" />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.money.tax"> </label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fMoneyTax" ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.money.with.tax"> </label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fMoneyTaxSum" ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.money.must.paid"> </label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fMoneySum" ng-disabled="true" />
+										</div>
+										<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.money.residual"> </label>
+										<div class="col-md-2">
+											<input type="text" class="form-control" ng-model="model.fMoneyChange" ng-disabled="true" />
+										</div>
+									</div>
+								</fieldset>
+
+								<div class="col-md-12" style="text-align: center; margin-bottom: 15px">
+									<button type="button" name="btnFSave" class="btn btn-primary btn-primary-120" ng-click="btnFSaveOnclick()">
+										<i class="fa fa-save"></i> <label translate="vnm.form_sale_dealer.button.save"></label>
+									</button>
+									<button type="button" name="btnFPrint" class="btn btn-primary btn-primary-120" ng-click="btnFPrintOnclick()" ng-disabled="disablePrint">
+										<i class="fa fa-print"></i> <label translate="vnm.common.btn.print"></label>
+									</button>
+								</div>
+							</fieldset>
+						</div>
+
+						<div class="modal fade" id="modalInputCardNo" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog" style="min-width: 800px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" ng-click="exitDICNCardNo()"></button>
+										<h4 class="modal-title" translate="vnm.form_sale_dealer.title.input.card.no"></h4>
+									</div>
+									<div class="modal-body">
+										<div ng-include="'/popup/dialogInputCardNo'"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalAddSerialSaleTrans" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog" style="min-width: 800px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" ng-click="btnASCancelOnclick()"></button>
+										<h4 class="modal-title" translate="vnm.form_sale_dealer.title.input.serial"></h4>
+									</div>
+									<div class="modal-body">
+										<div ng-include="'/popup/dialogAddSerialSaleTrans'"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalAddSerialListSaleTrans" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog" style="min-width: 800px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" ng-click="btnASLCancelOnclick()"></button>
+										<h4 class="modal-title" translate="vnm.form_sale_dealer.title.input.serial.list"></h4>
+									</div>
+									<div class="modal-body">
+										<div ng-include="'/popup/dialogAddSerialListSaleTrans'"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalListASFromSerial" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog" style="min-width: 1100px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title" translate="vnm.common.label.list.serial"></h4>
+									</div>
+									<div class="modal-body">
+										<div ng-include="'/popup/dialogASFromListSerial'"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalListASToSerial" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog" style="min-width: 1100px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title" translate="vnm.common.label.list.serial"></h4>
+									</div>
+									<div class="modal-body">
+										<div ng-include="'/popup/dialogASToListSerial'"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalInputAttachGoodsForDealer" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog" style="min-width: 1200px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" ng-click="btnBackAttachGoods()"></button>
+										<h4 class="modal-title" translate="vnm.dialogInputAttachGoods.label.title"></h4>
+									</div>
+									<div class="modal-body">
+										<div ng-include="'/popup/dialogInputAttachGoodsForDealer'"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="modal fade" id="modalListShop" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog" style="min-width: 1100px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" ng-click="dialogListShopActionBack()"></button>
+										<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+									</div>
+									<div class="modal-body">
+										<div ng-include="'/popup/dialogListShop'"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="modal fade" id="modalListGoods" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog" style="min-width: 1100px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" ng-click="dialogListGoodsActionBack()"></button>
+										<h4 class="modal-title" translate="vnm.common.label.list.goods"></h4>
+									</div>
+									<div class="modal-body">
+										<div ng-include="'/popup/dialogListGoods'"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

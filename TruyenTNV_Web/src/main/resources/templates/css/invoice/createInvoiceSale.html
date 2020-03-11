@@ -1,0 +1,545 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Lập hóa đơn bán hàng</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/invoice/createInvoiceSale.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-createBillSale" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.create_bill_sale.page.title"></span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_prepaid" class="form-horizontal  form-bordered"
+						method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+										<h3 class="form-section"
+											translate="vnm.create_bill_sale.label.search.title"></h3>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_bill_sale.label.shop.name"> </label>
+											<div class="col-md-15">
+												<ui-select ng-model="model.objectShopCode" class=""
+													on-select="onChangeShopCodeList()"> <ui-select-match>{{$select.selected.shopCode}}</ui-select-match>
+												<ui-select-choices style="width: auto;"
+													repeat="x in listShop | filter:$select.search">
+												<span ng-bind-html="x.shopName | highlight: $select.search"></span>
+												</ui-select-choices> </ui-select>
+											</div>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													placeholder="{{model.objectShopCode.shopName}}"
+													disabled="disabled"
+													title="{{model.objectShopCode.shopName}}" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_bill_sale.label.staff.name"></label>
+											<div class="col-md-15">
+												<ui-select ng-model="model.objectStaff" class="">
+												<ui-select-match>{{$select.selected.code}}</ui-select-match>
+												<ui-select-choices style="width: auto;"
+													repeat="x in listStaff | filter:$select.search">
+												<span ng-bind-html="x.code | highlight: $select.search"></span>
+												<span>-</span> <span
+													ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices>
+												</ui-select>
+											</div>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													placeholder="{{model.objectStaff.name}}"
+													disabled="disabled" title="{{model.objectStaff.name}}" />
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_bill_sale.label.transaction.type"></label>
+											<div class="col-md-40">
+												<ui-select ng-model="model.objectTransaction" class="">
+												<ui-select-match>{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices style="width: auto;"
+													repeat="x in listTransaction | filter:$select.search">
+												<span ng-bind-html="x.code | highlight: $select.search"></span>
+												<span>-</span> <span
+													ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices>
+												</ui-select>
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_bill_sale.label.payment.type"></label>
+											<div class="col-md-40">
+												<ui-select ng-model="model.objectPayMethod" class="">
+												<ui-select-match>{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices style="width: auto;"
+													repeat="x in listPayMethod | filter:$select.search">
+												<span ng-bind-html="x.code | highlight: $select.search"></span>
+												<span>-</span> <span
+													ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices>
+												</ui-select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_bill_sale.label.from.date"></label>
+											<div class="col-md-40">
+												<input ng-model="model.fromDate" id="fromDate"
+													name="dateOfIssue" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_bill_sale.label.to.date"></label>
+											<div class="col-md-40">
+												<input ng-model="model.toDate" id="toDate"
+													name="dateOfIssue" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+										</div>
+
+
+										<div class="col-md-12"
+											style="text-align: center; padding-top: 10px; padding-bottom: 20px;">
+											<button type="button" name="Search" class="btn btn-primary"
+												ng-click="searchTransaction()" style="margin-right: 30px;">
+												<i class="fa glyphicon glyphicon-search"></i> <label
+													translate="vnm.create_bill_sale.label.btn.search"></label>
+											</button>
+										</div>
+
+										<div class="form-group">
+											<div class="col-md-6">
+												<div class="form-group">
+													<h3 class="form-section"
+														translate="vnm.create_bill_sale.label.result.list.transaction"></h3>
+													<div class="col-md-12">
+														<div class="table-scrollable">
+															<table ng-table="tableParams"
+																class="table table-striped table-bordered"
+																show-filter="false">
+																<tr ng-repeat="item in $data"
+																	ng-click="getListGoods(item)"
+																	ng-class="{true:'active', false:''}[item.trans_id== itemTransSelected.trans_id]">
+																	<td title="'Trạng thái GD'" style="min-width: 150px">{{item.status
+																		=== "1" ? "Chưa thanh toán" : item.status === "2" ?
+																		"Chưa lập hóa đơn" : item.status === "3" ? "Đã lập hóa
+																		đơn" : "Hủy" }}</td>
+
+
+																	<td title="'Ngày GD'">{{item.create_datetime.substring(0,
+																		10)}}</td>
+																	<td title="'Mã SO/Mã xuất'">{{item.actionCode}}</td>
+																	<td title="'Nhân viên GD'">{{item.username}}</td>
+																	<td title="'Khách hàng'" style="min-width: 250px">{{item.cus_type
+																		=== "1" ? "Giao dịch bán lẻ Vietnamobile" : "Giao dịch
+																		bán hàng cho đại lý Vietnamobile" }}</td>
+																</tr>
+
+																<tr ng-if="tableParams.total() == 0">
+																	<td colspan="7"><label
+																		translate="vnm.common.data.not.found"></label></td>
+																</tr>
+																<tr ng-if="tableParams.total() != 0">
+																	<td colspan="11" align="right">
+																		<h3 class="form-section">
+																			<label translate="vnm.common.tableRecord.total"></label>{{tableParams.total()}}
+																		</h3>
+																	</td>
+																</tr>
+															</table>
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<h3 class="form-section"
+														translate="vnm.create_bill_sale.label.result.list.service"></h3>
+													<div class="table-scrollable">
+														<table ng-table="tableGoodsParams"
+															class="table table-striped table-bordered"
+															show-filter="false">
+															<thead class="ng-table-sort-header">
+																<td class="table-header-bold">Mặt hàng</td>
+																<td class="table-header-bold">Số lượng</td>
+																<td class="table-header-bold">Đơn giá</td>
+																<td class="table-header-bold">CK</td>
+																<td class="table-header-bold">KM</td>
+																<td class="table-header-bold">VAT</td>
+																<td class="table-header-bold">Tổng tiền</td>
+															</thead>
+
+															<tr ng-repeat="item in $data"
+																ng-click="getListGoodDetail(item)" ng-class="">
+																<td title="{{item.name}}">{{item.name}}</td>
+																<td title="{{item.quantity}}">{{item.quantity}}</td>
+																<td title="{{item.price}}">{{item.price}}</td>
+																<td title="{{item.discount}}">{{item.discount}}</td>
+																<td title="{{item.promotion}}">{{item.promotion}}</td>
+																<td title="{{item.tax_rate}}">{{item.tax_rate}}</td>
+																<td title="{{item.sum_money}}">{{item.sum_money}}</td>
+															</tr>
+
+															<tr ng-if="tableGoodsParams.total() == 0">
+																<td colspan="7"><label
+																	translate="vnm.common.data.not.found"></label></td>
+															</tr>
+															<tr ng-if="tableGoodsParams.total() != 0">
+																<td colspan="11" align="right">
+																	<h3 class="form-section">
+																		<label translate="vnm.common.tableRecord.total"></label>{{tableGoodsParams.total()}}
+																	</h3>
+																</td>
+															</tr>
+														</table>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<div class="col-md-12" style="">
+														<h3 class="form-section"
+															translate="vnm.create_bill_sale.label.detail.item"></h3>
+														<div class="table-scrollable">
+															<table ng-table="tableGoodDetailParams"
+																class="table table-striped table-bordered"
+																show-filter="false">
+																<tr ng-repeat="item in $data" ng-click="" ng-class="">
+																	<td title="'Số serial'">{{item.serial}}</td>
+																	<td title="'Ngày nhập'">{{item.create_datetime}}</td>
+																</tr>
+
+																<tr ng-if="tableGoodDetailParams.total() == 0">
+																	<td colspan="7"><label
+																		translate="vnm.common.data.not.found"></label></td>
+																</tr>
+																<tr ng-if="tableGoodsParams.total() != 0">
+																	<td colspan="11" align="right">
+																		<h3 class="form-section">
+																			<label translate="vnm.common.tableRecord.total"></label>{{tableGoodDetailParams.total()}}
+																		</h3>
+																	</td>
+																</tr>
+
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<h3 class="form-section"
+													translate="vnm.create_bill_sale.label.detail.bill"></h3>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.bill.number"></label>
+													<div class="col-md-10">
+														<input type="text" class="form-control"
+															disabled="disabled" ng-model="model.firstName"
+															name="firstName" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.create.date"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															disabled="disabled" ng-model="model.createDate"
+															name="cardId" />
+													</div>
+
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.status"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															disabled="disabled" ng-model="model.invoiceStatus"
+															name="invoiceStatus" />
+													</div>
+
+												</div>
+
+												<!-- cua hang -->
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.shop.name">
+													</label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.objectShopFormView" class=""
+															disabled="disabled"> <ui-select-match>{{$select.selected.shopCode}}</ui-select-match>
+														<ui-select-choices style="width: auto;"
+															repeat="x in listShop | filter:$select.search">
+														<span
+															ng-bind-html="x.shopName | highlight: $select.search"></span>
+														</ui-select-choices> </ui-select>
+													</div>
+													<div class="col-md-6">
+														<input type="text" class="form-control"
+															placeholder="{{model.objectShopFormView.shopName}}"
+															disabled="disabled"
+															title="{{model.objectShopFormView.shopName}}" />
+													</div>
+
+												</div>
+
+												<!-- nhan vien -->
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.staff.name"></label>
+
+													<div class="col-md-4">
+														<ui-select ng-model="model.objectStaffFormView" class=""
+															disabled="disabled"> <ui-select-match>{{$select.selected.code}}</ui-select-match>
+														<ui-select-choices style="width: auto;"
+															repeat="x in listStaff | filter:$select.search">
+														<span ng-bind-html="x.code | highlight: $select.search"></span>
+
+														</ui-select-choices> </ui-select>
+													</div>
+													<div class="col-md-6">
+														<input type="text" class="form-control"
+															placeholder="{{model.objectStaffFormView.name}}"
+															disabled="disabled"
+															title="{{model.objectStaffFormView.name}}" />
+													</div>
+												</div>
+
+												<!-- loai giao dich -->
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.transaction.type.bill"></label>
+
+													<div class="col-md-4">
+														<ui-select ng-model="model.objectTransactionFormView"
+															class="" disabled="disabled"> <ui-select-match>{{$select.selected.code}}</ui-select-match>
+														<ui-select-choices style="width: auto;"
+															repeat="x in listTransaction | filter:$select.search">
+														<span ng-bind-html="x.code | highlight: $select.search"></span>
+														<span>-</span> <span
+															ng-bind-html="x.name | highlight: $select.search"></span>
+														</ui-select-choices> </ui-select>
+													</div>
+													<div class="col-md-6">
+														<input type="text" class="form-control"
+															placeholder="{{model.objectTransactionFormView.name}}"
+															disabled="disabled"
+															title="{{model.objectTransactionFormView.name}}" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.customer.name">
+													</label>
+													<div class="col-md-10">
+														<input type="text" class="form-control"
+															ng-model="model.customerName" name="customerName" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.company.name"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															ng-model="model.companyName" name="companyName" />
+													</div>
+
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.address"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															ng-model="model.address" name="address" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.account.number"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															ng-model="model.accountNumber" name="accountNumber" />
+													</div>
+
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.taxcode"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															ng-model="model.taxCode" name="taxCode" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.payment.method"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															disabled="disabled" ng-model="model.paymentMethod"
+															name="paymentMethod" />
+													</div>
+
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.exchange.rate"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															disabled="disabled" ng-model="model.exchangeRate"
+															name="exchangeRate" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.money.no.tax"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control text-right"
+															disabled="disabled" ng-model="model.moneyNoTax"
+															name="moneyNoTax" />
+													</div>
+
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.promotion"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control text-right"
+															disabled="disabled" ng-model="model.promotion"
+															name="promotion" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.discount"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control text-right"
+															disabled="disabled" ng-model="model.discount"
+															name="discount" />
+													</div>
+
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.money.tax"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control text-right"
+															disabled="disabled" ng-model="model.moneyTax"
+															name="moneyTax" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.money.with.tax"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control text-right"
+															disabled="disabled" ng-model="model.moneyWithTax"
+															name="moneyWithTax" />
+													</div>
+
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.natural.currency"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control text-right"
+															disabled="disabled" ng-model="model.naturalCurrency"
+															name="naturalCurrency" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2" disabled="disabled"
+														translate="vnm.create_bill_sale.label.money.paid"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control text-right"
+															disabled="disabled" ng-model="model.moneyPaid"
+															name="moneyPaid" />
+													</div>
+
+													<label class="control-label col-md-2"></label>
+													<div class="col-md-4">
+														<label class="control-label">
+															{{model.moneyPaidType}}</label>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.note"></label>
+													<div class="col-md-10">
+														<input type="text" class="form-control"
+															ng-model="model.note" name="note" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_bill_sale.label.email"></label>
+													<div class="col-md-10">
+														<input type="text" class="form-control"
+															ng-model="model.email" name="email" />
+													</div>
+												</div>
+
+												<div class="form-actions" style="padding-top: 20px;">
+													<div class="col-md-4">
+														<button type="button" class="btn btn-primary"
+															ng-click="onCreateCInvoice()" style="width: 150px">
+															<i></i> <label
+																translate="vnm.create_bill_sale.label.btn.create.electronic.contract"></label>
+														</button>
+													</div>
+													<div class="col-md-4">
+														<button type="button"
+															ng-disabled="isDisabledBtnPrintElectronic"
+															class="btn btn-primary"
+															ng-click="onPrintElectronicInvoice()"
+															style="width: 150px">
+															<i></i> <label
+																translate="vnm.create_bill_sale.label.btn.print.electronic.contract"></label>
+														</button>
+													</div>
+
+													<div class="col-md-4">
+														<button type="button" class="btn btn-primary"
+															ng-disabled="isDisabledBtnPrintConversion"
+															ng-click="onPrintConversionInvoice()"
+															style="width: 150px">
+															<i></i> <label
+																translate="vnm.create_bill_sale.label.btn.print.conversion.contract"></label>
+														</button>
+													</div>
+												</div>
+
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<img src="" class="imagepreviewZoom" style="width: 100%;" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

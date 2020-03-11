@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Hủy giao dịch bán hàng</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/sales/FormDestroyTransaction.js" type="text/javascript"></script>
+		
+		<div ng-controller="formDestroyTransactionController" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.FormDestroyTransaction.page.title"></b>
+						</legend>
+						<form name="frm_FormDestroyTransaction"
+							class="form-horizontal  form-bordered" method="post"
+							ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+
+									<div class="tab-content">
+
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.FormDestroyTransaction.search.title"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormDestroyTransaction.search.sessionShop"></label>
+													<div class="col-md-4">
+														<input ng-model="model.sessionShopCode" id="shopCode"
+															name="sessionShopCode" class="form-control"
+															ng-disabled="true" />
+													</div>
+
+													<label class="control-label col-md-1"
+														translate="vnm.FormDestroyTransaction.search.lstStaff">
+													</label>
+												<div class="col-md-1">
+													<input type="text" class="form-control" ng-model="model.staffCode" id="fStaffCode" data-toggle="tooltip" data-placement="top" title=""
+														ng-blur="checkF9Staff()" style="text-transform: uppercase;"/>
+												</div>
+												<div class="col-md-3">
+													<input type="text" class="form-control" ng-model="model.staffName" id="fStaffName" ng-disabled="true" data-toggle="tooltip" data-placement="top"
+														title="" />
+												</div>
+													<button type="button" name="btnSearch"
+														style="width: 100px; height: 25px ; margin-top: 2px; margin-left: 3%" class="btn btn-primary"
+														ng-click="btnSearchOnclick()"
+														ng-disabled="checkDisableBtnSearch">
+														<span class="glyphicon glyphicon-search"></span> <label
+															translate="vnm.common.btn.search"></label>
+													</button>
+												</div>
+
+
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormDestroyTransaction.search.fromDate"></label>
+													<div class="col-md-4">
+														<input ng-model="model.searchFromDate" id="fromDate"
+															name="searchFromDate" datetime-picker="" date-only=""
+															date-format="DD/MM/YYYY" class="form-control"
+															ng-disabled="" />
+													</div>
+													<label class="control-label col-md-1"
+														translate="vnm.FormDestroyTransaction.search.toDate"></label>
+													<div class="col-md-4">
+														<input ng-model="model.searchToDate" id="toDate"
+															name="searchToDate" datetime-picker="" date-only=""
+															date-format="DD/MM/YYYY" class="form-control"
+															ng-disabled="" />
+													</div>
+												</div>
+												<div class="form-group">
+
+													<label class="control-label col-md-1"
+														translate="vnm.FormDestroyTransaction.search.custType"></label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.custType" class="" ng-init=""
+															ng-disabled=""> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices style="width: auto;"
+															repeat="x in lstCustType | filter:$select.search">
+														{{x.code}} - {{x.name}} </ui-select-choices> </ui-select>
+													</div>
+
+
+
+												</div>
+
+
+
+
+											</fieldset>
+
+
+											<div class="form-group">
+												<fieldset class="fieldset-primary">
+													<legend class="lengend-primary">
+														<b translate="vnm.FormDestroyTransaction.result.title"></b>
+													</legend>
+
+													<div class="form-group">
+														<div class="col-md-12">
+															<div class="table-scrollable">
+																<table id="resultSearchTableItems"
+																	class="table-bordered" style="width: 100%">
+																	<thead class="ng-table-sort-header">
+																		<tr>
+																			<th width="20%"
+																				translate="vnm.FormDestroyTransaction.table.column.status"></th>
+																			<th width="14%"
+																				translate="vnm.FormDestroyTransaction.table.column.date"></th>
+																			<th width="14%"
+																				translate="vnm.FormDestroyTransaction.table.column.staff"></th>
+																			<th width="15%"
+																				translate="vnm.FormDestroyTransaction.table.column.customer"></th>
+																			<th width="15%"
+																				translate="vnm.FormDestroyTransaction.table.column.payMethod"></th>
+																			<th width="14%"
+																				translate="vnm.FormDestroyTransaction.table.column.invoiceNo"></th>
+																			<th width="8%" id="checkAlls" style="width: 13px;"><input
+																				type="checkbox"
+																				style="width: 15px; margin-left: 39%" id="checkAll"
+																				class="form-control" ng-model="model.checkAll"
+																				ng-click="checkAllCheckBox()"
+																				ng-disabled="checkDisabledCheckBox" value=""></input></th>
+																		</tr>
+																	</thead>
+																</table>
+															</div>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+											<div class="form-group">
+												<fieldset class="fieldset-primary">
+													<legend class="lengend-primary">
+														<b translate="vnm.FormDestroyTransaction.result.sub.title"></b>
+													</legend>
+													<div class="form-group">
+														<div class="col-md-12">
+															<table id="resultSubSearchTableItems"
+																class="table-bordered" style="width: 100%">
+																<thead class="ng-table-sort-header">
+																	<tr>
+																		<th width="15%"
+																			translate="vnm.ExportToInferior.label.item"></th>
+																		<th width="10%"
+																			translate="vnm.ExportToInferior.label.column.quantity"></th>
+																		<th width="10%"
+																			translate="vnm.FormDestroyTransaction.table.column.price"></th>
+																		<th width="10%"
+																			translate="vnm.FormDestroyTransaction.result.sub.CK"></th>
+																		<th width="10%"
+																			translate="vnm.FormDestroyTransaction.result.sub.KM"></th>
+																		<th width="10%"
+																			translate="vnm.FormDestroyTransaction.result.sub.VAT"></th>
+																		<th width="10%"
+																			translate="vnm.FormDestroyTransaction.result.sub.sum"></th>
+																	</tr>
+																</thead>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+											<div class="form-group">
+												<fieldset class="fieldset-primary">
+													<legend class="lengend-primary">
+														<b
+															translate="vnm.FormDestroyTransaction.result.sub.sub.title"></b>
+													</legend>
+													<div class="form-group">
+														<div class="col-md-12">
+															<table id="resultSubSubSearchTableItems"
+																class="table-bordered" style="width: 100%">
+																<thead class="ng-table-sort-header">
+																	<tr>
+																		<th width="20%"
+																			translate="vnm.FormDestroyTransaction.result.sub.sub.serial"></th>
+																		<th width="14%"
+																			translate="vnm.FormDestroyTransaction.result.sub.sub.createDate"></th>
+																	</tr>
+																</thead>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+											<div class="form-group">
+
+												<div class="col-md-5"></div>
+												<button type="button" name="btnSearch"
+													style="width: 110px; height: 30px" class="btn btn-primary"
+													ng-click="btnDestroyOnclick()"
+													ng-disabled="checkDisableBtnSearch">
+													<span class="glyphicon glyphicon-remove-sign"></span> <label
+														translate="vnm.FormDestroyTransaction.button.label.destroy"></label>
+												</button>
+
+											</div>
+
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+							
+						<div class="modal fade" id="modalListStaff" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 900px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="dialogListStaffActionBack()">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.staff"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListStaff'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

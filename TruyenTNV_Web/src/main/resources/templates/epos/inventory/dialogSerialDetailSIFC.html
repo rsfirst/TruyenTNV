@@ -1,0 +1,123 @@
+<div>
+	<fieldset
+		style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+		<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+			<b translate="vnm.stock_view_detail.label.search"></b>
+		</legend>
+
+		<div class="form-group">
+			<label class="control-label col-md-1" translate="vnm.stock_view_detail.label.from.serial" />
+			<div class="col-md-2">
+				<input type="text" class="form-control" ng-model="model.fromSerial" ng-disabled="isNotSearch" />
+			</div>
+			<label class="control-label col-md-1" translate="vnm.stock_view_detail.label.to.serial" />
+			<div class="col-md-2">
+				<input type="text" class="form-control" ng-model="model.toSerial" ng-disabled="isNotSearch" />
+			</div>
+			<label class="control-label col-md-1" translate="vnm.stock_view_detail.label.number" />
+			<div class="col-md-2">
+				<input type="text" class="form-control" ng-model="model.number" ng-disabled="isNotSearch" />
+			</div>
+			<button type="button" name="btnDetail" style="width: 100px; margin-left: 80px;" class="btn btn-primary" ng-click="btnSearchSerial()">
+				<i></i> <label translate="vnm.stock_view_detail.label.btn.search"></label>
+			</button>
+
+		</div>
+	</fieldset>
+	<fieldset
+		style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+		<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+			<b translate="vnm.stock_view_detail.label.serial.transfer"></b>
+		</legend>
+		<div class="col-md-5 ">
+			<fieldset class="fieldset-primary fieldset-auto-width" style="overflow: scroll; height: 300px; width: 400px;">
+				<legend class="lengend-primary">
+					<b translate="vnm.stock_view_detail.label.serial.inventory"></b>
+				</legend>
+				<div class="col-md-12">
+					<div class="form-group">
+						<div class="form-group">
+							<div class="col-md-12">
+								<table id="tblSerialSingle" class="table-bordered" style="width: 100%; min-width: 300px;">
+									<thead class="ng-table-sort-header">
+										<tr>
+											<th width="50%" translate="vnm.common_table.column.serial"></th>
+											<th width="50%" translate="vnm.common_table.column.warranty.no"></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</fieldset>
+
+		</div>
+		<div class="col-md-2 md-height-300" style="margin-top: 90px;">
+			<div>
+				<button type="button" name="btnDetail" style="width: 100px; margin-left: 20px;" class="btn btn-primary" ng-click="addAllSerial()"
+					ng-disabled="model.showAddSerial">
+					<i></i> <label translate="vnm.common.paging.last"></label>
+				</button>
+			</div>
+			<div>
+				<button type="button" name="btnDetail" style="width: 100px; margin-left: 20px; margin-top: 20px;" class="btn btn-primary" ng-click="addSerial()"
+					ng-disabled="model.showAddSerial">
+					<i></i> <label translate="vnm.common.paging.next"></label>
+				</button>
+			</div>
+			<div>
+				<button type="button" name="btnDetail" style="width: 100px; margin-left: 20px; margin-top: 20px;" class="btn btn-primary" ng-click="removeSerial()"
+					ng-disabled="model.showRemoveSerial">
+					<i></i> <label translate="vnm.common.paging.prev"></label>
+				</button>
+			</div>
+			<div>
+				<button type="button" name="btnDetail" style="width: 100px; margin-left: 20px; margin-top: 20px;" class="btn btn-primary" ng-click="removeAll()"
+					ng-disabled="model.showRemoveSerial">
+					<i></i> <label translate="vnm.common.paging.first"></label>
+				</button>
+			</div>
+		</div>
+		<div class="col-md-5 ">
+			<fieldset class="fieldset-primary fieldset-auto-width" style="overflow: scroll; height: 300px; width: 400px;">
+				<legend class="lengend-primary">
+					<b translate="vnm.stock_view_detail.label.serial.transfered"></b>
+
+				</legend>
+				<div class="col-md-12">
+					<div class="form-group">
+						<div class="form-group">
+							<div class="col-md-12">
+								<table id="tblSerialSingle2" class="table-bordered" style="width: 100%; min-width: 300px;">
+									<thead class="ng-table-sort-header">
+										<tr>
+											<th width="50%" translate="vnm.common_table.column.serial"></th>
+											<th width="50%" translate="vnm.common_table.column.warranty.no"></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</fieldset>
+
+		</div>
+	</fieldset>
+
+	<div class="form-group">
+		<div class="col-md-12" style="text-align: center;">
+
+			<button type="button" name="btnSave" style="width: 100px" class="btn btn-primary" ng-click="btnAcceptClick()">
+				<i></i> <label translate="vnm.stock_view_detail.label.btn.accept"></label>
+			</button>
+
+			<button type="button" name="btnBack" style="width: 100px" ng-click="btnBackSerial()" class="btn btn-primary">
+				<i></i> <label translate="vnm.common.label.btn.back"></label>
+			</button>
+		</div>
+	</div>
+</div>

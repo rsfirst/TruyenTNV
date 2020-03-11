@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
-Implementation-Title: TruyenTNV-web
-Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Title: WebTruyenTNV-web
+Implementation-Version: 0.0.1
 Built-By: TNV6996
-Implementation-Vendor-Id: vn.com
+Implementation-Vendor-Id: vn.com.fis
 Build-Jdk: 1.8.0_172
-Implementation-URL: http://projects.spring.io/spring-boot/TruyenTNV-we
- b/
+Implementation-URL: http://projects.spring.io/spring-boot/WebTruyenTNV
+ -web/
 Created-By: Maven Integration for Eclipse
 Implementation-Vendor: Pivotal Software, Inc.
 

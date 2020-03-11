@@ -1,0 +1,165 @@
+<div>
+	<b id="attDescription"></b>
+	<fieldset style="margin-top: 10px">
+		<div class="col-md-1nw ">
+			<fieldset class="fieldset-primary"
+				style="overflow: scroll; height: 500px;">
+				<legend class="lengend-primary">
+					<b translate="vnm.dialogInputAttachGoods.label.list.attach.goods"></b>
+				</legend>
+				<div class="col-md-12">
+					<div class="form-group">
+						<div class="form-group">
+							<div class="col-md-12">
+								<table id="tblListAttachGoods" class="table-bordered"
+									style="width: 100%; min-width: 90%;">
+									<thead class="ng-table-sort-header">
+										<tr>
+											<th width="30%"
+												translate="vnm.dialogInputAttachGoods.column.good.code"></th>
+											<th width="20%"
+												translate="vnm.dialogInputAttachGoods.column.good.quantity"></th>
+											<th width="20%"
+												translate="vnm.dialogInputAttachGoods.column.good.price"></th>
+											<th width="20%"
+												translate="vnm.dialogInputAttachGoods.column.good.promotion"></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</fieldset>
+
+		</div>
+		<fieldset class="fieldset-primary" style="height: 180px;">
+			<legend class="lengend-primary">
+				<b translate="vnm.dialogInputAttachGoods.label.attach.goods.deatil"></b>
+			</legend>
+			<div class="form-group">
+				<label class="control-label col-md-2"
+					translate="vnm.dialogInputAttachGoods.label.good"></label>
+				<div class="col-md-4">
+					<input type="text" class="form-control" id="fAttGoodDlg"
+						ng-model="model.fAttGoodDlg" data-toggle="tooltip"
+						data-placement="top" title="" ng-disabled="true"/>
+					
+					<!-- <ui-select ng-model="model.fAttGoodDlg" class="" id="fAttGoodDlg"
+						ng-disabled="true" on-select="onChangeTransType()"
+						style="width: 100%;"> <ui-select-match>{{$select.selected.goodsCode}}</ui-select-match>
+					<ui-select-choices
+						repeat="x in lstAttGoodsDlg | filter:$select.search | limitTo: limitCbb">
+					{{x.goodsCode}} - {{x.name}}</ui-select-choices> </ui-select> -->
+
+				</div>
+				<div class="col-md-6">
+					<input type="text" class="form-control" id="fAttGoodNameDlg"
+						ng-model="model.fAttGoodNameDlg" data-toggle="tooltip"
+						data-placement="top" title="" ng-disabled="true" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2"
+					translate="vnm.dialogInputAttachGoods.label.good.price"></label>
+				<div class="col-md-6">
+					<ui-select ng-model="model.fAttPriceDlg" class="" id="fAttPriceDlg"
+						on-select="onChooseShopForm()" style="width: 100%;"> <ui-select-match>{{$select.selected.price}}
+					- {{$select.selected.name}}</ui-select-match> <ui-select-choices
+						repeat="x in lstPriceAttachGoods | filter:$select.search | limitTo: limitCbb">
+					{{x.price}} - {{x.name}}</ui-select-choices> </ui-select>
+				</div>
+				<label class="control-label col-md-2"
+					translate="vnm.dialogInputAttachGoods.column.good.quantity"></label>
+				<div class="col-md-2">
+					<input type="text" class="form-control"
+						ng-disabled="isDisableQuantityAttGood"
+						ng-model="model.fAttQuantityDlg" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2"
+					translate="vnm.formSaleTransaction.label.promotion"> </label>
+				<div class="col-md-4">
+					<ui-select ng-model="model.fAttPromotionDlg" class=""
+						id="fAttPromotionDlg" style="width: 100%;"
+						ng-click="getAttPromotionNameDlg()" data-toggle="tooltip"
+						data-placement="top" title=""> <ui-select-match>{{$select.selected.promProgramCode}}</ui-select-match>
+					<ui-select-choices
+						repeat="x in PromotionSource | filter:$select.search | limitTo: limitCbb">
+					{{x.promProgramCode}} - {{x.name}} </ui-select-choices></ui-select>
+				</div>
+				<div class="col-md-6">
+					<input type="text" class="form-control" id="fAttPromotionNameDlg"
+						ng-model="model.fAttPromotionNameDlg" ng-disabled="true" />
+				</div>
+			</div>
+			<div class="form-group"
+				style="padding-top: 10px; margin-bottom: 30px;">
+				<div class="col-md-12" style="text-align: center;"
+					id="pnlButtonAction">
+
+					<button type="button" name="btnEdit" style="width: 100px"
+						ng-disabled="isDisabledBtnEdit" class="btn btn-primary"
+						ng-click="btnUpdateOnclick()">
+						<i class="fa fa-edit"></i> <label
+							translate="vnm.common.btn.update"></label>
+					</button>
+
+					<button type="button" name="btnDelete" style="width: 100px"
+						ng-disabled="isDisabledBtnDelete" class="btn btn-primary"
+						ng-click="btnDeleteOnclick()">
+						<i class="fa fa-trash"></i> <label
+							translate="vnm.common.btn.delete"></label>
+					</button>
+				</div>
+			</div>
+
+		</fieldset>
+		<fieldset class="fieldset-primary"
+			style="overflow: scroll; height: 300px;">
+			<legend class="lengend-primary">
+				<b translate="vnm.stock_view_detail.label.serial.transfered"></b>
+
+			</legend>
+			<div class="col-md-12">
+				<div class="form-group">
+					<div class="form-group">
+						<div class="col-md-12">
+							<table id="tblSerialAttachGoods" class="table-bordered"
+								style="width: 100%; min-width: 90%;">
+								<thead class="ng-table-sort-header">
+									<tr>
+										<th width="50%" translate="vnm.common_table.column.serial"></th>
+										<th width="30%" translate="vnm.common_table.column.input.date"></th>
+										<th width="8%" id="checkAllAttachs"  style="text-align: center;"><input type="checkbox" id="checkAllAttach"
+											class="form-control" ng-model="model.checkAllAttach" ng-click="checkAllCheckBoxAttach()" value=""></input></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</fieldset>
+	</fieldset>
+
+	<div class="form-group">
+		<div class="col-md-12" style="text-align: center;">
+
+			<button type="button" name="btnSave" style="width: 100px"
+				class="btn btn-primary" ng-click="btnAcceptAttachGoodsClick()">
+				<i class="fa fa-thumbs-o-up"></i> <label
+					translate="vnm.common.btn.approve"></label>
+			</button>
+
+			<button type="button" name="btnBack" style="width: 100px"
+				ng-click="btnBackAttachGoods()" class="btn btn-primary">
+				<i class="fa fa-rotate-left"></i> <label
+					translate="vnm.common.btn.cancel"></label>
+			</button>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,1773 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Đăng ký dịch vụ chuyển mạng trả trước đơn
+	lẻ</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/mnp_registration/mnp_registration_prepaid.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-ticket" class="ng-cloak">
+			<div class="portlet light bordered">
+				<input type="hidden" ng-model="model.checkinsert" />
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"> <span
+							translate="vnm.form_mnp.mnp_prepaid.page.title"></span></span>
+					</div>
+					<div class="actions">
+						<a class="btn btn-circle btn-icon-only btn-default fullscreen"
+							href="#" data-original-title="" title=""> </a>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_registration_prepaid"
+						class="form-horizontal  form-bordered" method="post"
+						ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<ul class="nav nav-tabs ">
+									<li class="active"><a href="#thong-tin-chuyen-mang"
+										data-toggle="tab" aria-expanded="false"><span
+											translate="vnm.form_mnp.mnp_prepaid.tab.npr.title"></span></a></li>
+									<li><a href="#thong-tin-khach-hang-va-thue-bao"
+										data-toggle="tab" aria-expanded="true"
+										ng-click="mapModelFullTab"><span
+											translate="vnm.form_mnp.mnp_prepaid.tab.cus.title"></span></a></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane  active" id="thong-tin-chuyen-mang">
+										<div class="form-group">
+											<fieldset
+												style="border: 1px groove #ddd !important; padding: 0 1.4em 1.4em 1.4em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+												<legend
+													style="width: inherit; padding: 0 10px; border-bottom: none;">
+													<b>Tìm kiếm số pre-order:</b>
+												</legend>
+												<div class="form-group" style="margin-top: 10px">
+													<label class="control-label col-md-2"> Số thuê bao
+													</label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															ng-disabled="uploader.queue.length"
+															ng-model="model.mnpIsdnPreorder" />
+													</div>
+													<div class="col-md-6" style="text-align: left;">
+														<button type="button" name="Search"
+															class="btn btn-primary"
+															ng-click="onSearchGroupMnpOrder()">
+															<i class="fa glyphicon glyphicon-search"></i> <label
+																translate="vnm.category_group_mdn.lable.btn.search"></label>
+														</button>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+
+
+										<fieldset
+											style="border: 1px groove #ddd !important; padding: 0 1.4em 1.4em 1.4em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+											<legend
+												style="width: inherit; padding: 0 10px; border-bottom: none;">
+												<b>Thông tin chuyển mạng:</b>
+											</legend>
+
+											<div class="form-group" style="margin-top: 10px">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_prepaid.npr.customertype"></label>
+													<span class="red" ng-show="customerTypeNPR">(*)</span>
+												</label>
+												<div class="col-md-4" id="idCustomerTypeNPRDiv">
+													<ui-select ng-model="model.customerTypeNPR" class=""
+														style="width: 100%;" on-select="onCustomerNPRChange()">
+													<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in CustomerTypeSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_prepaid.npr.fullName"></label><span
+													class="red" ng-show="fullNameNPR">(*)</span>
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-change="copyNameCustomer()" ng-model="model.fullName"
+														name="FullName" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_prepaid.npr.document.type"></label>
+													<span class="red" ng-show="documentIssueTypeNPR">(*)</span>
+												</label>
+												<div class="col-md-4" id="idDocumentTypeDiv">
+													<ui-select ng-model="model.documentType" class=""
+														style="width: 100%;" on-select="onDocumentTypeNPRChange()">
+													<ui-select-match>{{$select.selected.documentName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.documentType as x in IdentityTypeSource | filter:$select.search">
+													{{x.documentName}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_prepaid.npr.doc.issue.number"></label>
+													<span class="red" ng-show="documentIssueNumberNPR">(*)</span>
+												</label>
+												<div class="col-md-4">
+													<input id="Test" type="text" class="form-control"
+														ng-model="model.documentNumber"
+														ng-change="copyValueDocumentType()" name="DocumentNumber" />
+												</div>
+
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_prepaid.npr.document.issue.date"></label>
+													<span class="red" ng-show="documentIssueDateNPR">(*)</span></label>
+												<div class="col-md-4">
+													<input placeholder=" /  /  /" id="documentIssueDate"
+														ng-model="model.documentIssueDate"
+														name="DocumentIssueDate" datetime-picker="" maxlength="10"
+														ng-change="copyValueByCustomerType('documentIssueDate','documentIssueDateCustomer')"
+														date-only="" date-format="DD/MM/YYYY" class="form-control" />
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_prepaid.npr.document.issue.place"></label><span
+													class="red" ng-show="documentIssuePlaceNPR">(*)</span>
+												</label>
+												<div class="col-md-4">
+													<input type="text" ng-model="model.documentIssuePlace"
+														ng-change="copyValueByCustomerType('documentIssuePlace','documentIssuePlaceCustomer')"
+														class="form-control" name="DocumentIssuePlace" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.country"></label> <span
+													class="red" ng-show="countryNPR">(*)</span> </label>
+
+												<div class="col-md-4" id="idCitizenDiv">
+													<ui-select name="Citizen" ng-model="model.citizen" class=""
+														style="width: 100%;" on-select="onCountryChange()">
+													<ui-select-match>{{$select.selected.countryName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in CitizenSource | filter:$select.search">
+													{{x.countryName}} </ui-select-choices> </ui-select>
+													<!-- 						                            <label id="Citizen-error" style = "display: none;" class="help-block">Yêu cầu nhập quốc tịch</label> -->
+												</div>
+
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.email"></label></label>
+												<div class="col-md-4">
+													<input type="text" ng-model="model.email"
+														class="form-control" name="Email" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.province"></label>
+													<span class="red">(*)</span> </label>
+												<div class="col-md-4" id="idSelectDivProvince">
+													<ui-select id="Province" name="Province"
+														ng-model="model.province" class=""
+														ng-init="model.province = ProvinceSource[1]"
+														style="width: 100%;" on-select="onProvinceChange()">
+													<ui-select-match placeholder="Tỉnh/Thành phố...">
+													{{$select.selected.provinceName}}</ui-select-match> <ui-select-choices
+														repeat="x as x in ProvinceSource | filter:$select.search">
+													<span class="ng-binding">{{x.provinceName}}</span> </ui-select-choices> </ui-select>
+													<!-- 						                            <label id="Province-error" style = "display: none;" class="help-block">Yêu cầu nhập tỉnh thành</label> -->
+												</div>
+
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.district"></label>
+													<span class="red">(*)</span> </label>
+
+												<div class="col-md-4" id="divDistrictId">
+													<ui-select ng-model="model.district"
+														ng-init="model.district = DistrictSource[-1].disId"
+														class="" style="width: 100%;"
+														on-select="onDistrictChange()"> <ui-select-match
+														placeholder="Quận /Huyện...">{{$select.selected.districtName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in DistrictSource | filter:$select.search">
+													{{x.districtName}} </ui-select-choices> </ui-select>
+													<!-- 						                            <label id="District-error" style = "display: none;" class="help-block">Yêu cầu nhập quận/huyện</label> -->
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.address"></label> <span
+													class="red" ng-show="addressNPR">(*)</span> </label>
+
+												<div class="col-md-10">
+													<input type="text" class="form-control"
+														ng-model="model.address" name="Address"
+														ng-change="copyValueToOtherInput()" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.reprentative.name"></label></label>
+												<div class="col-md-4">
+													<input ng-model="model.reprentativeName"
+														ng-change="copyNameCustomer()" name="ReprentativeName"
+														type="text" class="form-control" />
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.representative.position"></label></label>
+												<div class="col-md-4">
+													<input ng-model="model.representativePosition"
+														name="RepresentativePosition" type="text"
+														class="form-control" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.representative.docnumber"></label></label>
+												<div class="col-md-4">
+													<input ng-model="model.representativeDocNumber"
+														name="RepresentativeDocNumber" type="text"
+														class="form-control" />
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.representative.doc.date"></label></label>
+												<div class="col-md-4">
+													<input id="RepresentativeDocDate" placeholder="   /  /  /"
+														ng-model="model.representativeDocDate"
+														name="RepresentativeDocDate" datetime-picker=""
+														maxlength="10" date-only="" date-format="DD/MM/YYYY"
+														class="form-control" />
+												</div>
+
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.donor"></label> <span
+													class="red" ng-show="donorNPR">(*)</span> </label>
+
+												<div class="col-md-4" id="idDonorDiv">
+													<ui-select ng-model="model.donor" class=""
+														style="width: 100%;" on-select="onDonorNPRChange()">
+													<ui-select-match placeholder="Chọn nhà mạng...">{{$select.selected.networkName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.networkId as x in DonorSource | filter:$select.search">
+													{{x.networkName}} </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.receipient"></label></label>
+												<div class="col-md-4">
+													<p class="form-control-static">
+														<span class="label label-vnm"
+															translate="vnm.lable.vnm.name"></span>
+													</p>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.subdata.number"></label>
+													<span class="red" ng-show="subscriberNumberNPR">(*)</span>
+												</label>
+												<div class="col-md-4">
+													<input ng-model="model.subDataNumber" class="form-control"
+														ng-blur="validateSubDataNumber()" data-toggle="tooltip"
+														data-placement="top" name="SubdataDNONumber"
+														maxlength="11" />
+												</div>
+
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.account.type.dno"></label>
+													<span class="red" ng-show="accountTypeNPR">(*)</span> </label>
+
+												<div class="col-md-4" id="idAccountTypeDiv">
+													<ui-select ng-model="model.accountType"
+														ng-init="model.accountType= AccountTypeDNOSource[-1].Id"
+														class="" style="width: 100%;"
+														on-select="onAccountTypeNPRChange()"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in AccountTypeDNOSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.dno.contract.number"></label>
+													<span class="red" ng-show="dnoContractNumberNPR">(*)</span>
+												</label>
+												<div class="col-md-4">
+													<input type="text" ng-model="model.dnoContractNumber"
+														name="DnoContractNumber" class="form-control" />
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.sub.dno.contract.date"></label><span
+													class="red" ng-show="dnoContractDateNPR">(*)</span> </label>
+
+												<div class="col-md-4">
+													<input placeholder=" /  /  /" id="subDNOContractDateRes"
+														ng-model="model.subDNOContractDateRes"
+														name="SubDNOContractDateRes" datetime-picker=""
+														maxlength="10" date-only="" date-format="DD/MM/YYYY"
+														class="form-control" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.comments"></label></label>
+												<div class="col-md-4">
+													<input type="text" ng-model="model.comments"
+														name="Comments" class="form-control" />
+												</div>
+											</div>
+
+											<h3 class="form-section">
+												<label translate="vnm.form_mnp.mnp_prepaid.npr.file.title"></label>
+											</h3>
+
+											<div class="form-group">
+												<div class="col-md-12">
+													<span class="btn blue-hoki  btn-file"> <span
+														class="fileinput-new"> <span
+															translate="vnm.form_mnp.mnp_prepaid.npr.file.choose.file"></span>
+													</span> <input type="file" nv-file-select="" uploader="uploader"
+														multiple="" />
+													</span>
+													<div class="table-scrollable">
+														<table class="table table-hover">
+															<thead class="ng-table-sort-header">
+																<tr>
+																	<th width=""><span
+																		translate="vnm.form_mnp.mnp_prepaid.npr.file.index"></span></th>
+																	<th width=""><span
+																		translate="vnm.form_mnp.mnp_prepaid.npr.file.name"></span></th>
+																	<th ng-show="uploader.isHTML5"><span
+																		translate="vnm.form_mnp.mnp_prepaid.npr.file.size"></span></th>
+																	<th width="200px"><span
+																		translate="vnm.form_mnp.mnp_prepaid.npr.file.type"></span></th>
+																	<th width="200px"><span
+																		translate="vnm.form_mnp.mnp_prepaid.npr.file.note"></span></th>
+																	<th width="50px"><span
+																		translate="vnm.form_mnp.mnp_prepaid.npr.file.status"></span></th>
+																	<th width="120px"></th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="item in uploader.queue">
+																	<td><strong>{{
+																			uploader.getIndexOfItem(item)+1 }}</strong></td>
+																	<td><strong><a
+																			ng-click="downloadFileUploadClient(item)">{{
+																				item.file.name }}</a></strong></td>
+																	<td ng-show="uploader.isHTML5" nowrap="">{{
+																		item.file.size/1024/1024|number:2 }} MB</td>
+																	<td nowrap=""><select class="form-control"
+																		ng-disabled="item.disabledAttachType"
+																		ng-model="item.documentType"
+																		ng-options="value.Id as value.Title for value in DocumentTypeSource"
+																		ng-init="item.documentType = DocumentTypeSource[0].Id"
+																		ng-change="angular.element(this).scope().changeStatusFile(this)">
+																	</select></td>
+																	<td><input type="text"
+																		ng-model="item.identityDocNote"
+																		ng-disabled="item.disabledNote" class="form-control" />
+																		<input type="text" style="display: none;"
+																		ng-model="item.attachMentId" class="form-control" /></td>
+																	<td class="text-center"><span
+																		ng-show="item.isSuccess"><i
+																			class="glyphicon glyphicon-ok"></i></span> <span
+																		ng-show="item.isCancel"><i
+																			class="glyphicon glyphicon-ban-circle"></i></span> <span
+																		ng-show="item.isError"><i
+																			class="glyphicon glyphicon-remove"></i></span></td>
+																	<td nowrap="">
+																		<button type="button" class="btn btn-danger btn-xs"
+																			ng-click="removeElementAttachmenByItem(item)">
+																			<span class="glyphicon glyphicon-trash"></span> <label
+																				translate="vnm.form_mnp.mnp_prepaid.npr.item.delete"></label>
+																		</button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+														<div>
+															<div>
+																<p></p>
+																<div class="progress" style="">
+																	<div class="progress-bar" role="progressbar"
+																		ng-style="{ 'width': uploader.progress + '%' }">{{uploader.progress}}%</div>
+																</div>
+															</div>
+															<button type="button" class="btn btn-danger btn-s"
+																ng-click="removeAllItem()"
+																ng-disabled="!uploader.queue.length">
+																<span class="glyphicon glyphicon-trash"></span> <label
+																	translate="vnm.form_mnp.mnp_prepaid.npr.file.clear.all.file"></label>
+															</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</fieldset>
+									</div>
+
+									<!-- Begin Khach Hang Thue Bao -->
+									<div class="tab-pane" id="thong-tin-khach-hang-va-thue-bao">
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.customer.type"></label>
+												<span class="red" ng-show="customerTypeCus">(*)</span> </label>
+
+											<div class="col-md-4" id="idDivCustomerTypeCustomer">
+												<ui-select ng-model="model.customerType" class=""
+													on-select="onCustomerChange()" style="width: 100%;">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in CustomerTypeSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-2"><label
+												translate="">Thanh toán</label></label>
+
+											<div class="col-md-4" id="subPaymentTypeDiv">
+												<ui-select ng-model="model.subPaymentType" class=""
+													ng-disabled="true"
+													ng-init="model.subPaymentType=lstSubPayMentType[0].Id"
+													style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in lstSubPayMentType | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+												<!-- 						                            <label id="DistrictCustomer-error" style = "display: none;" class="help-block">Yêu cầu nhập quận huyện</label> -->
+											</div>
+
+
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2" ng-show="showToChucCha"><label
+												translate="">Đối tượng sử dụng</label> <span class="red">(*)</span>
+											</label>
+
+											<div class="col-md-4" id="subUseTypeDiv"
+												ng-show="showToChucCha">
+												<ui-select ng-model="model.subUseType" class=""
+													style="width: 100%;" on-select="onSelectSubUseTypeChange()">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in lstSubUseType | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.shop.name"></label><span
+												class="red" ng-show="shopCodeCus">(*)</span> </label>
+											<div class="col-md-4">
+												<input type="text" ng-disabled="true" class="form-control"
+													ng-model="shopNameCustomer" name="ShopNameCustomer" />
+											</div>
+										</div>
+										<div class="form-group">
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.surname"></label>
+												<span style="color: red;">(*)</span> </label>
+
+											<div class="col-md-4" id="SurNameCustomerDiv">
+												<input type="text" class="form-control" maxlength="80"
+													ng-blur="validateSurNameCustomer(model.surnameCustomer)"
+													ng-model="model.surnameCustomer" name="SurNameCustomer"
+													ng-disabled="disabledCustomerName" />
+											</div>
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.name"></label>
+												<span style="color: red;">(*)</span> </label>
+
+											<div class="col-md-4" id="NameCustomerDiv">
+												<input type="text" class="form-control" maxlength="80"
+													ng-blur="validateNameCustomer(model.nameCustomer)"
+													ng-model="model.nameCustomer" name="NameCustomer"
+													ng-disabled="disabledCustomerName" />
+											</div>
+
+
+
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="">Loại giấy tờ tùy thân</label> <span
+												style="color: red;"> (*)</span> </label>
+
+											<div class="col-md-4" id="typeCardDiv">
+												<ui-select ng-model="model.typeCard" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in lstTypeCard | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-2"><label
+												translate="Số giấy tờ tùy thân"></label> <span
+												style="color: red;"> (*)</span> </label>
+
+											<div class="col-md-4" id="DocumentNumberCustomerDiv">
+												<input type="text" class="form-control" maxlength="15"
+													ng-model="model.documentNumberCustomer"
+													name="DocumentNumberCustomer"
+													ng-disabled="disabledDocumentNumberCustomer" />
+											</div>
+
+
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.document.place"></label>
+												<span style="color: red;"> (*)</span> </label>
+
+											<div class="col-md-4" id="DocumentIssuePlaceCustomerDiv">
+												<input type="text"
+													ng-model="model.documentIssuePlaceCustomer"
+													ng-disabled="disabledDocumentIssuePlaceCustomer"
+													class="form-control" name="DocumentIssuePlaceCustomer" />
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.document.date"></label>
+												<span style="color: red;"> (*)</span> </label>
+
+											<div class="col-md-4" id="DocumentIssueDateCustomerDiv">
+												<input id="DocumentIssueDateCustomer" placeholder=" /  /  /"
+													ng-model="model.documentIssueDateCustomer"
+													name="DocumentIssueDateCustomer" datetime-picker=""
+													maxlength="10" date-only="" date-format="DD/MM/YYYY"
+													class="form-control"
+													ng-disabled="disabledDocumentIssueDateCustomer" />
+											</div>
+										</div>
+										<div class="form-group" ng-show="showCaNhan">
+											<label class="control-label col-md-2"><label
+												translate="">Loại giấy tờ tổ chức </label><span class="red"
+												ng-show="taxCodeCus">(*)</span> </label>
+
+											<div class="col-md-4" id="typeCardCompanyDiv"
+												ng-show="showCaNhan">
+												<ui-select ng-model="model.typeCardCompany" class=""
+													ng-disabled="disabledTypeCardCompany" style="width: 100%;">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in lstTypeCardCompany | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-2" ng-show="showCaNhan"><label
+												translate="Số giấy tờ tổ chức"></label> <span class="red"
+												ng-show="taxCodeCus">(*)</span> </label>
+
+											<div class="col-md-4" ng-show="showCaNhan">
+												<input type="text" class="form-control"
+													ng-model="model.taxIdentificationNumber" maxlength="15"
+													name="TaxIdentificationNumber" />
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.birthday"></label>
+												<span style="color: red;">(*)</span> </label>
+
+											<div class="col-md-4" id="CustomerBirthDayDiv">
+												<input id="CustomerBirthDay" maxlength="10"
+													ng-model="model.customerBirthDay" placeholder=" /  /  /"
+													name="CustomerBirthDay" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control"
+													ng-disabled="disabledCustomerBirthday" />
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.gender"></label>
+												<span style="color: red;">(*)</span> </label>
+
+											<div class="col-md-4" id="idGenderDiv">
+												<ui-select ng-model="model.genderType"
+													ng-disabled="disabledGenderType"
+													ng-init="model.genderType = GenderTypeSource[-1].Id"
+													class="" style="width: 100%;"
+													on-select="onGenderCustomerChange()"> <ui-select-match
+													placeholder="Chọn giới tính...">{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in GenderTypeSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.address">
+											</label><span style="color: red;">(*)</span> </label>
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+													ng-model="model.addressCustomer" name="AddressCustomer"
+													maxlenght="500" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.country"></label>
+												<span class="red">(*)</span> </label>
+
+											<div class="col-md-4" id="CitizenCustomerDiv">
+												<ui-select ng-model="model.citizenCustomer"
+													ng-init="model.citizenCustomer = CitizenSource[0].countryId"
+													class="" style="width: 100%;"
+													ng-disabled="disabledCitizenCustomer"
+													on-select="onCountryChangeCustomer()"> <ui-select-match>{{$select.selected.countryName}}</ui-select-match>
+												<ui-select-choices
+													repeat="x as x in CitizenSource | filter:$select.search">
+												{{x.countryName}} </ui-select-choices> </ui-select>
+												<!-- 						                            <label id="CitizenCustomer-error" style = "display: none;" class="help-block">Yêu cầu nhập quốc tịch</label> -->
+											</div>
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.company.name"></label>
+												<span class="red">(*)</span> </label>
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+													ng-change="changeCompanyName()"
+													ng-model="model.companyName" name="CompanyName"
+													maxlength="150" ng-disabled="disabledCompanyName" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.province"></label>
+												<span class="red">(*)</span> </label>
+											<div class="col-md-4" id="ProvinceCustomerDiv">
+												<ui-select name="ProvinceCustomer"
+													ng-model="model.provinceCustomer" class=""
+													style="width: 100%;"
+													on-select="onSelectedChangeProvinceCustomer()">
+												<ui-select-match placeholder="Tỉnh/Thành phố...">{{$select.selected.provinceName}}</ui-select-match>
+												<ui-select-choices
+													repeat="x as x in ProvinceSource | filter:$select.search">
+												<span class="ng-binding">{{x.provinceName}}</span> </ui-select-choices> </ui-select>
+												<!-- 						                            <label id="ProvinceCustomer-error" style = "display: none;" class="help-block">Yêu cầu nhập tỉnh thành</label> -->
+											</div>
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.district"></label>
+												<span class="red">(*)</span> </label>
+
+											<div class="col-md-4" id="DistrictCustomerDiv">
+												<ui-select ng-model="model.districtCustomer" class=""
+													style="width: 100%;"
+													on-select="onSelectedDistrictCustomer()"> <ui-select-match
+													placeholder="Quận /Huyện...">{{$select.selected.districtName}}</ui-select-match>
+												<ui-select-choices
+													repeat="x as x in DistrictSourceCustomer | filter:$select.search">
+												{{x.districtName}} </ui-select-choices> </ui-select>
+												<!-- 						                            <label id="DistrictCustomer-error" style = "display: none;" class="help-block">Yêu cầu nhập quận huyện</label> -->
+											</div>
+
+
+										</div>
+
+										<div class="form-group">
+
+
+											<!-- Datx -->
+											<label class="control-label col-md-2" ng-show="showCaNhan"><label
+												translate="Địa chỉ của công ty"> </label><span
+												style="color: red;">(*)</span> </label>
+											<div class="col-md-4" ng-show="showCaNhan">
+												<input type="text" class="form-control"
+													ng-model="model.addressCompany" name="AddressCustomer"
+													maxlenght="150" />
+											</div>
+											<label class="control-label col-md-2" ng-show="showToChucCha"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.serial"></label>
+												<span class="red" ng-show="serialSimSub">(*)</span> </label>
+
+											<div class="col-md-4">
+												<input ng-model="model.numberSIM" name="NumberSIM"
+													ng-show="showToChucCha" type="text" class="form-control" />
+											</div>
+										</div>
+
+										<!-- DatBD2 -->
+
+										<div class="form-group">
+
+											<label class="control-label col-md-2"><label
+												ng-show="showToChucCha"
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.package.type"></label>
+												<span class="red" ng-show="showToChucCha">(*)</span> </label>
+
+											<div class="col-md-4" id="idPackageTypeDiv"
+												ng-show="showToChucCha">
+												<ui-select ng-model="model.packageType" class=""
+													style="width: 100%;"
+													on-select="onPackageTypeCustomerChange()"> <ui-select-match
+													placeholder="Chọn gói cước...">{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.value as x in PackageTypeSource | filter:$select.search">
+												{{x.name}} </ui-select-choices> </ui-select>
+											</div>
+
+
+											<label class="control-label col-md-2" ng-show="showToChucCha"><label
+												translate="vnm.form_mnp.mnp_prepaid.cus.label.msisdn"></label><span
+												class="red" ng-show="subscriberNumberSub">(*)</span> </label>
+											<div class="col-md-4">
+												<input ng-disabled="true" ng-model="model.subDataNumber"
+													ng-show="showToChucCha" name="SubScriberCustomerNumber"
+													type="text" class="form-control" maxlength="11" />
+											</div>
+
+										</div>
+										<!-- Thêm mới DatBD2-->
+										<div class="form-group" ng-show="showPanelCompanyBaby">
+											<div class="form-group"
+												style="text-align: center; padding-top: 40px;">
+
+												<label class="control-label col-md-2"><label
+													translate="" style="font-size: larger; color: orange;"><b>Khách
+															hàng con</b></label> </label>
+
+
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.customer.type"></label>
+													<span class="red" ng-show="customerTypeCus">(*)</span> </label>
+
+												<div class="col-md-4" id="idDivCustomerTypeCustomer">
+													<ui-select ng-model="model.customerTypeBaby" class=""
+														ng-disabled="disableCustomerTypeBaby"
+														on-select="onCustomerChange()" style="width: 100%;">
+													<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in CustomerTypeSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="">Thanh toán</label></label>
+
+												<div class="col-md-4" id="subPayMentTypeDivBaby">
+													<ui-select ng-model="model.subPaymentType" class=""
+														ng-disabled="true"
+														ng-init="model.subPaymentType=lstSubPayMentType[0].Id"
+														style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in lstSubPayMentType | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="">Đối tượng sử dụng</label> <span class="red">(*)</span>
+												</label>
+
+												<div class="col-md-4" id="subUseTypeDivBaby">
+													<ui-select ng-model="model.subUseType" class=""
+														style="width: 100%;"
+														on-select="onSelectSubUseTypeChangeBaby()"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in lstSubUseType | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.shop.name"></label><span
+													class="red" ng-show="shopCodeCus">(*)</span> </label>
+												<div class="col-md-4">
+													<input type="text" ng-disabled="true" class="form-control"
+														ng-model="shopNameCustomer" name="ShopNameCustomer" />
+												</div>
+											</div>
+
+											<div class="form-group">
+
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.surname"></label>
+													<span style="color: red;">(*)</span> </label>
+
+												<div class="col-md-4" id="SurNameCustomerDiv">
+													<input type="text" class="form-control"
+														ng-model="model.surnameCustomerBaby"
+														name="SurNameCustomer"
+														ng-disabled="disabledCustomerNameBaby" />
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.name"></label>
+													<span style="color: red;">(*)</span> </label>
+
+												<div class="col-md-4" id="NameCustomerDiv">
+													<input type="text" class="form-control"
+														ng-model="model.nameCustomerBaby" name="NameCustomer"
+														ng-disabled="disabledCustomerNameBaby" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="">Loại giấy tờ tùy thân</label> <span
+													style="color: red">(*)</span> </label>
+
+												<div class="col-md-4" id="typeCardDivBaby">
+													<ui-select ng-model="model.typeCardBaby" class=""
+														ng-disabled="disabledTypeCardBaby" style="width: 100%;">
+													<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in lstTypeCard | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="Số giấy tờ tùy thân"></label> <span
+													style="color: red">(*)</span> </label>
+
+												<div class="col-md-4" id="DocumentNumberCustomerDiv">
+													<input type="text" class="form-control"
+														ng-model="model.documentNumberCustomerBaby"
+														name="DocumentNumberCustomer"
+														ng-disabled="disabledDocumentNumberCustomerBaby" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.document.place"></label>
+													<span style="color: red;">(*)</span> </label>
+
+												<div class="col-md-4" id="DocumentIssuePlaceCustomerDiv">
+													<input type="text"
+														ng-model="model.documentIssuePlaceCustomerBaby"
+														ng-disabled="disabledDocumentIssuePlaceCustomerBaby"
+														class="form-control" name="DocumentIssuePlaceCustomer" />
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.document.date"></label>
+													<span style="color: red;">(*)</span> </label>
+
+												<div class="col-md-4" id="DocumentIssueDateCustomerDiv">
+													<input id="DocumentIssueDateCustomerBaby"
+														placeholder=" /  /  /" maxlength="10"
+														ng-model="model.documentIssueDateCustomerBaby"
+														name="DocumentIssueDateCustomer" datetime-picker=""
+														date-only="" date-format="DD/MM/YYYY" class="form-control"
+														ng-disabled="disabledDocumentIssueDateCustomerBaby" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="">Loại giấy tờ tổ chức</label> <span class="red"
+													ng-show="taxCodeCus">(*)</span></label>
+
+												<div class="col-md-4" id="typeCardCompanyDivBaby">
+													<ui-select ng-model="model.typeCardCompany" class=""
+														ng-disabled="true" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in lstTypeCardCompany | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="Số giấy tờ tổ chức"></label> <span class="red"
+													ng-show="taxCodeCus">(*)</span> </label>
+
+												<div class="col-md-4">
+													<input type="text" class="form-control" ng-disabled="true"
+														ng-model="model.taxIdentificationNumber" maxlength="15"
+														name="TaxIdentificationNumber" />
+												</div>
+											</div>
+
+
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.birthday"></label>
+													<span style="color: red;">(*)</span> </label>
+
+												<div class="col-md-4" id="CustomerBirthDayDiv">
+													<input id="CustomerBirthDayBaby"
+														ng-model="model.customerBirthDayBaby" maxlength="10"
+														placeholder=" /  /  /" name="CustomerBirthDay"
+														datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+														class="form-control"
+														ng-disabled="disabledCustomerBirthdayBaby" />
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.gender"></label>
+													<span style="color: red;">(*)</span> </label>
+
+												<div class="col-md-4" id="idGenderDivBaby">
+													<ui-select ng-model="model.genderTypeBaby"
+														ng-disabled="disabledGenderTypeBaby"
+														ng-init="model.genderTypeBaby = GenderTypeSource[-1].Id"
+														class="" style="width: 100%;"
+														on-select="onGenderCustomerChangeBaby()"> <ui-select-match
+														placeholder="Chọn giới tính...">{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in GenderTypeSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.country"></label>
+													<span class="red">(*)</span> </label>
+
+												<div class="col-md-4" id="CitizenCustomerDivBaby">
+													<ui-select ng-model="model.citizenCustomerBaby"
+														ng-disabled="disabledCitizenCustomerBaby"
+														ng-init="model.citizenCustomerBaby = CitizenSource[0].countryId"
+														class="" style="width: 100%;"
+														on-select="onCountryChangeCustomerBaby()"> <ui-select-match>{{$select.selected.countryName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in CitizenSource | filter:$select.search">
+													{{x.countryName}} </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.company.name"></label>
+													<span class="red" ng-show="companyNameCus">(*)</span></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control" ng-disabled="true"
+														ng-model="model.companyNameBaby" name="CompanyName" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.province"></label>
+													<span class="red" ng-show="provinceCus">(*)</span> </label>
+												<div class="col-md-4" id="ProvinceCustomerDivBaby">
+													<ui-select name="ProvinceCustomer"
+														ng-model="model.provinceCustomerBaby" class=""
+														style="width: 100%;"
+														on-select="onSelectedChangeProvinceCustomerBaby()">
+													<ui-select-match placeholder="Tỉnh/Thành phố...">{{$select.selected.provinceName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in ProvinceSource | filter:$select.search">
+													<span class="ng-binding">{{x.provinceName}}</span> </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.district"></label>
+													<span class="red" ng-show="districtCus">(*)</span> </label>
+
+												<div class="col-md-4" id="DistrictCustomerDivBaby">
+													<ui-select ng-model="model.districtCustomerBaby" class=""
+														style="width: 100%;"
+														on-select="onSelectedDistrictCustomerBaby()">
+													<ui-select-match placeholder="Quận /Huyện...">{{$select.selected.districtName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in DistrictSourceCustomerBaby | filter:$select.search">
+													{{x.districtName}} </ui-select-choices> </ui-select>
+												</div>
+
+											</div>
+											<!-- DatBD2 -->
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.address"></label>
+													<span class="red" ng-show="addressCus">(*)</span> </label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.addressCustomerBaby"
+														name="AddressCustomer" />
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.serial"></label>
+													<span class="red" ng-show="serialSimSub">(*)</span> </label>
+												<div class="col-md-4">
+													<input ng-model="model.numberSIM" name="NumberSIM"
+														type="text" class="form-control" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.package.type"></label>
+													<span class="red" ng-show="packageTypeCus">(*)</span> </label>
+
+												<div class="col-md-4" id="idPackageTypeDivBaby">
+													<ui-select ng-model="model.packageTypeBaby" class=""
+														style="width: 100%;"
+														on-select="onPackageTypeCustomerChangeBaby()">
+													<ui-select-match placeholder="Chọn gói cước...">{{$select.selected.name}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.value as x in PackageTypeSource | filter:$select.search">
+													{{x.name}} </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.cus.label.msisdn"></label><span
+													class="red" ng-show="subscriberNumberSub">(*)</span> </label>
+												<div class="col-md-4">
+													<input ng-disabled="true" ng-model="model.subDataNumber"
+														name="SubScriberCustomerNumber" type="text"
+														class="form-control" maxlength="11" />
+												</div>
+											</div>
+
+										</div>
+										<!-- Kết thúc thêm mới -->
+										<div class="form-group"></div>
+
+										<fieldset class="fieldsetcustom" style="margin-top: 30px;">
+											<div class="form-group">
+												<div class="col-md">
+													<h6 class="form-section">
+														<label translate="vnm.form_mnp.mnp_prepaid.cus.file.title"></label>
+													</h6>
+												</div>
+											</div>
+
+											<!-- Begin List image  -->
+											<div class="form-group">
+												<!-- DatBD2 -->
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtGPKD)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewGPKD}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải GPKD </span> <input
+																	type="file" id="btnFileUploadGPKD" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewGPKD','fileExtGPKD','attachMentIdGPKD','attachMentTypeGPKD1')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadGPKD','fileExtGPKD','attachMentIdGPKD')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdGPKD"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeGPKD1" class="form-control"
+																	value="CUS_GPKD" />
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtGPKD2)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewGPKD2}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải GPKD2 </span> <input
+																	type="file" id="btnFileUploadGPKD2" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewGPKD2','fileExtGPKD2','attachMentIdGPKD2','attachMentTypeGPKD2')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadGPKD2','fileExtGPKD2','attachMentIdGPKD2')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdGPKD2"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeGPKD2" class="form-control"
+																	value="CUS_GPKD2" />
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtDSKHC)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewDSKHC}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải DSKH con </span> <input
+																	type="file" id="btnFileUploadDSKHC" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewDSKHC','fileExtDSKHC','attachMentIdDSKHC','attachMentTypeDSKHC')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadDSKHC','fileExtDSKHC','attachMentIdDSKHC')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdDSKHC"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeDSKHC" class="form-control"
+																	value="CUS_DSCN" />
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtCMT1parent)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewparent}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải CMT1 đại diện </span>
+																	<input type="file" id="btnFileUploadCMT1parent"
+																	nv-file-select="" uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewparent','fileExtCMT1parent','attachMentIdCMT1parent','attachMentTypeparent')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadCMT1parent','fileExtCMT1parent','attachMentIdCMT1parent')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdCMT1parent"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeparent" class="form-control"
+																	value="CUS_CMT1_PAR" />
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtCMT2parent)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreview2parent}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải CMT2 đại diện</span> <input
+																	type="file" id="btnFileUploadCMT2parent"
+																	nv-file-select="" uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreview2parent','fileExtCMT2parent','attachMentIdCMT2parent','attachMentTypeCMT2parent')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+															application/msword, application/vnd.ms-excel, 
+															application/pdf " />
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadCMT2parent','fileExtCMT2parent','attachMentIdCMT2parent')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdCMT2parent"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeCMT2parent" class="form-control"
+																	value="CUS_CMT2_PAR" />
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtKHparent)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewKHparent}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải KH đại diện </span> <input
+																	type="file" id="btnFileUploadKHparent"
+																	nv-file-select="" uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewKHparent','fileExtKHparent','attachMentIdKHparent','attachMentTypeKH2parent')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadKHparent','fileExtKHparent','attachMentIdKHparent')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdKHparent"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeKH2parent" class="form-control"
+																	value="CUS_KH_PAR" />
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- END DATBD2 -->
+
+
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtHD1)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewHD1}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải HĐ1 </span> <input
+																	type="file" id="btnFileUploadHD1" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewHD1','fileExtHD1','attachMentIdHD1','attachMentTypeHD1')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadHD1','fileExtHD1','attachMentIdHD1')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdHD1"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeHD1" class="form-control"
+																	value="CUS_HD1" />
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtHD2)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewHD2}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new">Tải HĐ2</span> <input
+																	type="file" id="btnFileUploadHD2" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewHD2','fileExtHD2','attachMentIdHD2','attachMentTypeHD2')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadHD2','fileExtHD2','attachMentIdHD2')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdHD2"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeHD2" class="form-control"
+																	value="CUS_HD2" />
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtCMT1)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreview}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải CMT1 </span> <input
+																	type="file" id="btnFileUploadCMT1" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreview','fileExtCMT1','attachMentIdCMT1','attachMentType')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadCMT1','fileExtCMT1','attachMentIdCMT1')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdCMT1"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentType" class="form-control"
+																	value="CUS_CMT1" />
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtCMT2)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreview2}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải CMT2 </span> <input
+																	type="file" id="btnFileUploadCMT2" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreview2','fileExtCMT2','attachMentIdCMT2','attachMentTypeCMT2')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+															application/msword, application/vnd.ms-excel, 
+															application/pdf " />
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadCMT2','fileExtCMT2','attachMentIdCMT2')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdCMT2"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeCMT2" class="form-control"
+																	value="CUS_CMT2" />
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtKH)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewKH}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải KH </span> <input
+																	type="file" id="btnFileUploadKH" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewKH','fileExtKH','attachMentIdKH','attachMentTypeKH2')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadKH','fileExtKH','attachMentIdKH')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdKH"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeKH2" class="form-control"
+																	value="CUS_KH" />
+															</div>
+														</div>
+													</div>
+												</div>
+
+
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtHS1)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewHS1}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải HS1</span> <input
+																	type="file" id="btnFileUploadHS1" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewHS1','fileExtHS1','attachMentIdHS1','attachMentTypeHS1')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadHS1','fileExtHS1','attachMentIdHS1')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdHS1"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeHS1" class="form-control"
+																	value="CUS_HS1" />
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtHS2)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewHS2}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải HS2 </span> <input
+																	type="file" id="btnFileUploadHS2" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewHS2','fileExtHS2','attachMentIdHS2','attachMentTypeHS2')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadHS2','fileExtHS2','attachMentIdHS2')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdHS2"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeHS2" class="form-control"
+																	value="CUS_HS2" />
+															</div>
+														</div>
+													</div>
+												</div>
+
+
+
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtSUB_HD1)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewSUB_HD1}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải HĐ1 TB </span> <input
+																	type="file" id="btnFileUploadSUB_HD1" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewSUB_HD1','fileExtSUB_HD1','attachMentIdSUB_HD1','attachMentTypeSUB_HD1')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadSUB_HD1','fileExtSUB_HD1','attachMentIdSUB_HD1')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdSUB_HD1"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeSUB_HD1" class="form-control"
+																	value="CUS_SUB_HD1" />
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtSUB_HD2)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewSUB_HD2}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải HĐ2 TB </span> <input
+																	type="file" id="btnFileUploadSUB_HD2" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewSUB_HD2','fileExtSUB_HD2','attachMentIdSUB_HD2','attachMentTypeSUB_HD2')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																application/msword, application/vnd.ms-excel, 
+																application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadSUB_HD2','fileExtSUB_HD2','attachMentIdSUB_HD2')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdSUB_HD2"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeSUB_HD2" class="form-control"
+																	value="CUS_SUB_HD2" />
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<div class="thumbailClass">
+																	<img class="thumb img-thumbnail"
+																		ng-if="isImage(model.fileExtGUQ)"
+																		ng-click="imgZoom($event)"
+																		ng-src="{{model.imagePreviewGUQ}}" alt="" />
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="form-group">
+															<div class="col-md-́8" align="center">
+																<span class="btn blue-hoki  btn-file thumBailText">
+																	<span class="fileinput-new"> Tải GUQ </span> <input
+																	type="file" id="btnFileUploadGUQ" nv-file-select=""
+																	uploader="uploaderCustomer"
+																	onchange="angular.element(this).scope().uploadedFilePreview(this, 'imagePreviewGUQ','fileExtGUQ','attachMentIdGUQ','attachMentTypeGUQ')"
+																	name="attachement"
+																	accept="image/png, image/jpeg, image/jpg, 
+																			application/msword, application/vnd.ms-excel, 
+																			application/pdf " />
+
+																</span>
+																<button type="button"
+																	class="btn btn-primary thumBailText"
+																	ng-click="deleteImage('btnFileUploadGUQ','fileExtGUQ','attachMentIdGUQ')">Xóa
+																	ảnh</button>
+																<input type="hidden" id="attachMentIdGUQ"
+																	class="form-control" /> <input type="hidden"
+																	id="attachMentTypeGUQ" class="form-control"
+																	value="CUS_GUQ" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- End List image  -->
+										</fieldset>
+									</div>
+									<!-- End Khach Hang Thue Bao -->
+								</div>
+							</div>
+
+						</div>
+
+
+						<div class="form-group">
+							<div class="col-md-12" style="text-align: center;">
+								<button type="button" class="btn btn-primary"
+									ng-click="onclickConfirmSave()">
+									<i class="fa fa-save"></i> <label
+										translate="vnm.form_mnp.mnp_prepaid.npr.btn.registration"></label>
+								</button>
+							</div>
+
+							<!-- 							<div class="col-md-6" style="text-align: center;"> -->
+							<!-- 								<button type="button" class="btn btn-primary" ng-click="save()"> -->
+							<!-- 									<i class="glyphicon glyphicon-print"></i> In phiếu thu -->
+							<!-- 								</button> -->
+							<!-- 							</div> -->
+						</div>
+
+					</form>
+				</div>
+			</div>
+
+			<div class="modal fade" id="dialogAttetion" role="dialog">
+				<div class="modal-dialog " style="min-width: 400px;">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Thông báo</h4>
+						</div>
+						<div class="modal-body">
+							<label id="messageInfo">message</label>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn red" data-dismiss="modal">
+								<i class="glyphicon"></i> Close
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="dialogAttetionList" role="dialog">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content" style="width: 450px;">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Thông báo</h4>
+						</div>
+						<div class="modal-body" align="center">
+							<label id="messageInfoHeader"></label>
+							<div>
+								<div style="padding-left: 20px;" ng-repeat="x in listMessage">
+									{{x}}</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn red" data-dismiss="modal">
+								<i class="glyphicon"></i> Close
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<img src="" class="imagepreviewZoom" style="width: 100%;" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>

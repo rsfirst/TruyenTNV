@@ -1,0 +1,619 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Xác nhận số chuyển mạng đi</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/mnp_registration/mnp_confirm_portout.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-portout" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"> <span
+							translate="vnm.form_mnp.mnp_portout.page.title"></span></span>
+					</div>
+					<div class="actions">
+						<a class="btn btn-circle btn-icon-only btn-default fullscreen"
+							href="#" data-original-title="" title=""> </a>
+					</div>
+				</div>
+
+				<div class="portlet-body form">
+					<form name="frm_registration_prepaid"
+						class="form-horizontal  form-bordered" method="post"
+						ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<fieldset class="fieldsetcustom" style="padding-bottom: 20px;">
+									<div class="form-group">
+										<h5 class="form-section">
+											<label
+												translate="vnm.form_mnp.mnp_portout.label.information.search"></label>
+										</h5>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-2"
+											translate="vnm.form_mnp.mnp_portout.label.search.msisdn">
+										</label>
+
+										<div class="col-md-3">
+											<input type="text" class="form-control"
+												ng-model="model.msisdn" name="msisdn" />
+										</div>
+
+										<label class="control-label col-md-2"
+											translate="vnm.form_mnp.mnp_portout.label.search.transactionid"></label>
+										<div class="col-md-3">
+											<input type="text" class="form-control"
+												ng-model="model.transactionID" name="transactionID" />
+										</div>
+
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-2"
+											translate="vnm.form_mnp.mnp_portout.label.search.date.start"></label>
+										<div class="col-md-3">
+											<input ng-model="model.startDate" id="startDateID"
+												name="StartDate" datetime-picker="" date-only=""
+												date-format="DD/MM/YYYY" class="form-control"
+												placeholder=" / /" />
+										</div>
+										<label class="control-label col-md-2"
+											translate="vnm.form_mnp.mnp_portout.label.search.date.end"></label>
+										<div class="col-md-3">
+											<input ng-model="model.endDate" id="endDateID" name="EndDate"
+												datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+												class="form-control" placeholder=" / /" />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-2"
+											translate="vnm.form_mnp.mnp_portout.label.search.rno.network">
+										</label>
+										<div class="col-md-3">
+											<ui-select ng-model="model.receiveNetwork" class=""
+												style="width: 100%;"> <ui-select-match
+												placeholder="Chọn nhà mạng...">{{$select.selected.networkName}}</ui-select-match>
+											<ui-select-choices
+												repeat="x.networkId as x in DonorSource | filter:$select.search">
+											{{x.networkName}} </ui-select-choices> </ui-select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="col-md-12" style="text-align: center;">
+											<button type="button" class="btn btn-primary"
+												style="height: 30px;" ng-click="searchListNPRPortOut()">
+												<i class="fa fa-search"></i> <label
+													translate="vnm.form_mnp.mnp_portout.npr.btn.search"></label>
+											</button>
+										</div>
+									</div>
+								</fieldset>
+
+								<div ng-show="dataTableNPRPortOut.length>0">
+									<fieldset class="fieldsetcustom" style="padding-bottom: 30px;">
+										<h5 class="form-section">
+
+											<label
+												translate="vnm.form_mnp.mnp_portout.label.result.list.portout"></label>
+										</h5>
+										<div class="col-md-12">
+											<div class="table-scrollable">
+												<table ng-table="tableParamsNPRPortOut" class="table">
+													<tr ng-repeat="item in $data"
+														ng-class="{true:'active', false:''}[item.nprId == rowHighlightNPRPortOut.nprId]">
+														<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+														<td title="'Mã YCCM'"
+															ng-click="viewInformationPortOutDetail(item)"
+															style="min-width: 180px" align="center"
+															sortable="'cchTransId'">{{item.cchTransId}}</td>
+
+														<td title="'Tên KH'"
+															ng-click="viewInformationPortOutDetail(item)"
+															style="min-width: 180px" align="center"
+															sortable="'subdataSubscriberName'">{{item.subdataSubscriberName}}</td>
+
+														<td title="'Thuê bao đại diện'"
+															ng-click="viewInformationPortOutDetail(item)"
+															style="min-width: 130px" align="center"
+															sortable="'subdataContactNumber'">{{item.subdataContactNumber}}</td>
+
+														<td title="'Loại giấy tờ'"
+															ng-click="viewInformationPortOutDetail(item)"
+															style="min-width: 130px" align="center"
+															sortable="'subdataDocTypeStr'">{{item.subdataDocTypeStr}}</td>
+
+														<td title="'Ngày cấp'"
+															ng-click="viewInformationPortOutDetail(item)"
+															style="min-width: 130px" align="center"
+															sortable="'subdataDocIssueDateStr'">{{item.subdataDocIssueDateStr}}</td>
+
+														<td title="'Nơi cấp'"
+															ng-click="viewInformationPortOutDetail(item)"
+															style="min-width: 130px" align="center"
+															sortable="'subdataDocIssuePlace'">{{item.subdataDocIssuePlace}}</td>
+
+														<td title="'Nhà Mạng Chuyển Đến'"
+															sortable="'receipientStr'"
+															ng-click="viewInformationPortOutDetail(item)"
+															style="min-width: 100px" align="center">{{item.receipientStr}}</td>
+
+														<td title="'Ngày nhận YCCM'"
+															ng-click="viewInformationPortOutDetail(item)"
+															sortable="'createdDateStr'">{{item.createdDateStr}}</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+
+								<ul class="nav nav-tabs ">
+									<li class="active"><a href="#thong-tin-chuyen-mang"
+										data-toggle="tab" aria-expanded="false"><span
+											translate="vnm.form_mnp.mnp_portout.tab.npr.title"></span></a></li>
+									<li><a href="#thong-tin-khach-hang-va-thue-bao"
+										ng-click="onclickTabDanhSach()" data-toggle="tab"
+										aria-expanded="true"><span
+											translate="vnm.form_mnp.mnp_portout.tab.cus.title"></span></a></li>
+								</ul>
+
+								<div class="tab-content">
+									<div class="tab-pane  active" id="thong-tin-chuyen-mang">
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_portout.npr.customertype"></label>
+												<span class="red" ng-show="customerTypeNPR">(*)</span>
+											</label>
+
+											<div class="col-md-4" id="idCustomerTypeNPRDiv">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="nprDetailSelectedPortOutModal.subTypeStr"
+													name="FullName" value="" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_portout.npr.fullName"></label><span
+												class="red" ng-show="fullNameNPR">(*)</span>
+											</label>
+
+											<div class="col-md-4">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="nprDetailSelectedPortOutModal.subdataSubscriberName"
+													name="FullName" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_portout.npr.document.type"></label>
+												<span class="red" ng-show="documentIssueTypeNPR">(*)</span>
+											</label>
+											<div class="col-md-4" id="idDocumentTypeDiv">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="nprDetailSelectedPortOutModal.subdataDocTypeStr"
+													name="FullName" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_portout.npr.doc.issue.number"></label>
+												<span class="red" ng-show="documentIssueNumberNPR">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input id="Test" type="text" class="form-control"
+													ng-model="nprDetailSelectedPortOutModal.subdataDocNumber"
+													ng-disabled="true" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_portout.npr.document.issue.date"></label>
+												<span class="red" ng-show="documentIssueDateNPR">(*)</span></label>
+											<div class="col-md-4">
+												<input id="documentIssueDate"
+													ng-model="nprDetailSelectedPortOutModal.subdataDocIssueDateStr"
+													name="DocumentIssueDate" ng-disabled="true"
+													class="form-control" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_portout.npr.document.issue.place"></label><span
+												class="red" ng-show="documentIssuePlaceNPR">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input type="text"
+													ng-model="nprDetailSelectedPortOutModal.subdataDocIssuePlace"
+													class="form-control" name="DocumentIssuePlace"
+													ng-disabled="true" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.country"></label> <span
+												class="red" ng-show="countryNPR">(*)</span> </label>
+
+											<div class="col-md-4" id="idCitizenDiv">
+												<input type="text"
+													ng-model="nprDetailSelectedPortOutModal.country"
+													ng-disabled="true" class="form-control"
+													value="{{nprDetailSelectedPortOutModal.country}}" />
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.email"></label></label>
+											<div class="col-md-4">
+												<input type="text"
+													ng-model="nprDetailSelectedPortOutModal.subdataEmail"
+													class="form-control" ng-disabled="true" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.province"></label> <span
+												class="red" ng-show="provinceNPR">(*)</span> </label>
+
+											<div class="col-md-4" id="idSelectDivProvince">
+												<input type="text"
+													ng-model="nprDetailSelectedPortOutModal.province"
+													class="form-control" ng-disabled="true" />
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.district"></label> <span
+												class="red" ng-show="districtNPR">(*)</span> </label>
+
+											<div class="col-md-4" id="divDistrictId">
+												<input type="text"
+													ng-model="nprDetailSelectedPortOutModal.district"
+													class="form-control" ng-disabled="true" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.address"></label> <span
+												class="red" ng-show="addressNPR">(*)</span> </label>
+
+											<div class="col-md-10">
+												<input type="text" class="form-control"
+													ng-model="nprDetailSelectedPortOutModal.subdataAddress"
+													name="Address" ng-disabled="true" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.reprentative.name"></label></label>
+											<div class="col-md-4">
+												<input
+													ng-model="nprDetailSelectedPortOutModal.subdataSubReprentative"
+													name="ReprentativeName" type="text" class="form-control"
+													ng-disabled="true" />
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.representative.position"></label></label>
+											<div class="col-md-4">
+												<input ng-model="nprDetailSelectedPortOutModal.RepresentativePosition"
+													name="subdataRepPosition"
+													type="text" class="form-control" ng-disabled="true" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.representative.docnumber"></label></label>
+											<div class="col-md-4">
+												<input
+													ng-model="nprDetailSelectedPortOutModal.subdataRepDocNumber"
+													ng-disabled="true" name="RepresentativeDocNumber"
+													type="text" class="form-control" />
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.representative.doc.date"></label></label>
+											<div class="col-md-4">
+												<input id="RepresentativeDocDate" ng-disabled="true"
+													ng-model="nprDetailSelectedPortOutModal.subdataRepIssueDate"
+													name="RepresentativeDocDate" class="form-control" />
+											</div>
+										</div>
+
+										<br />
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.donor"></label> <span
+												class="red" ng-show="donorNPR">(*)</span> </label>
+
+											<div class="col-md-4" id="idDonorDiv">
+												<p class="form-control-static">
+													<span class="label label-vnm" translate="vnm.lable.vnm.name">  </span>
+												</p>
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.receipient"></label></label>
+											<div class="col-md-4">
+												<input id="RepresentativeDocDate" ng-disabled="true"
+													ng-model="nprDetailSelectedPortOutModal.receipientStr"
+													name="receipientStr" class="form-control" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.subdata.number"></label>
+												<span class="red" ng-show="subscriberNumberNPR">(*)</span> </label>
+											<div class="col-md-4">
+												<input
+													ng-model="nprDetailSelectedPortOutModal.subdataContactNumber"
+													class="form-control" ng-disabled="true"
+													name="SubdataDNONumber" />
+											</div>
+
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.dno.contract.number"></label></label>
+											<div class="col-md-4">
+												<input type="text"
+													ng-model="nprDetailSelectedPortOutModal.subdataDnoContractNumber"
+													name="DnoContractNumber" ng-disabled="true"
+													class="form-control" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.sub.dno.contract.date"></label></label>
+											<div class="col-md-4">
+												<input placeholder=" /  /  /" id="subDNOContractDateRes"
+													ng-model="nprDetailSelectedPortOutModal.subdataDnoContractDateRes"
+													name="SubDNOContractDateRes" ng-disabled="true"
+													class="form-control" />
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.npr.comments"></label></label>
+											<div class="col-md-4">
+												<input type="text"
+													ng-model="nprDetailSelectedPortOutModal.comments"
+													name="Comments" class="form-control" ng-disabled="true" />
+											</div>
+										</div>
+
+										<h3 class="form-section" style="padding-top: 30px;">
+											<label translate="vnm.form_mnp.mnp_prepaid.npr.file.title"></label>
+										</h3>
+										<table ng-table="tableAttachmentDataPortOutDetail"
+											class="table">
+											<tr ng-repeat="item in $data">
+												<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+												<td title="'Tên File'" style="min-width: 180px"
+													align="center" sortable="'fileName'">{{item.fileName}}</td>
+
+												<td title="'Ghi Chú'" style="min-width: 180px"
+													align="center" sortable="'note'">{{item.note}}</td>
+												<td title="'Download'" style="min-width: 130px"
+													align="center" sortable="'actionDateStr'"><img
+													src="/images/mnp_image_preview_icon.png"
+													title="{{item.fileName}}" width="20px" height="25px"
+													ng-click="downloadFileAttachMent(item)" /></td>
+											</tr>
+										</table>
+
+									</div>
+
+									<!-- Begin Khach Hang Thue Bao -->
+									<div class="tab-pane" id="thong-tin-khach-hang-va-thue-bao">
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.cus.label.subscriber.number"></label>
+												<span class="red" ng-show="customerTypeCus">(*)</span> </label>
+
+											<div class="col-md-3" id="SubscriberNumber">
+												<input type="text" class="form-control"
+													ng-disabled="subscriberNumberDis"
+													ng-model="model.subscriberNumber" name="SubscriberNumber" />
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_portout.cus.account.type"></label>
+												<span class="red" ng-show="surNameCus">(*)</span> </label>
+
+											<div class="col-md-3" id="SurNameCustomerDiv">
+												<input type="text" class="form-control"
+													ng-disabled="accountTypeDis" ng-model="model.accountType"
+													name="AccountType" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.mnp_portout.cus.label.approve"></label>
+
+											<div class="col-md-3" ng-disabled="approvedNprDis">
+												<select class="form-control" ng-disabled="approvedNprDis"
+													ng-model="model.approveNPR"
+													ng-change="onApproveNPRChange()"
+													ng-options="value.Id as value.Title for value in ApproveNPRSource">
+												</select>
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.mnp_portout.cus.label.cancel.reason">
+											</label>
+
+											<div class="col-md-3">
+												<ui-select ng-model="model.rejectReason" class=""
+													placeholder="Chọn lý do..." multiple="" theme="bootstrap"
+													ng-disabled="rejectReasonDis" close-on-select="false" id="rejectReasonId"
+													style="width: 100%; height:24px;"> <ui-select-match>{{$item.Id}}</ui-select-match>
+												<ui-select-choices style="width: 400px;"
+													repeat="x.Id as x in RejectSource | filter:$select.search">
+												<div ng-repeat="tilteSub in x.Title">{{tilteSub}}</div>
+
+												</ui-select-choices> </ui-select>
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.mnp_portout.cus.label.approve.violation">
+											</label>
+
+											<div class="col-md-3">
+												<select class="form-control" ng-disabled="approvedViolation"
+													ng-model="model.approveViolation"
+													ng-change="onApproveViolationChange()"
+													placeholder="Có hậu kiểm/Không hậu kiểm"
+													ng-options="value.Id as value.Title for value in ApproveSource">
+												</select>
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.mnp_portout.cus.label.violation.reason">
+											</label>
+
+											<div class="col-md-3">
+												<select class="form-control"
+													ng-disabled="reasonViolationDis"
+													ng-model="model.violationReason"
+													ng-options="value.Id as value.Title for value in ViolationReasonSource">
+												</select>
+
+											</div>
+										</div>
+
+										<div class="form-group" style="padding-top: 30px;">
+											<div class="col-md-3"></div>
+											<div class="col-md-3" style="text-align: center;">
+												<button type="button" class="btn btn-primary"
+													ng-disabled="!isOpenBtnEdit" style="height: 30px;"
+													ng-click="editInformationPortOut()">
+													<i class="fa fa-save"></i> <label
+														translate="vnm.form_mnp.mnp_portout.npr.btn.edit"></label>
+												</button>
+											</div>
+
+											<div class="col-md-3" style="text-align: left;">
+												<button type="button" class="btn btn-primary"
+													ng-disabled="!isOpenBtnUpdate" style="height: 30px;"
+													ng-click="updateItemSubscriberPortOut()">
+													<i class="fa fa-save"></i> <label
+														translate="vnm.form_mnp.mnp_portout.npr.btn.update"></label>
+												</button>
+											</div>
+
+											<!-- 1190 comment <div class="col-md-3" style="text-align: center;">
+												<button type="button" class="btn btn-primary"
+													ng-disabled="!isOpenBtnAcceptAll" style="height: 30px;"
+													ng-click="updateAcceptAllPortOut()">
+													<i class="fa fa-save"></i> <label
+														translate="vnm.form_mnp.mnp_portout.npr.btn.updateall"></label>
+												</button>
+											</div>
+
+											<div class="col-md-4" style="text-align: center;">
+												<button type="button" class="btn btn-primary"
+													ng-disabled="!isOpenBtnNoneViolationAll"
+													style="height: 30px;"
+													ng-click="updateNoneViolationAllPortOut()">
+													<i class="fa fa-save"></i> <label
+														translate="vnm.form_mnp.mnp_portout.npr.btn.update.all.violation"></label>
+												</button>
+											</div> -->
+										</div>
+
+										<div class="form-group">
+											<div class="table-scrollable">
+												<table ng-table="tableSubscriberPortOut" class="table">
+													<tr ng-repeat="item in $data"
+														ng-class="{true:'active', false:''}[item.nprSubscriberId == rowHighlightSubscriber.nprSubscriberId]">
+														<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+														<td title="'Số thuê bao'"
+															ng-click="viewSubscriberDetail(item)"
+															style="min-width: 180px" align="center"
+															sortable="'msisdn'">{{item.msisdn}}</td>
+
+														<td title="'Loại thuê bao'"
+															ng-click="viewSubscriberDetail(item)"
+															style="min-width: 180px" align="center"
+															sortable="'accountTypeStr'">{{item.accountTypeStr}}</td>
+
+														<td title="'Duyệt YCCM'"
+															ng-click="viewSubscriberDetail(item)"
+															style="min-width: 130px" align="center"
+															sortable="'approvedNPRStr'">{{item.approvedNPRStr}}</td>
+
+														<td title="'Lý do từ chối chuyển mạng'"
+															style="min-width: 500px"
+															ng-click="viewSubscriberDetail(item)"
+															sortable="'rejectReason'">
+															<div ng-repeat="itemNote in item.listRejectReasonText"
+																style="font-size: 12px;">
+																{{itemNote}}</div>
+														</td>
+
+														<td title="'Duyệt hậu kiểm'"
+															sortable="'approveViolationStr'"
+															ng-click="viewSubscriberDetail(item)"
+															style="min-width: 100px" align="center">{{item.approveViolationStr}}</td>
+
+														<td title="'Lý do hậu kiểm'" style="min-width: 150px"
+															ng-click="viewSubscriberDetail(item)"
+															sortable="'violationReasonStr'">{{item.violationReasonStr}}</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div>
+									<!-- End Khach Hang Thue Bao -->
+								</div>
+							</div>
+
+						</div>
+						<div class="form-group">
+							<div class="col-md-6" style="text-align: right;">
+								<button type="button" class="btn btn-primary"
+									ng-disabled="!checkEnableBtnSendAccept()" style="height: 30px;"
+									ng-click="onclickConfirmAcceptPortOut()">
+									<i class="fa fa-save"></i> <label
+										translate="vnm.form_mnp.mnp_portout.npr.btn.accept.port.out"></label>
+								</button>
+							</div>
+
+							<div class="col-md-6" style="text-align: left;">
+								<button type="button" class="btn btn-primary"
+									ng-disabled="!checkEnableBtnSendReject()" style="height: 30px;"
+									ng-click="onclickConfirmRejectPortOut()">
+									<i class="fa fa-save"></i> <label
+										translate="vnm.form_mnp.mnp_portout.npr.btn.cancel.port.out"></label>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>

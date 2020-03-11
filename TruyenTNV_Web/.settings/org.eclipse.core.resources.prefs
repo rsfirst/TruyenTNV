@@ -1,5 +1,11 @@
 eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
 encoding//src/main/resources=UTF-8
-encoding//src/test/java=UTF-8
+encoding//src/main/resources/static/views/shared/countDown.htm=UTF-8
+encoding//src/main/resources/static/views/shared/shop.htm=UTF-8
+encoding//src/main/resources/templates/account/login.html=UTF-8
+encoding//src/main/resources/templates/inventory=UTF-8
+encoding//src/main/resources/templates/inventory/dialogButtonDetail.html=UTF-8
+encoding//src/main/resources/templates/inventory/stockViewInfo.html=UTF-8
+encoding//src/main/resources/templates/layout/fragments/topmenu.html=UTF-8
 encoding/<project>=UTF-8

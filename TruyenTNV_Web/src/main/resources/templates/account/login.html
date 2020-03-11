@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout_blank :: layout_blank">
+<head th:include="layout/layout_blank :: header">
+<title id="pageTitle">Đăng nhập</title>
+
+</head>
+<body th:fragment="content">
+	<script src="/views/account/logincontroller.js" type="text/javascript"></script>
+	<script src="/assets/global/plugins/bootbox.js" type="text/javascript"></script>
+	<div class="login-form" ng-app="app-vnm" ng-controller="ctrl-login">
+		<a class="login-logo" href="#"> <img style="width: 100%;" src="/images/logo.png" />
+		</a>
+		<div class="form-group log-user">
+			<input type="text" class="form-control" placeholder="Tài khoản " id="UserName" ng-model="username" key-enter="login()" /> <i class="fa fa-user"></i>
+		</div>
+
+		<div class="form-group log-status">
+			<input type="password" class="form-control" placeholder="Mật khẩu" id="Passwod" ng-model="password" key-Enter="login()" /> <i class="fa fa-lock"></i>
+		</div>
+
+		<div class="form-group">
+			<label class="link" style="float: left !important; margin-bottom: 5px;"> Ngôn ngữ: </label> <select name="language" id="language" style="width: 100%; height: 35px; color: #666">
+				<option value="en" >Tiếng Anh</option>
+				<option value="vn" selected="selected">Tiếng Việt</option>
+			</select><br />
+		</div>
+
+		<span class="alert">{{error}}</span> <a class="link" href="#">Quên mật khẩu?</a>
+		<button type="button" class="log-btn" key-enter="login()" ng-click="login()">Đăng nhập</button>
+
+	</div>
+
+	<link href="/assets/layouts/login/css/style.css" rel="stylesheet" type="text/css" />
+</body>
+</html>

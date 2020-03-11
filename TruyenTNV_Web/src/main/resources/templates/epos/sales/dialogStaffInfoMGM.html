@@ -1,0 +1,137 @@
+<div>
+
+	<fieldset class="fieldset-primary" style="overflow: scroll; height: 250px;">
+		<div class="col-md-12" style="min-width: 1900px;">
+			<div class="form-group">
+				<div class="form-group">
+					<div class="col-md-12">
+						<table id="tblStaffInfoMGM" class="table-bordered">
+							<thead class="ng-table-sort-header">
+								<tr>
+									<th width="12%" translate="vnm.dialogStaffInfoMGM.column.good.code"></th>
+									<th width="12%" translate="vnm.dialogStaffInfoMGM.column.serial"></th>
+									<th width="12%" translate="vnm.dialogStaffInfoMGM.column.staff.code"></th>
+									<th width="12%" translate="vnm.dialogStaffInfoMGM.column.staff.name"></th>
+									<th width="12%" translate="vnm.dialogStaffInfoMGM.column.customer.code"></th>
+									<th width="10%" translate="vnm.dialogStaffInfoMGM.column.customer.name"></th>
+									<th width="10%" translate="vnm.dialogStaffInfoMGM.column.phone"></th>
+									<th width="10%" translate="vnm.dialogStaffInfoMGM.column.pack.data"></th>
+									<th width="10%" translate="vnm.dialogStaffInfoMGM.column.company"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</fieldset>
+
+
+	<div class="form-group">
+		<div class="col-md-6">
+			<fieldset class="fieldset-primary" style="height: 230px;">
+				<legend class="lengend-primary">
+					<b translate="vnm.dialogStaffInfoMGM.label.staff.intro.title"></b>
+				</legend>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.staff.code"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="20" class="form-control" id="fStaffCodeInfo" ng-model="model.staffCodeInfo" ng-disabled="dStaffCodeInfo" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.staff.name"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="50" class="form-control" id="fStaffNameInfo" ng-model="model.staffNameInfo" ng-disabled="dStaffNameInfo" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.cmt"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="25" class="form-control" id="fCMTStaffInfo" ng-model="model.cmtStaffInfo" ng-disabled="dCMTStaffInfo" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.address"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="100" class="form-control" id="fAddressStaffInfo" ng-model="model.addressStaffInfo" ng-disabled="dAddressStaffInfo" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.company"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="150" class="form-control" id="fCompanyInfo" ng-model="model.companyInfo" ng-disabled="dCompanyInfo" />
+					</div>
+				</div>
+
+			</fieldset>
+		</div>
+
+		<div class="col-md-6">
+			<fieldset class="fieldset-primary" style="height: 230px;">
+				<legend class="lengend-primary">
+					<b translate="vnm.dialogStaffInfoMGM.label.postpaid.title"></b>
+				</legend>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.customer.code"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="20" class="form-control" id="fCusCodeInfo" ng-model="model.cusCodeInfo" ng-disabled="dCusCodeInfo" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.customer.name"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="50" class="form-control" id="fCusNameInfo" ng-model="model.cusNameInfo" ng-disabled="dCusNameInfo" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.cmt"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="25" class="form-control" id="fCMTCusInfo" ng-model="model.cmtCusInfo" ng-disabled="dCMTCusInfo" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.address"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="100" class="form-control" id="fAddressCusInfo" ng-model="model.addressCusInfo" ng-disabled="dAddressCusInfo" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.phone"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="10" class="form-control" id="fPhoneInfo" ng-model="model.phoneInfo" ng-disabled="dPhoneInfo" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-md-3" translate="vnm.dialogStaffInfoMGM.label.pack.data"> </label>
+					<div class="col-md-8">
+						<input type="text" maxlength="10" class="form-control" id="fPackDataInfo" ng-model="model.packDataInfo" ng-disabled="dPackDataInfo" />
+					</div>
+				</div>
+			</fieldset>
+		</div>
+
+	</div>
+
+	<div class="form-group">
+		<div class="col-md-12" style="text-align: center;" id="pnlButtonActionMGM">
+
+			<button type="button" name="btnSave" class="btn btn-primary  btn-primary-100" ng-click="btnInputOnClik()">
+				<i class="fa fa-save"></i> <label translate="vnm.dialogStaffInfoMGM.btn.input"></label>
+			</button>
+
+			<button type="button" name="btnBack" ng-click="btnBackOnClick()" class="btn btn-primary  btn-primary-100">
+				<i class="fa fa-rotate-left"></i> <label translate="vnm.dialogStaffInfoMGM.btn.back"></label>
+			</button>
+		</div>
+		<div class="col-md-12" style="text-align: center;" id="pnlButtonOKMGM">
+			<button type="button" name="search" class="btn btn-primary btn-primary-100" ng-click="accept()">
+				<i class="fa fa-thumbs-o-up"></i> <label translate="vnm.FormWarTransaction.label.button.accept"></label>
+			</button>
+			<button type="button" name="search" class="btn btn-primary btn-primary-100" ng-click="destroy()">
+				<i class="fa fa-trash"></i> <label translate="vnm.FormWarTransaction.label.button.destroy"></label>
+			</button>
+		</div>
+	</div>
+</div>

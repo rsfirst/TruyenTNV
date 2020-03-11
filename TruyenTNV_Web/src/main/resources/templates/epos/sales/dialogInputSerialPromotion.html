@@ -1,0 +1,207 @@
+<div>
+	<fieldset>
+		<b id="lbNote"></b>
+	</fieldset>
+	<fieldset
+		style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+		<legend
+			style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+			<b translate="vnm.dialogInputSerialPromotion.label.search.title"></b>
+		</legend>
+
+		<div class="form-group">
+			<label class="control-label col-md-1"
+				translate="vnm.stock_view_detail.label.from.serial" />
+			<div class="col-md-2">
+				<input type="text" class="form-control" ng-model="model.fromSerial"
+					ng-disabled="isNotSearch" />
+			</div>
+			<label class="control-label col-md-1"
+				translate="vnm.stock_view_detail.label.to.serial" />
+			<div class="col-md-2">
+				<input type="text" class="form-control" ng-model="model.toSerial"
+					ng-disabled="isNotSearch" />
+			</div>
+			<label class="control-label col-md-1"
+				translate="vnm.stock_view_detail.label.number" />
+			<div class="col-md-2">
+				<input type="text" class="form-control" ng-model="model.number"
+					ng-disabled="isNotSearch" onkeypress="return valid_numbers(event)" />
+			</div>
+			<button type="button" name="btnSearch"
+				style="width: 100px; margin-left: 80px;" class="btn btn-primary"
+				ng-click="btnSearchSerialPromotion()" ng-disabled="isNotSearch">
+				<i class="fa fa-search"></i> <label
+					translate="vnm.stock_view_detail.label.btn.search"></label>
+			</button>
+		</div>
+	</fieldset>
+
+	<fieldset
+		style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+		<legend
+			style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+			<b translate="vnm.dialogInputSerialPromotion.label.transfer.title"></b>
+		</legend>
+		<div class="col-md-1nw ">
+			<fieldset class="fieldset-primary"
+				style="overflow: scroll; height: 300px;">
+				<legend class="lengend-primary">
+					<b translate="vnm.dialogInputSerialPromotion.label.deal.title"></b>
+				</legend>
+				<div class="col-md-12">
+					<div class="form-group">
+						<div class="form-group">
+							<div class="col-md-12">
+								<table id="tblSerialDeal" class="table-bordered"
+									style="width: 100%; min-width: 90%;">
+									<thead class="ng-table-sort-header">
+										<tr>
+											<th width="100%" translate="vnm.common_table.column.serial"></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</fieldset>
+
+		</div>
+		<div class="col-md-2nw" style="margin-top: 80px; height: 220px">
+			<div>
+				<button type="button" name="btnDetail"
+					style="width: 90%; margin-left: 5%;" class="btn btn-primary"
+					ng-click="addAllSerial()" ng-disabled="model.showAddSerial">
+					<i></i> <label translate="vnm.common.paging.last"></label>
+				</button>
+			</div>
+			<div>
+				<button type="button" name="btnDetail"
+					style="width: 90%; margin-left: 5%; margin-top: 20px;"
+					class="btn btn-primary" ng-click="addSerial()"
+					ng-disabled="model.showAddSerial">
+					<i></i> <label translate="vnm.common.paging.next"></label>
+				</button>
+			</div>
+			<div>
+				<button type="button" name="btnDetail"
+					style="width: 90%; margin-left: 5%; margin-top: 20px;"
+					class="btn btn-primary" ng-click="removeSerial()"
+					ng-disabled="model.showRemoveSerial">
+					<i></i> <label translate="vnm.common.paging.prev"></label>
+				</button>
+			</div>
+			<div>
+				<button type="button" name="btnDetail"
+					style="width: 90%; margin-left: 5%; margin-top: 20px;"
+					class="btn btn-primary" ng-click="removeAll()"
+					ng-disabled="model.showRemoveSerial">
+					<i></i> <label translate="vnm.common.paging.first"></label>
+				</button>
+			</div>
+		</div>
+		<div class="col-md-1nw ">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label class="control-label col-md-1"
+						translate="vnm.dialogInputSerialPromotion.label.serial" />
+					<div class="col-md-1"></div>
+					<div class="col-md-8">
+						<input type="text" class="form-control" ng-model="model.serial"
+							ng-disabled="!isNotSearch" />
+					</div>
+				</div>
+			</div>
+
+			<fieldset class="fieldset-primary"
+				style="overflow: scroll; height: 272px;">
+				<legend class="lengend-primary">
+					<b translate="vnm.dialogInputSerialPromotion.label.transfer.title"></b>
+
+				</legend>
+				<div class="col-md-12">
+					<div class="form-group">
+						<div class="form-group">
+							<div class="col-md-12">
+								<table id="tblSerialPromotion" class="table-bordered"
+									style="width: 100%; min-width: 90%;">
+									<thead class="ng-table-sort-header">
+										<tr>
+											<th width="20%"
+												translate="vnm.dialogInputSerialPromotion.column.serial"></th>
+											<th width="20%"
+												translate="vnm.dialogInputSerialPromotion.column.phone"></th>
+											<th width="20%"
+												translate="vnm.dialogInputSerialPromotion.column.phone.type"></th>
+											<th width="20%"
+												translate="vnm.dialogInputSerialPromotion.column.pool.type"></th>
+											<th width="20%"
+												translate="vnm.dialogInputSerialPromotion.column.status"></th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</fieldset>
+
+		</div>
+	</fieldset>
+
+	<div class="form-group">
+		<div class="col-md-12" style="text-align: center;">
+
+			<button type="button" name="btnWrite" style="width: 100px"
+				class="btn btn-primary btn-primary-100"
+				ng-click="btnWriteInfoPromotion()" ng-show="showBtn">
+				<i class="fa fa-thumbs-o-up"></i> <label
+					translate="vnm.dialogInputSerialPromotion.btn.write.info"></label>
+			</button>
+
+			<button type="button" name="btnBack" style="width: 100px"
+				ng-click="btnBackSerialPromotion()" ng-show="showBtn"
+				class="btn btn-primary btn-primary-100">
+				<i class="fa fa-rotate-left"></i> <label
+					translate="vnm.common.label.btn.back"></label>
+			</button>
+			<button type="button" name="btnAdd" style="width: 100px"
+				class="btn btn-primary btn-primary-100"
+				ng-click="btnAddSerialPromotion()" ng-show="showBtn">
+				<i class="fa fa-thumbs-o-up"></i> <label
+					translate="vnm.dialogInputSerialPromotion.btn.add"></label>
+			</button>
+
+			<button type="button" name="btnEdit" style="width: 100px"
+				ng-click="btnEditSerialPromotion()" ng-show="showBtn"
+				class="btn btn-primary btn-primary-100">
+				<i class="fa fa-rotate-left"></i> <label
+					translate="vnm.common.btn.edit"></label>
+			</button>
+			<button type="button" name="btnDelete" style="width: 100px"
+				class="btn btn-primary btn-primary-100"
+				ng-click="btnDeletePromotion()" ng-show="showBtn">
+				<i class="fa fa-thumbs-o-up"></i> <label
+					translate="vnm.dialogInputSerialPromotion.btn.delete"></label>
+			</button>
+
+			<button type="button" name="btnApprove" style="width: 100px"
+				class="btn btn-primary btn-primary-100"
+				ng-click="btnApprovePromotion()" ng-show="!showBtn">
+				<i class="fa fa-thumbs-o-up"></i> <label
+					translate="vnm.dialogInputSerialPromotion.btn.approve"></label>
+			</button>
+
+			<button type="button" name="btnBack2" style="width: 100px"
+				class="btn btn-primary btn-primary-100"
+				ng-click="btnBack2Promotion()" ng-show="!showBtn">
+				<i class="fa fa-thumbs-o-up"></i> <label
+					translate="vnm.dialogInputSerialPromotion.btn.back"></label>
+			</button>
+
+		</div>
+	</div>
+</div>

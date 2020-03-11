@@ -1,0 +1,155 @@
+<div ng-show="isShowInformationDetail">
+	<div class="form-group">
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.request.code"></label></label>
+		<div class="col-md-25">
+			<input type="text" class="form-control" ng-disabled="true"
+				ng-model="model.detail_RequestId" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.creater"></label></label>
+		<div class="col-md-25">
+			<input type="text" class="form-control" ng-disabled="true"
+				ng-model="model.detail_Creater" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.create.date"></label></label>
+		<div class="col-md-25">
+			<input ng-model="model.detail_CreateDate" ng-disabled="true"
+				id="idCreateDate" datetime-picker="" date-only=""
+				date-format="DD/MM/YYYY" class="form-control" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.executer"></label> </label>
+		<div class="col-md-25">
+			<input type="text" class="form-control" ng-disabled="true"
+				ng-model="model.detail_UserExecution" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.execute.date"></label> </label>
+		<div class="col-md-25">
+			<input ng-model="model.detail_DateExecution" ng-disabled="true"
+				datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+				class="form-control" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.customer.name"></label> </label>
+		<div class="col-md-25">
+			<input type="text" class="form-control" ng-disabled="true"
+				ng-model="model.detail_CusFullName" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.birth.date"></label></label>
+		<div class="col-md-25">
+			<input ng-model="model.detail_BirthDay" ng-disabled="true"
+				datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+				class="form-control" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.address"></label></label>
+		<div class="col-md-25">
+			<input type="text" class="form-control" ng-disabled="true"
+				ng-model="model.detail_Address" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.phone.number"></label></label>
+		<div class="col-md-25">
+			<input type="text" class="form-control" ng-disabled="true"
+				ng-model="model.detail_PhoneNumber" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.id.card"></label></label>
+		<div class="col-md-25">
+			<input type="text" class="form-control" ng-disabled="true"
+				ng-model="model.detail_IssueNumber" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.place.issue"></label></label>
+		<div class="col-md-25">
+			<input type="text" class="form-control" ng-disabled="true"
+				ng-model="model.detail_IssuePlace" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.date.issue"></label></label>
+		<div class="col-md-25">
+			<input ng-model="model.detail_IssueDate" datetime-picker=""
+				date-only="" ng-disabled="true" date-format="DD/MM/YYYY"
+				class="form-control" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.rejecter"></label></label>
+		<div class="col-md-25">
+			<input type="text" class="form-control"
+				ng-model="model.detail_UserReject" ng-disabled="true" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.reject.date"></label></label>
+		<div class="col-md-25">
+			<input ng-model="model.detail_DateReject" ng-disabled="true"
+				datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+				class="form-control" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.reject.reason"></label></label>
+		<div class="col-md-25">
+
+			<input type="text" class="form-control" ng-disabled="true"
+				ng-model="model.detail_ReasonReject" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.reviewer"></label></label>
+		<div class="col-md-25">
+			<input type="text" class="form-control"
+				ng-model="model.detail_UserReview" ng-disabled="true" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.review.date"></label></label>
+		<div class="col-md-25">
+			<input ng-model="model.detail_DateReview" ng-disabled="true"
+				datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+				class="form-control" />
+		</div>
+
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.review.reason"></label></label>
+		<div class="col-md-25">
+			<input type="text" class="form-control" ng-disabled="true"
+				ng-model="model.detail_ReasonReview" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-15"><label
+			translate="vnm.form_ownership.popup.label.verify.infor"></label></label>
+		<div class="col-md-65">
+			<textarea class="form-control" id="idDetailInforVerify"
+				ng-disabled="true" ng-model="model.detail_InforVerify" rows="5"></textarea>
+		</div>
+	</div>
+</div>

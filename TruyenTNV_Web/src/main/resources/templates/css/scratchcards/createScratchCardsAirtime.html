@@ -1,0 +1,730 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Tạo yêu cầu đổi thẻ cào airtime</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script type="text/ng-template" id="headerCheckboxAdd.html">
+   	 		<input type="checkbox" ng-model="model.checkboxListSerialAirtime" value="" ng-click="checkAllAdd()"/>
+  		</script>
+
+		<script src="/views/css/scratchcards/createScratchCardsAirtime.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-createairtime" id="contentMainCardAirtime"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"> Tạo
+							yêu cầu đổi thẻ cào airtime </span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_createairtime"
+						class="form-horizontal  form-bordered" method="post"
+						ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<ul class="nav nav-tabs ">
+									<li class="active"><a href="#tab_5_1" data-toggle="tab"
+										aria-expanded="false"
+										translate="vnm.air_time.label.tab.title1" /></li>
+
+									<li><a href="#search_airtime" data-toggle="tab"
+										aria-expanded="false"
+										translate="vnm.air_time.label.tab.title2" /></li>
+								</ul>
+
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+
+										<!-- <h3 class="form-section">Điều kiện tìm kiếm</h3> -->
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.air_time.label.input1"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.requestId" name="RequestId" />
+
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.air_time.label.input5"></label>
+											<div class="col-md-3">
+												<ui-select ng-model="model.requestStatus"
+													ng-init="model.requestStatus = RequestStatusSource[1].Id"
+													ng-disabled="true" class="" style="width: 100%;">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in RequestStatusSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.air_time.label.input2"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.shtNumber" name="ShtNumber" />
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.air_time.label.input6"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control"
+													ng-model="model.contactNumber" name="ContactNumber" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.air_time.label.input3"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control"
+													ng-disabled="isDisabledSerialCard"
+													ng-model="model.serialCard" name="SerialCard" />
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.air_time.label.input7"></label>
+											<div class="col-md-3">
+												<ui-select ng-model="model.statusCard"
+													ng-init="model.statusCard = StatusCardSource[0].Id"
+													ng-disabled="true" class="" style="width: 100%;">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in StatusCardSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.air_time.label.input4"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.valueCard" name="ValueCard" />
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.air_time.label.input8"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.raggedCardStatus" name="RaggedCardStatus" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.air_time.label.input9"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.createUser" name="CreateUser" />
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.air_time.label.input10"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.createDate" name="createDate" />
+											</div>
+										</div>
+
+										<div class="form-group" style="padding-top: 30px;">
+											<!-- 											<div class="col-md-3" align="center"></div> -->
+											<div class="col-md-6" align="right">
+												<button type="button" class="btn btn-primary"
+													ng-disabled="isDisabledButtonSave"
+													ng-click="createRequestChangeCardAirtimeFunction()">
+													<i class=""></i> <span translate="vnm.air_time.label.btn2"></span>
+												</button>
+											</div>
+
+											<div class="col-md-6" align="left">
+												<button type="button" class="btn btn-primary"
+													ng-click="resetFormAfterSuccess()">
+													<i class=""></i> <span translate="vnm.air_time.label.btn3"></span>
+												</button>
+											</div>
+											<!-- 											<div class="col-md-3" align="center"></div> -->
+										</div>
+
+										<div class="form-group" style="padding-top: 30px;">
+											<div class="col-md-4">
+												<span class="btn blue-hoki  btn-file"> <i
+													class="fa fa-cloud-upload"></i> <span
+													translate="vnm.air_time.label.btn5"></span><input
+													type="file"
+													ng-click="uploadFileTemplateListSerial(uploaderListSerial, $event)"
+													nv-file-select="" uploader="uploaderListSerial" multiple="" />
+												</span>
+
+												<button type="button" class="btn"
+													style="background-color: blue; color: white;"
+													ng-click="downloadFileTemplateServer()">
+													<span class="fa fa-download"></span>Tải file mẫu
+												</button>
+
+												<button type="button" class="btn btn-danger btn-s"
+													ng-click="removeAllFileListSerial()"
+													ng-disabled="!uploaderListSerial.queue.length">
+													<span class="glyphicon glyphicon-trash"></span> Xóa file
+												</button>
+											</div>
+
+											<label class="control-label col-md-1">Tên file</label>
+											<div class="col-md-4">
+												<input type="text" ng-disabled="true"
+													placeholder="Filename...." class="form-control"
+													ng-model="fileNameListSerialUpload"
+													name="FileNameListSerialUpload" />
+											</div>
+										</div>
+
+										<div class="form-group" style="padding-top: 10px;">
+											<div class="col-md-3" align="center">
+												<h3 class="form-section">
+													<span translate="vnm.air_time.label.title1"></span>
+												</h3>
+											</div>
+											<div class="" style="margin-top: 10px;">
+												<!-- <div class="table-scrollable">
+													<table ng-table="tableParamsListSerial"
+														class="table table-striped table-bordered"
+														show-filter="false">
+														<tr ng-repeat="item in $data"
+															ng-click="fillDetail(item,$index)"
+															ng-class="{true:'active', false:''}[itemSelectedDetail==item]">
+															<td title="'Mã thẻ'" sortable="'raggedCardId'"></td>
+															<td title="'Serial thẻ'" sortable="'newSerial'">{{item.newSerial}}</td>
+															<td title="'Trạng thái thẻ'" sortable="'statusCard'">{{item.statusCard
+																=== "0" ? "Lập" : item.cardStatus === "1" ? "Từ chối" :
+																item.cardStatus === "2" ? "Đã khóa thẻ" :
+																item.cardStatus === "3" ? "Đã đổi thẻ" : item.cardStatus
+																=== "4" ? "Đã cộng HH" :"Hủy" }}</td>
+
+															<td title="'Trạng thái lỗi'" sortable="'serial'"><div
+																	ng-repeat="itemNote in item.listNoteRecord track by $index">
+																	{{itemNote}}</div></td>
+
+															<td header="'headerCheckboxAdd.html'" align="center"><input
+																type="checkbox" ng-click="selectOrRemoveGoodItem(item)"
+																ng-model="item.typeCheckBox" /></td>
+
+														</tr>
+														<tr ng-if="totalRequestDetail == 0">
+															<td colspan="7">Không có dữ liệu</td>
+														</tr>
+														<tr>
+															<td colspan="15" align="right">
+																<h3 class="form-section">Số
+																	lượng:{{totalRequestDetail}}</h3>
+															</td>
+														</tr>
+													</table>
+												</div> -->
+												<div class="table-scrollable">
+													<table ng-table="tableParamsListSerial"
+														class="table table-striped table-bordered"
+														show-filter="false">
+														<tr ng-repeat="item in $data"
+															ng-click="fillDetailFunction(item)"
+															ng-class="{true:'active', false:''}[item.serial == rowHightLight.serial]">
+															<td header="'headerCheckboxAdd.html'" align="center"><input
+																type="checkbox" ng-click="selectOrRemoveGoodItem(item)"
+																ng-model="item.typeCheckBox" /></td>
+
+															<td title="'Mã thẻ'" sortable="'raggedCardId'">{{item.raggedCardId}}</td>
+															<td title="'Serial thẻ'" sortable="'serial'">{{item.serial}}</td>
+															<td title="'Trạng thái thẻ'" sortable="'cardStatus'">{{item.cardStatus
+																=== "0" ? "Lập" : item.cardStatus === "1" ? "Từ chối" :
+																item.cardStatus === "2" ? "Đã khóa thẻ" :
+																item.cardStatus === "3" ? "Đã đổi thẻ" : item.cardStatus
+																=== "4" ? "Đã cộng HH" :"Hủy" }}</td>
+															<td title="'Tình trạng thẻ'"
+																sortable="'raggedCardStatus'">{{item.raggedCardStatus}}</td>
+															<td title="'Mệnh giá'" sortable="'cardValue'">{{item.cardValue}}</td>
+															<td title="'Người từ chối'" sortable="'userReject'">{{item.userReject}}</td>
+															<td title="'Ngày từ chối'" sortable="'dateReject'">{{item.dateReject.split("-").reverse().join("/")}}</td>
+															<td title="'Ngày thay đổi'" sortable="'lastModify'">{{item.lastModify.split("-").reverse().join("/")}}</td>
+															<td title="'Lý do từ chối'" sortable="'rejectDesciption'">{{item.rejectDesciption}}</td>
+															<td title="'Người khóa thẻ'" sortable="'userLock'">{{item.userLock}}</td>
+															<td title="'Ngày khóa thẻ'" sortable="'dateLock'">{{item.dateLock.split("-").reverse().join("/")}}</td>
+															<td title="'Người đổi thẻ'" sortable="'userChange'">{{item.userChange}}</td>
+															<td title="'Ngày đổi thẻ'" sortable="'dateChange'">{{item.dateChange.split("-").reverse().join("/")}}</td>
+															<td title="'Người hủy'" sortable="'userDestroy'">{{item.userDestroy}}</td>
+															<td title="'Ngày hủy'" sortable="'dateDestroy'">{{item.dateDestroy.split("-").reverse().join("/")}}</td>
+															<td title="'Trạng thái lỗi'" sortable="'listNoteRecord'"><div
+																	ng-repeat="itemNote in item.listNoteRecord track by $index">
+																	{{itemNote}}</div></td>
+														</tr>
+														<tr ng-if="totalRequestDetail == 0">
+															<td colspan="7">Không có dữ liệu</td>
+														</tr>
+														<tr>
+															<td colspan="20" align="right">
+																<h3 class="form-section">Số
+																	lượng:{{dataListSerialUpload.length}}</h3>
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group" style="padding-top: 20px;">
+											<h3 class="form-section"
+												translate="vnm.air_time.label.title2"></h3>
+											<div class="col-md-12">
+												<span class="btn blue-hoki  btn-file"
+													ng-disabled="isDisabledButtonSave"> <span
+													class="fileinput-new"
+													translate="vnm.air_time.label.btn.chooseFile"> </span> <input
+													type="file" ng-click="abcd($event)"
+													ng-disabled="isDisabledButtonSave" nv-file-select=""
+													uploader="uploader" multiple="" />
+												</span>
+
+												<div class="table-scrollable">
+													<table class="table table-striped table-bordered">
+														<thead class="ng-table-sort-header">
+															<tr>
+																<th width="50px" style="text-align: center;">STT</th>
+																<th width="250px" style="text-align: center;">Tên</th>
+																<th width="200px" ng-show="uploader.isHTML5"
+																	style="text-align: center;">Kích thước File</th>
+																<th width="100px" style="text-align: center;">Trạng
+																	thái</th>
+																<th width="100px" style="text-align: center;">Xóa</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="item in uploader.queue">
+																<td><strong>{{
+																		uploader.getIndexOfItem(item) + 1}}</strong></td>
+
+																<td><strong><a
+																		ng-click="viewFileImageClient(item, 'imagemodal', 'imagepreview')">{{
+																			item.file.name }}</a></strong></td>
+
+																<td ng-show="uploader.isHTML5" nowrap="">{{
+																	item.file.size/1024/1024|number:2 }} MB</td>
+
+																<td class="text-center"><span
+																	ng-show="item.isSuccess"><i
+																		class="glyphicon glyphicon-ok"></i></span> <span
+																	ng-show="item.isCancel"><i
+																		class="glyphicon glyphicon-ban-circle"></i></span> <span
+																	ng-show="item.isError"><i
+																		class="glyphicon glyphicon-remove"></i></span></td>
+
+																<td nowrap="" align="center">
+
+																	<div ng-show="!isDisableDeleteButtonImage">
+																		<button type="button" class="btn btn-danger btn-xs"
+																			ng-click="removeElementAttachmenByItem(item)">
+																			<span class="glyphicon glyphicon-trash"></span> Xóa
+																		</button>
+																	</div>
+																</td>
+
+															</tr>
+														</tbody>
+													</table>
+													<div>
+														<div>
+															<p></p>
+															<div class="progress" style="">
+																<div class="progress-bar" role="progressbar"
+																	ng-style="{ 'width': uploader.progress + '%' }">{{uploader.progress}}%</div>
+															</div>
+														</div>
+														<button type="button" class="btn btn-success btn-s"
+															ng-click="uploadAllFile(uploader)"
+															ng-disabled="!uploader.getNotUploadedItems().length">
+															<span class="glyphicon glyphicon-upload"></span> <span
+																translate="vnm.common.label.btn.upload.all"></span>
+														</button>
+														<button type="button" class="btn btn-danger btn-s"
+															ng-click="removeAllItemImageFile()"
+															ng-disabled="!uploader.queue.length">
+															<span class="glyphicon glyphicon-trash"></span> <span
+																translate="vnm.common.label.btn.delete.all"></span>
+														</button>
+													</div>
+												</div>
+												<div class="note note-info">
+													<p>Tài liệu bao gồm: ảnh hồ sơ, ảnh chứng minh thư, ảnh
+														hợp đồng ...</p>
+												</div>
+											</div>
+										</div>
+
+									</div>
+
+									<div class="tab-pane" id="search_airtime">
+										<div class="tab-pane active" id="tab_5_1">
+											<div class="form-group">
+												<label class="control-label col-md-15"
+													translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.request.code" />
+												<div class="col-md-40">
+													<input type="text" class="form-control"
+														ng-model="model.requestIdSearch" name="requestId" />
+												</div>
+
+												<label class="control-label col-md-15"
+													translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.status.order" />
+												<div class="col-md-40">
+
+													<ui-select ng-model="model.requestStatusSearch"
+														ng-init="model.requestStatusSearch = RequestStatusSource[0].Id"
+														class="" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in RequestStatusSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-15"
+													translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.stk.number" />
+												<div class="col-md-40">
+													<input type="text" class="form-control"
+														ng-model="model.stkNumber" name="stkNumber" />
+												</div>
+
+												<label class="control-label col-md-15"
+													translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.phone.number" />
+												<div class="col-md-40">
+													<input type="text" class="form-control"
+														ng-model="model.phoneNumber" name="phoneNumber" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-15"
+													translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.user.create" />
+												<div class="col-md-40">
+													<input type="text" class="form-control" ng-disabled="true"
+														ng-model="model.createUser" name="CreateUser" />
+													<!-- <ui-select ng-model="model.code" class=""> <ui-select-match
+														allow-clear="true">{{$select.selected.code}}</ui-select-match>
+													<ui-select-choices style="width: auto;"
+														repeat="x in listStaff | filter:$select.search">
+													<span ng-bind-html="x.code | highlight: $select.search"></span>
+													<span>-</span> <span
+														ng-bind-html="x.name | highlight: $select.search"></span>
+													</ui-select-choices> </ui-select> -->
+												</div>
+												<!-- <div class="col-md-25">
+													<input type="text" class="form-control"
+														placeholder="{{model.code.name}}" disabled="disabled"
+														title="{{model.code.name}}" />
+												</div> -->
+
+												<label class="control-label col-md-15"
+													translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.date.create" />
+												<div class="col-md-40">
+													<input ng-model="model.createDateSearch"
+														id="createDateSearch" datetime-picker="" date-only=""
+														date-format="DD/MM/YYYY" class="form-control" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-15"
+													translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.serial" />
+												<div class="col-md-40">
+													<input type="text" class="form-control"
+														ng-model="model.serial" name="serial" />
+												</div>
+
+												<label class="control-label col-md-15"
+													translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.status.change" />
+												<div class="col-md-40">
+													<ui-select ng-model="model.type" ng-disabled="true"
+														ng-init="model.type=RequestStatusChangeSource[0].Id"
+														class="" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in RequestStatusChangeSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<div class="col-md-12" style="text-align: center;">
+													<button type="button" name="Search" class="btn btn-primary"
+														ng-click="searchRequestChangeCard()"
+														style="margin-right: 30px;">
+														<i class="fa glyphicon glyphicon-search"></i> Tìm kiếm
+													</button>
+												</div>
+											</div>
+											<h3 class="form-section"
+												translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.list.order"></h3>
+											<div class="table-scrollable"
+												style="margin-top: 30px; margin-bottom: 30px;">
+												<div class="table-scrollable">
+													<table ng-table="tableParams"
+														class="table table-striped table-bordered"
+														show-filter="false">
+														<tr ng-repeat="item in $data"
+															ng-click="item.type==='0'?showDetail(item,$index):showDetailPhysical(item,$index)"
+															ng-class="{true:'active', false:''}[itemSelected==item]">
+															<td title="'Mã yêu cầu'" sortable="'requestId'">{{item.reqChangeRaggedCardId}}</td>
+															<td title="'Số STK'" sortable="'stkNumber'">{{item.stkNumber}}</td>
+															<td title="'Số điện thoại liên lạc'"
+																sortable="'phoneNumber'">{{item.phoneNumber}}</td>
+															<td title="'Trạng thái yêu cầu'" sortable="'status'">{{item.status
+																=== "0" ? "Lập" : item.status === "1" ? "Từ chối" :
+																item.status === "2" ? "Đang thực hiện" : item.status ===
+																"3" ? "Đã thực hiện" : "Hủy" }}</td>
+															<td title="'Người tạo'" sortable="'userCreate'">{{item.userCreate}}</td>
+															<td title="'Ngày tạo'" sortable="'dateCreated'">{{item.dateCreated.split("-").reverse().join("/")}}</td>
+															<td title="'Tên ảnh thẻ'" sortable="'imgsName'">{{item.imgsName}}</td>
+															<td title="'Người từ chối'" sortable="'userReject'">{{item.userReject}}</td>
+															<td title="'Ngày từ chối'" sortable="'dateReject'">{{item.dateReject.split("-").reverse().join("/")}}</td>
+															<td title="'Ngày thay đổi'" sortable="'lastModify'">{{item.lastModify.split("-").reverse().join("/")}}</td>
+															<td title="'Lý do từ chối'"
+																sortable="'descriptionReject'">{{item.descriptionReject}}</td>
+															<td title="'Airtime đổi thẻ'"
+																sortable="'totalAirtimeChange'">{{item.totalAirtimeChange}}</td>
+															<td title="'Airtime cộng hoa hồng'"
+																sortable="'totalAirtimeAddcomm'">{{item.totalAirtimeAddcomm}}</td>
+															<td title="'Hình thức đổi thẻ'" sortable="'type'">{{item.type
+																=== "0" ? "Đổi thẻ bằng Airtime" : "Đổi thẻ bằng thẻ vật
+																lý" }}</td>
+														</tr>
+														<tr ng-if="totalRequest == 0">
+															<td colspan="7">Không có dữ liệu</td>
+														</tr>
+														<tr>
+															<td colspan="14" align="right">
+																<h3 class="form-section">Số lượng:{{totalRequest}}</h3>
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+											<div class="form-group" ng-show="showDetailAirtimeResquest">
+												<h3 class="form-section"
+													translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.airtime.detail"></h3>
+												<div class="form-group">
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.request.code" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.requestIdSelected"
+															name="requestIdSelected" disabled="disabled" />
+													</div>
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.status.order" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.statusOrderSelected"
+															name="statusOrderSelected" disabled="disabled" />
+													</div>
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.user.reject" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.userRejectSelected"
+															name="userRejectSelected" disabled="disabled" />
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.stk.number" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.stkSelected" name="stkSelected"
+															disabled="disabled" />
+													</div>
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.phone.number" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.phoneNumberSelected"
+															name="phoneNumberSelected" disabled="disabled" />
+													</div>
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.date.reject" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.dateRejectSelected"
+															name="dateRejectSelected" disabled="disabled" />
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.serial" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.serialSelected" name="serialSelected"
+															disabled="disabled" />
+													</div>
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.status.card" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.cardStatusSelected"
+															name="cardStatusSelected" disabled="disabled" />
+													</div>
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.user.destroy" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.userDestroySelected"
+															name="userDestroySelected" disabled="disabled" />
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.face.value" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.cardValueSelected"
+															name="cardValueSelected" disabled="disabled" />
+													</div>
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.card.status.1" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.raggedCardStatus" name="raggedCardStatus"
+															disabled="disabled" />
+													</div>
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.date.destroy" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.dateDestroySelected"
+															name="dateDestroySelected" disabled="disabled" />
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-15" />
+													<div class="col-md-25" />
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.user.create" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.userCreateSelected"
+															name="userCreateSelected" disabled="disabled" />
+													</div>
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.user.lock" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.userLockSelected" name="userLockSelected"
+															disabled="disabled" />
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-15" />
+													<div class="col-md-25" />
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.date.create" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.dateCreateSelected"
+															name="dateCreateSelected" disabled="disabled" />
+													</div>
+													<label class="control-label col-md-15"
+														translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.date.lock" />
+													<div class="col-md-25">
+														<input type="text" class="form-control"
+															ng-model="model.dateLockSelected" name="dateLockSelected"
+															disabled="disabled" />
+													</div>
+												</div>
+												<h3 class="form-section"
+													translate="vnm.form_pepaid_customers.acceptRequestChangeCard.lable.list.fail"></h3>
+												<div class="" style="margin-top: 30px; margin-bottom: 30px;">
+													<div class="table-scrollable">
+														<table ng-table="detailPurchase"
+															class="table table-striped table-bordered"
+															show-filter="false">
+															<tr ng-repeat="item in $data"
+																ng-click="fillDetail(item,$index)"
+																ng-class="{true:'active', false:''}[itemSelectedDetail==item]">
+																<td header="'headerCheckboxAdd.html'"><input
+																	type="checkbox" ng-click="selectNotIn(item)"
+																	ng-model="model.checkboxAdd.items[item.raggedCardId]" /></td>
+																<td title="'Mã thẻ'" sortable="'raggedCardId'">{{item.raggedCardId}}</td>
+																<td title="'Serial thẻ'" sortable="'serial'">{{item.serial}}</td>
+																<td title="'Trạng thái thẻ'" sortable="'cardStatus'">{{item.cardStatus
+																	=== "0" ? "Lập" : item.cardStatus === "1" ? "Từ chối" :
+																	item.cardStatus === "2" ? "Đã khóa thẻ" :
+																	item.cardStatus === "3" ? "Đã đổi thẻ" :
+																	item.cardStatus === "4" ? "Đã cộng HH" :"Hủy" }}</td>
+																<td title="'Tình trạng thẻ'"
+																	sortable="'raggedCardStatus'">{{item.raggedCardStatus}}</td>
+																<td title="'Mệnh giá'" sortable="'cardValue'">{{item.cardValue}}</td>
+																<td title="'Người từ chối'" sortable="'userReject'">{{item.userReject}}</td>
+																<td title="'Ngày từ chối'" sortable="'dateReject'">{{item.dateReject.split("-").reverse().join("/")}}</td>
+																<td title="'Ngày thay đổi'" sortable="'lastModify'">{{item.lastModify.split("-").reverse().join("/")}}</td>
+																<td title="'Lý do hủy'" sortable="'rejectDesciption'">{{item.rejectDesciption}}</td>
+																<td title="'Người khóa thẻ'" sortable="'userLock'">{{item.userLock}}</td>
+																<td title="'Ngày khóa thẻ'" sortable="'dateLock'">{{item.dateLock.split("-").reverse().join("/")}}</td>
+																<td title="'Người đổi thẻ'" sortable="'userChange'">{{item.userChange}}</td>
+																<td title="'Ngày đổi thẻ'" sortable="'dateChange'">{{item.dateChange.split("-").reverse().join("/")}}</td>
+																<td title="'Người hủy'" sortable="'userDestroy'">{{item.userDestroy}}</td>
+																<td title="'Ngày hủy'" sortable="'dateDestroy'">{{item.dateDestroy.split("-").reverse().join("/")}}</td>
+															</tr>
+															<tr ng-if="totalRequestDetail == 0">
+																<td colspan="7">Không có dữ liệu</td>
+															</tr>
+															<tr>
+																<td colspan="15" align="right">
+																	<h3 class="form-section">Số
+																		lượng:{{totalRequestDetail}}</h3>
+																</td>
+															</tr>
+														</table>
+													</div>
+													<div class="col-md-12" ng-show="imgBody!=''">
+														<div class="portlet light">
+															<table class="table table-striped table-bordered"
+																style="width: auto;">
+																<tr>
+																	<td ng-repeat="item in imgBody"
+																		style="background: white;"><div class="photo">
+																			<img id="myImg" ng-click="imgZoom($event)"
+																				style="width: 150px; height: 150px; padding: 1px;"
+																				ng-src="data:image/png;base64, {{item}}" alt="Image" />
+																		</div></td>
+																</tr>
+															</table>
+
+														</div>
+													</div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="imagemodal" tabindex="-1"
+							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-body">
+										<img src="" class="imagepreview" style="width: 100%;" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

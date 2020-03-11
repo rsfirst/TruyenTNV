@@ -1,0 +1,1150 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Lập giao dịch bán hàng cho khách hàng</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+
+		<script type="text/ng-template" id="headerCheckboxAdd.html">
+   	 		<input type="checkbox" ng-model="model.checkboxListSerialItem" value="" ng-click="checkAllSerials()"/>
+  		</script>
+  		
+  		<script type="text/ng-template" id="headerCheckboxAddSerial.html">
+   	 		<input type="checkbox" ng-model="model.checkboxListAttachSerialItem" value="" ng-click="checkAllAttachSerials()"/>
+  		</script>
+
+		<script src="/views/css/invoice/createExchangeForCust.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-createExchangeForCust" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.create_exchange_for_cust.page.title"></span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_prepaid" class="form-horizontal  form-bordered"
+						method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+										<h3 class="form-section"
+											translate="vnm.create_exchange_for_cust.label.infor.cust.title"></h3>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.type">
+											</label>
+											<div class="col-md-40">
+												<ui-select ng-model="model.custInfor" class=""
+													on-select="loadName()" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices
+													repeat="x in CustInfoSource | filter:$select.search">
+												{{x.name}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.customer.name"></label>
+
+											<div class="col-md-40">
+												<input type="text" class="form-control"
+													ng-model="model.custName" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.company.name"></label>
+
+											<div class="col-md-40">
+												<input type="text" class="form-control"
+													ng-model="model.companyName" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.tax.code"></label>
+											<div class="col-md-40">
+												<input type="text" class="form-control"
+													ng-model="model.taxCode" />
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.account"></label>
+											<div class="col-md-40">
+												<input type="text" class="form-control"
+													ng-model="model.account" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.address"></label>
+											<div class="col-md-40">
+												<input type="text" class="form-control"
+													ng-model="model.address" />
+											</div>
+										</div>
+
+										<h3 class="form-section"
+											translate="vnm.create_exchange_for_cust.label.infor.exchange.title"></h3>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.form">
+											</label>
+											<div class="col-md-40">
+												<ui-select ng-model="model.payMethod" class=""
+													ng-disabled="disablePayMethod" on-select="loadRate()"
+													style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices
+													repeat="x in PayMethodSource | filter:$select.search">
+												{{x.name}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.exchane.rate"></label>
+
+											<div class="col-md-40">
+												<input type="text" class="form-control" disabled="true"
+													ng-model="model.rate" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.card.no"></label>
+
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.cardNo" />
+											</div>
+
+											<div class="col-md-15">
+												<button type="button" class="btn red"
+													ng-click="onChooseCard()">
+													<i class="glyphicon"></i>...
+												</button>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.user"></label>
+											<div class="col-md-15">
+												<input type="text" class="form-control" disabled="true"
+													ng-model="model.userId" />
+											</div>
+											<div class="col-md-25">
+												<input type="text" class="form-control" disabled="true"
+													ng-model="model.userName" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.date.create"></label>
+											<div class="col-md-40">
+												<input ng-model="model.transDate" id="transDate"
+													name="transDate" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+										</div>
+
+
+
+
+										<h3 class="form-section"
+											translate="vnm.create_exchange_for_cust.label.infor.good.title"></h3>
+
+										<div class="form-group">
+											<label class="control-label col-md-1"
+												translate="vnm.create_exchange_for_cust.label.mathang"></label>
+											<div class="col-md-3">
+												<ui-select ng-model="model.good" class=""
+													on-select="loadlstPrice()" style="width: 100%;">
+												<ui-select-match>{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices
+													repeat="x in GoodsSource | filter:$select.search">
+												{{x.name}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-1"
+												translate="vnm.create_exchange_for_cust.label.soluong"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control text-right" onkeypress="return valid_numbers(event)"
+													ng-disabled="disableSoLuong" ng-model="model.soluong" />
+											</div>
+
+											<label class="control-label col-md-1"
+												translate="vnm.create_exchange_for_cust.label.dongia"></label>
+											<div class="col-md-3">
+												<ui-select ng-model="model.price" class=""
+													on-select="loadVAT()" style="width: 100%;"> <ui-select-match>{{$select.selected.display}}</ui-select-match>
+												<ui-select-choices
+													repeat="x in PriceSource | filter:$select.search">
+												{{x.display}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+
+										<div class="form-group">
+											<label class="control-label col-md-1"
+												translate="vnm.create_exchange_for_cust.label.khuyenmai"></label>
+											<div class="col-md-3">
+												<ui-select ng-model="model.promotion" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.display}}</ui-select-match>
+												<ui-select-choices
+													repeat="x in PromotionSource | filter:$select.search">
+												{{x.display}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-1"
+												translate="vnm.create_exchange_for_cust.label.chietkhau"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control text-right"
+													disabled="true" ng-model="model.chietkhau" />
+											</div>
+
+											<label class="control-label col-md-1"
+												translate="vnm.create_exchange_for_cust.label.thueVAT"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control" disabled="true"
+													ng-model="model.thueVAT" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="col-md-12" style="text-align: center;">
+												<button type="button" class="btn btn-primary"
+													ng-click="insert()">
+													<i class="fa fa-add"></i> Thêm vào danh sách
+												</button>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="col-md-8">
+												<div class="form-group">
+													<h3 class="form-section"
+														translate="vnm.create_exchange_for_cust.label.list.good"></h3>
+													<div class="col-md-12">
+														<div class="table-scrollable">
+															<table ng-table="tableParamsGood"
+																class="table table-striped table-bordered"
+																show-filter="false">
+																<tr ng-repeat="item in $data"
+																	ng-click="getInfoGood(item)"
+																	ng-class="{true:'active', false:''}[itemGoodSelected.rowId==item.rowId]">
+																	<td title="'Mặt hàng'">{{item.mstrGoodCode}}</td>
+																	<td title="'Số lượng'">{{item.mstrQuantity}}</td>
+																	<td title="'Đơn giá'">{{item.mstrPrice}}</td>
+																	<td title="'CK'">{{item.mstrDiscount}}</td>
+																	<td title="'KM'">{{item.mstrProm}}</td>
+																	<td title="'ĐVT'">{{item.mstrUnitName}}</td>
+																	<td title="'Tổng tiền'">{{item.mstrMoneySum}}</td>
+																</tr>
+															</table>
+														</div>
+													</div>
+													<div class="form-actions" align="center"
+														style="padding-top: 10px;">
+														<div class="col-md-12">
+															<button type="button" name="detele"
+																class="btn btn-primary" ng-click="deleteGood()"
+																style="width: 120px">
+																<i></i> <label
+																	translate="vnm.create_exchange_for_cust.label.button.detele"></label>
+															</button>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="col-md-4">
+												<div class="form-group">
+													<h3 class="form-section"
+														translate="vnm.create_exchange_for_cust.label.detail.good"></h3>
+													<div class="col-md-12">
+														<div class="table-scrollable">
+															<table ng-table="tableParamsSerialAdd"
+																class="table table-striped table-bordered"
+																show-filter="false">
+																<tr ng-repeat="item in $data">
+																	<td title="'Số serial'">{{item.serial}}</td>
+																	<td title="'Ngày nhập'">{{item.importDatetime}}</td>
+																</tr>
+															</table>
+														</div>
+													</div>
+													<div class="form-actions" align="center"
+														style="padding-top: 10px;">
+														<div class="col-md-12">
+															<button type="button" name="detele"
+																class="btn btn-primary" ng-click="modifySerial()"
+																style="width: 120px">
+																<i></i> <label
+																	translate="vnm.create_exchange_for_cust.label.button.edit"></label>
+															</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+
+										<h3 class="form-section"
+											translate="vnm.create_exchange_for_cust.label.summary.exchange.title"></h3>
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.summary.no.tax">
+											</label>
+											<div class="col-md-40">
+												<input type="text" class="form-control text-right"
+													disabled="true" ng-model="model.moneyNotax" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.summary.discount"></label>
+
+											<div class="col-md-40">
+												<input type="text" class="form-control text-right"
+													disabled="true" ng-model="model.discount" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.summary.promo">
+											</label>
+											<div class="col-md-40">
+												<input type="text" class="form-control text-right"
+													disabled="true" ng-model="model.promo" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.summary.deposit"></label>
+
+											<div class="col-md-40">
+												<input type="text" class="form-control text-right" onkeypress="return valid_numbers(event)"
+													ng-model="model.deposit" ng-blur="calculateTienThua()"/>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.summary.tax.amount">
+											</label>
+											<div class="col-md-40">
+												<input type="text" class="form-control text-right"
+													disabled="true" ng-model="model.taxAmount" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.summary.amount"></label>
+
+											<div class="col-md-40">
+												<input type="text" class="form-control text-right"
+													disabled="true" ng-model="model.amount" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.summary.total">
+											</label>
+											<div class="col-md-40">
+												<input type="text" class="form-control text-right"
+													disabled="true" ng-model="model.total" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.summary.residual"></label>
+
+											<div class="col-md-40">
+												<input type="text" class="form-control text-right"
+													disabled="true" ng-model="model.residual" />
+											</div>
+										</div>
+										<div class="form-actions" align="center"
+											style="padding-top: 10px;">
+											<div class="col-md-12">
+												<button type="button" name="commit" class="btn btn-primary"
+													ng-click="commit()" style="width: 170px">
+													<i></i> <label
+														translate="vnm.create_exchange_for_cust.label.button.commit"></label>
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalInputSerial" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog " style="min-width: 1100px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title"
+											translate="vnm.create_exchange_for_cust.label.input.serial"></h4>
+									</div>
+									<div class="modal-body">
+										<div class="form-group">
+											<div class="col-md-4" align="center">
+												<label><input type="radio"
+													ng-model="model.inputType" value="single"
+													ng-change='inputTypeChangeFn(model.inputType)' /><span
+													translate="vnm.create_exchange_for_cust.label.input.serial.single"></span></label>
+											</div>
+											<div class="col-md-4" align="center">
+												<label><input type="radio"
+													ng-model="model.inputType" value="strip"
+													ng-change='inputTypeChangeFn(model.inputType)' /><span
+													translate="vnm.create_exchange_for_cust.label.input.serial.strip"></span></label>
+											</div>
+											<div class="col-md-4" align="center">
+												<label><input type="radio"
+													ng-model="model.inputType" value="list"
+													ng-change='inputTypeChangeFn(model.inputType)' /><span
+													translate="vnm.create_exchange_for_cust.label.input.serial.list"></span></label>
+											</div>
+										</div>
+
+										<div class="form-group" style="padding-top: 20px;">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.dialog.good">
+											</label>
+											<div class="col-md-40">
+												<input type="text" class="form-control" id="dGood"
+													ng-disabled="true" ng-model="model.dGood" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.dialog.quantity"></label>
+
+											<div class="col-md-40">
+												<input type="text" class="form-control" id="dQuantity"
+													ng-disabled="true" ng-model="model.dQuantity" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.dialog.from.serial">
+											</label>
+											<div class="col-md-40">
+												<ui-select ng-model="model.dFromSerial" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.serial}}</ui-select-match>
+												<ui-select-choices
+													repeat="x in SerialSource | filter:$select.search">
+												{{x.serial}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.dialog.to.serial"></label>
+
+											<div class="col-md-40">
+												<ui-select ng-model="model.dToSerial" class=""
+													ng-disabled="dToSerial" style="width: 100%;"> <ui-select-match>{{$select.selected.serial}}</ui-select-match>
+												<ui-select-choices
+													repeat="x in SerialSource | filter:$select.search">
+												{{x.serial}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group" align="center">
+											<button type="button" class="btn btn-primary"
+												ng-click="insertSerial()">
+												<i class="fa fa-add"></i> Thêm
+											</button>
+										</div>
+
+										<div class="form-group" style="padding-top: 10px;">
+											<div class="table-scrollable">
+												<table ng-table="tableParamsListSerial"
+													class="table table-striped table-bordered"
+													show-filter="false">
+													<tr ng-repeat="item in $data" ng-click="getItem(item)"
+														ng-class="{true:'active', false:''}[item.serial == itemSerial.serial]">
+														<td title="'Số serial'" align="center">{{item.serial}}</td>
+														<td title="'Ngày nhập'" align="center">{{item.importDatetime}}</td>
+													</tr>
+													<tr ng-if="tableParamsListSerial.total() == 0">
+														<td colspan="7"><label
+															translate="vnm.common.data.not.found"></label></td>
+													</tr>
+													<tr ng-if="tableParamsListSerial.total() != 0">
+														<td colspan="11" align="right">
+															<h3 class="form-section">
+																<label translate="vnm.common.tableRecord.total"></label>{{tableParamsListSerial.total()}}
+															</h3>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+										<div class="form-group" align="center">
+											<button type="button" class="btn btn-primary"
+												ng-click="deleteSerial()">
+												<i class="fa fa-add"></i> Xóa
+											</button>
+										</div>
+
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn red"
+											ng-click="acceptSerial()">
+											<i class="glyphicon"></i> Chấp nhận
+										</button>
+										<button type="button" class="btn red" ng-click="blurSerial()">
+											<i class="glyphicon"></i> Bỏ qua
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalInputListSerial" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog "
+								style="min-width: 900px; min-height: 700px;">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title"
+											translate="vnm.create_exchange_for_cust.label.input.list.serial"></h4>
+									</div>
+									<div class="modal-body">
+										<h3 class="form-section"
+											translate="vnm.create_exchange_for_cust.label.trans.info"></h3>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.dialog.good">
+											</label>
+											<div class="col-md-40">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.dlGood" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.dialog.quantity"></label>
+
+											<div class="col-md-40">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.dlQuantity" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.create_exchange_for_cust.label.dialog.stock">
+											</label>
+											<div class="col-md-40">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.dlStock" />
+											</div>
+										</div>
+
+										<h3 class="form-section"
+											translate="vnm.create_exchange_for_cust.label.list.serial.good"></h3>
+
+										<div class="form-group" style="padding-top: 5px;">
+											<div class="table-scrollable">
+												<table ng-table="tableParamsListSerialGoods"
+													class="table table-striped table-bordered"
+													show-filter="false">
+													<tr ng-repeat="item in $data" ng-click="getItem(item)"
+														ng-class="{true:'active', false:''}[item.serial == itemSerial.serial]">
+														<td title="'Số serial'" align="center">{{item.serial}}</td>
+														<td title="'Ngày nhập'" align="center">{{item.importDatetime}}</td>
+
+														<td header="'headerCheckboxAdd.html'" align="center"><input
+															type="checkbox" ng-click="selectOrRemoveSerialItem(item)"
+															ng-model="item.typeCheckBox" /></td>
+													</tr>
+													<tr ng-if="tableParamsListSerialGoods.total() == 0">
+														<td colspan="7"><label
+															translate="vnm.common.data.not.found"></label></td>
+													</tr>
+													<tr ng-if="tableParamsListSerialGoods.total() != 0">
+														<td colspan="11" align="right">
+															<h3 class="form-section">
+																<label translate="vnm.common.tableRecord.total"></label>{{tableParamsListSerialGoods.total()}}
+															</h3>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer">
+										<button type="button" class="btn red"
+											ng-click="acceptListSerial()">
+											<i class="glyphicon"></i> Chấp nhận
+										</button>
+										<button type="button" class="btn red" data-dismiss="modal">
+											<i class="glyphicon"></i> Bỏ qua
+										</button>
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalCreateBill" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog " style="min-width: 600px;">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title"
+											translate="vnm.create_exchange_for_cust.label.create.bill"></h4>
+									</div>
+
+									<div class="modal-body">
+										<div class="form-group">
+											<label class="control-label col-md-4"
+												translate="vnm.create_exchange_for_cust.label.bill.type">
+											</label>
+											<div class="col-md-8">
+												<ui-select ng-model="model.bType" class=""
+													ng-disabled="true" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices
+													repeat="x in InvoiceTypeSource | filter:$select.search">
+												{{x.name}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-4"
+												translate="vnm.create_exchange_for_cust.label.bill.TQ">
+											</label>
+											<div class="col-md-8">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.bTQ" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-4"
+												translate="vnm.create_exchange_for_cust.label.bill.serial">
+											</label>
+											<div class="col-md-8">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.bSerial" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-4"
+												translate="vnm.create_exchange_for_cust.label.bill.from">
+											</label>
+											<div class="col-md-8">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.bFrom" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-4"
+												translate="vnm.create_exchange_for_cust.label.bill.to">
+											</label>
+											<div class="col-md-8">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.bTo" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-4"
+												translate="vnm.create_exchange_for_cust.label.bill.current">
+											</label>
+											<div class="col-md-8">
+												<input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.bCurrent" />
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer">
+										<div class="form-group">
+											<button type="button" class="btn red" ng-disabled="true">
+												<i class="glyphicon"></i> Chấp nhận
+											</button>
+											<button type="button" class="btn red" data-dismiss="modal">
+												<i class="glyphicon"></i> Bỏ qua
+											</button>
+										</div>
+
+										<div class="form-group" style="padding-top: 10px">
+											<button type="button" class="btn red" ng-click="redirectToCreateBill()">
+												<i class="glyphicon"></i> Hóa đơn ĐT
+											</button>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalMoreInfo" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog " style="min-width: 1100px;">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" ng-click="returnToWriteInfo()">&times;</button>
+										<h4 class="modal-title"
+											translate="vnm.create_exchange_for_cust.label.more.info"></h4>
+									</div>
+
+									<div class="modal-body">
+
+										<div class="form-group" style="padding-top: 10px;">
+											<div class="table-scrollable">
+												<table ng-table="tableMoreInfos"
+													class="table table-striped table-bordered"
+													show-filter="false">
+													<tr ng-repeat="item in $data" ng-click="getMoreInfo(item)"
+														ng-class="{true:'active', false:''}[item.mstrSerial == itemMoreInfo.mstrSerial]">
+														<td title="'Mã hàng'" align="center">{{item.mstrGoodsCode}}</td>
+														<td title="'Serial'" align="center">{{item.mstrSerial}}</td>
+														<td title="'Mã NV'" align="center">{{item.maNV}}</td>
+														<td title="'Tên NV'" align="center">{{item.tenNV}}</td>
+														<td title="'Mã KH'" align="center">{{item.maKH}}</td>
+														<td title="'Tên KH'" align="center">{{item.tenKH}}</td>
+														<td title="'Số thuê bao'" align="center">{{item.soThueBao}}</td>
+														<td title="'Gói cước'" align="center">{{item.goiCuoc}}</td>
+														<td title="'Công ty'" align="center">{{item.congTyNV}}</td>
+													</tr>
+													<tr ng-if="tableMoreInfos.total() == 0">
+														<td colspan="7"><label
+															translate="vnm.common.data.not.found"></label></td>
+													</tr>
+													<tr ng-if="tableMoreInfos.total() != 0">
+														<td colspan="11" align="right">
+															<h3 class="form-section">
+																<label translate="vnm.common.tableRecord.total"></label>{{tableMoreInfos.total()}}
+															</h3>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="col-md-6">
+												<div class="form-group">
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.staff.id">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo" ng-model="model.mStaffId" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.staff.name">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo"
+																ng-model="model.mStaffName" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.staff.id.no">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo"
+																ng-model="model.mStaffIdNo" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.staff.address">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo"
+																ng-model="model.mStaffAddress" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.staff.company">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo"
+																ng-model="model.mStaffCompany" />
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.cus.id">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo" ng-model="model.mCusId" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.cus.name">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo" ng-model="model.mCusName" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.cus.id.no">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo" ng-model="model.mCusIdNo" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.cus.address">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo"
+																ng-model="model.mCusAddress" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.cus.number">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo"
+																ng-model="model.mCusNumber" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4"
+															translate="vnm.create_exchange_for_cust.label.more.cus.cos">
+														</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"
+																ng-disabled="disableMoreInfo" ng-model="model.mCusCos" />
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="modal-footer">
+											<div class="form-group">
+												<button type="button" class="btn red"
+													ng-show="isShowBtnEnter" ng-click="enterMoreInfo()">
+													<i class="glyphicon"></i> Nhập
+												</button>
+												<button type="button" class="btn red"
+													ng-show="isShowBtnEnter" ng-click="returnToWriteInfo()">
+													<i class="glyphicon"></i> Quay lại
+												</button>
+
+												<button type="button" class="btn red"
+													ng-show="isShowBtnCancel" ng-click="chapNhan()">
+													<i class="glyphicon"></i> Chấp nhận
+												</button>
+												<button type="button" class="btn red"
+													ng-show="isShowBtnCancel" ng-click="boQua()">
+													<i class="glyphicon"></i>Bỏ qua
+												</button>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+
+						<div class="modal fade" id="modalInputCard" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog " style="min-width: 900px;">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" ng-click="exitCardNo()">&times;</button>
+										<h4 class="modal-title"
+											translate="vnm.create_exchange_for_cust.label.input.card.no"></h4>
+									</div>
+
+									<div class="modal-body">
+										<div class="form-group" style="padding-top: 10px;">
+
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.create_exchange_for_cust.label.dialog.card.no">
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="disableCardNo" ng-model="model.dCardNo" />
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.create_exchange_for_cust.label.dialog.card.price">
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control" onkeypress="return valid_numbers(event)"
+														ng-disabled="disableCardNo" ng-model="model.dCardPrice" />
+												</div>
+											</div>
+
+											<div class="form-group" style="padding-top: 10px" align="center">
+												<button type="button" class="btn red" ng-click="addCardNo()"
+													ng-show="isShowbtnAction">
+													<i class="glyphicon"></i> Thêm
+												</button>
+												<button type="button" class="btn red"
+													ng-show="isShowbtnAction" ng-click="editCardNo()">
+													<i class="glyphicon"></i> Sửa
+												</button>
+												<button type="button" class="btn red"
+													ng-show="isShowbtnAction" ng-click="deleteCardNo()">
+													<i class="glyphicon"></i> Xóa
+												</button>
+												<button type="button" class="btn red"
+													ng-click="exitCardNo()" ng-show="isShowbtnAction">
+													<i class="glyphicon"></i> Thoát
+												</button>
+												<button type="button" class="btn red" ng-click="okCardNo()"
+													ng-show="isShowbtnExecute">
+													<i class="glyphicon"></i> Chấp nhận
+												</button>
+												<button type="button" class="btn red" ng-click="nokCardNo()"
+													ng-show="isShowbtnExecute">
+													<i class="glyphicon"></i> Bỏ qua
+												</button>
+											</div>
+
+											<div class="table-scrollable">
+												<table ng-table="tableCardNos"
+													class="table table-striped table-bordered"
+													show-filter="false">
+													<tr ng-repeat="item in $data" ng-click="getCardNo(item)"
+														ng-class="{true:'active', false:''}[item.rowId == itemCardNo.rowId]">
+														<td title="'Số thẻ'" align="center">{{item.cardNo}}</td>
+														<td title="'Giá tiền'" align="center">{{item.cardPrice}}</td>
+													</tr>
+													<tr ng-if="tableCardNos.total() == 0">
+														<td colspan="7"><label
+															translate="vnm.common.data.not.found"></label></td>
+													</tr>
+													<tr ng-if="tableCardNos.total() != 0">
+														<td colspan="11" align="right">
+															<h3 class="form-section">
+																<label translate="vnm.common.tableRecord.total"></label>{{tableCardNos.total()}}
+															</h3>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer"></div>
+
+								</div>
+							</div>
+						</div>
+
+
+						<div class="modal fade" id="modalInputAttachGood" role="dialog" data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog " style="min-width: 1100px;">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" ng-click="atCancel()">&times;</button>
+										<h4 class="modal-title"
+											translate="vnm.create_exchange_for_cust.label.input.attach.good"></h4>
+									</div>
+
+									<div class="modal-body">
+
+										<div class="form-group">
+											<strong><input type="text" class="form-control" ng-disabled="true"
+													ng-model="model.labelAttachGood" /></strong>
+										</div>
+										
+										<div class="form-group">
+											<div class="col-md-5">
+												<div class="form-group">
+													<h3 class="form-section"
+														translate="vnm.create_exchange_for_cust.label.list.attach.good"></h3>
+
+													<div class="table-scrollable">
+														<table ng-table="tableAttachGoods"
+															class="table table-striped table-bordered"
+															show-filter="false">
+															<tr ng-repeat="item in $data"
+																ng-click="getSerialOfAttachGood(item)"
+																ng-class="{true:'active', false:''}[item.goodsCode == itemAttachGood.goodsCode]">
+																<td title="'Mã hàng'" align="center">{{item.goodsCode}}</td>
+																<td title="'Số lượng'" align="center">{{item.quantityEffect}}</td>
+																<td title="'Giá'" align="center">{{item.price}}</td>
+																<td title="'Khuyến mại'" align="center">{{item.promotionTotal}}</td>
+															</tr>
+															<tr ng-if="tableAttachGoods.total() == 0">
+																<td colspan="7"><label
+																	translate="vnm.common.data.not.found"></label></td>
+															</tr>
+															<tr ng-if="tableAttachGoods.total() != 0">
+																<td colspan="11" align="right">
+																	<h3 class="form-section">
+																		<label translate="vnm.common.tableRecord.total"></label>{{tableAttachGoods.total()}}
+																	</h3>
+																</td>
+															</tr>
+														</table>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-7">
+												<h3 class="form-section"
+													translate="vnm.create_exchange_for_cust.label.info.attach.good"></h3>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_exchange_for_cust.label.mathang">
+													</label>
+													<div class="col-md-10">
+														<ui-select ng-model="model.atGood" class="" ng-disabled="true"
+															style="width: 100%;">
+														<ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in GoodsSource | filter:$select.search">
+														{{x.name}} </ui-select-choices> </ui-select>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_exchange_for_cust.label.dongia">
+													</label>
+													<div class="col-md-10">
+														<ui-select ng-model="model.atPrice" class=""
+															style="width: 100%;">
+														<ui-select-match>{{$select.selected.display}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in PriceAttachGoodSource | filter:$select.search">
+														{{x.display}} </ui-select-choices> </ui-select>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_exchange_for_cust.label.soluong">
+													</label>
+													<div class="col-md-10">
+														<input type="text" class="form-control" ng-disabled="disableQuantityAttachGood" onkeypress="return valid_numbers(event)"
+															ng-model="model.atQuantity" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.create_exchange_for_cust.label.khuyenmai">
+													</label>
+													<div class="col-md-10">
+														<ui-select ng-model="model.atProm" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.display}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in PromotionSource | filter:$select.search">
+														{{x.display}} </ui-select-choices> </ui-select>
+													</div>
+												</div>
+
+												<div class="form-group" style="padding-top: 5px" align="center">
+													<button type="button" class="btn red" ng-click="atInput()">
+														<i class="glyphicon"></i> Cập nhật
+													</button>
+													<button type="button" class="btn red" ng-click="atClear()">
+														<i class="glyphicon"></i> Xóa
+													</button>
+												</div>
+
+												<h3 class="form-section"
+													translate="vnm.create_exchange_for_cust.label.list.serial.attach.good"></h3>
+
+												<div class="form-group">
+													<div class="table-scrollable">
+														<table ng-table="tableSerialAttachGoods"
+															class="table table-striped table-bordered"
+															show-filter="false">
+															<tr ng-repeat="item in $data">
+																<td title="'Số serial'" align="center">{{item.serial}}</td>
+																<td title="'Ngày nhập'" align="center">{{item.importDatetime}}</td>
+																
+																<td header="'headerCheckboxAddSerial.html'" align="center"><input
+																	type="checkbox" ng-click="selectOrRemoveAttachSerialItem(item)"
+																	ng-model="item.typeCheckBox" /></td>
+															</tr>
+															<tr ng-if="tableSerialAttachGoods.total() == 0">
+																<td colspan="7"><label
+																	translate="vnm.common.data.not.found"></label></td>
+															</tr>
+															<tr ng-if="tableSerialAttachGoods.total() != 0">
+																<td colspan="11" align="right">
+																	<h3 class="form-section">
+																		<label translate="vnm.common.tableRecord.total"></label>{{tableSerialAttachGoods.total()}}
+																	</h3>
+																</td>
+															</tr>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer">
+										<button type="button" class="btn red" ng-click="atAccept()">
+											<i class="glyphicon"></i> Chấp nhận
+										</button>
+										<button type="button" class="btn red" ng-click="atCancel()">
+											<i class="glyphicon"></i> Bỏ qua
+										</button>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<img src="" class="imagepreviewZoom" style="width: 100%;" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>
+</body>
+</html>

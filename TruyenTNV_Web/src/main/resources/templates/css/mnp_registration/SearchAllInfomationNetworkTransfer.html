@@ -1,0 +1,3241 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Tra cứu thông tin chuyển mạng</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<div class="page-content" th:fragment="content">
+		<script
+			src="/views/css/SearchAllInfomationNetworkTransfer/SearchAllInfomationNetworkTransferController.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctr-search-all-infomation" class="ng-cloak">
+			<!-- controller begin -->
+
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.form_mnp.search_information.page.title"></span>
+
+					</div>
+					<div class="actions">
+						<a class="btn btn-circle btn-icon-only btn-default fullscreen"
+							href="#" data-original-title="" title=""> </a>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_search_all_information"
+						class="form-horizontal  form-bordered" method="post"
+						ng-validate="validationOptions">
+
+
+						<fieldset class="fieldsetcustom">
+							<legend class="legendcustom"
+								translate="vnm.form_mnp.search_information.search.title"></legend>
+
+							<div class="">
+								<div class="tab-content">
+									<div class="form-body">
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.search_information.label.search.type"></label>
+											<div class="col-md-3">
+												<ui-select ng-model="model.typeSearch"
+													ng-init="model.typeSearch = TypeSearchSource[-1].Id"
+													on-select="onTypeSearchChange()" class=""
+													style="width: 100%;"> <ui-select-match
+													placeholder="Chọn loại tra cứu...">{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in TypeSearchSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.search_information.label.msisdn"></label>
+											<div class="col-md-3">
+												<input type="text" class="form-control"
+													ng-model="model.msisdn" name="msisdn"
+													ng-keyup="removeZezoFirstPosition($event);"
+													ng-keydown="removeZezoFirstPosition($event);" />
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.search_information.label.transactionid">
+											</label>
+											<div class="col-md-3">
+												<input type="text" class="form-control"
+													ng-model="model.transactionID" name="transactionID" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.search_information.label.date.start"></label>
+											<div class="col-md-3">
+												<input ng-model="model.startDate" id="startDateID"
+													name="StartDate" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control"
+													placeholder=" / /" />
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.search_information.label.date.end"></label>
+											<div class="col-md-3">
+												<input ng-model="model.endDate" id="endDateID"
+													name="EndDate" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control"
+													placeholder=" / /" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.search_information.label.network.type"></label>
+											<div class="col-md-3">
+												<ui-select ng-model="model.receiveNetwork"
+													ng-init="model.receiveNetwork = DonorSource[0].networkId"
+													class="" style="width: 100%;"> <ui-select-match
+													placeholder="Chọn nhà mạng...">{{$select.selected.networkName}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.networkId as x in DonorSource | filter:$select.search">
+												{{x.networkName}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.search_information.label.status.type"></label>
+											<div class="col-md-3">
+												<ui-select ng-model="model.status" class=""
+													style="width: 100%;"> <ui-select-match
+													placeholder="Chọn trạng thái...">{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in StatusSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group"
+											style="padding-top: 20px; padding-bottom: 20px;">
+											<div class="col-md" align="center">
+												<button type="button" class="btn btn-primary"
+													ng-click="searchALL()">
+													<i class="fa fa-search"></i> <span
+														translate="vnm.form_mnp.search_information.label.btn.search"></span>
+												</button>
+											</div>
+										</div>
+
+									</div>
+
+									<!-- Begin Kết quả tra cứu Chuyển mạng đến -->
+									<div ng-show="nprSubscriberPortInVisible">
+										<!-- table begin-->
+										<div class="form-group">
+											<fieldset class="fieldsetcustom">
+												<legend class="legendcustom">Yêu cầu chuyển mạng
+													đến</legend>
+												<div class="col-md-12">
+													<div class="table-scrollable">
+														<table ng-table="tableParamsNPRPortIn" class="table">
+															<tr ng-repeat="item in $data"
+																ng-class="{true:'active', false:''}[item.nprId == rowHighlightNPRPortIn.nprId]">
+																<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																<td title="'Mã YCCM'"
+																	ng-click="getListSubscriberInfoPortIn(item)"
+																	style="min-width: 180px" align="center"
+																	sortable="'cchTransId'">{{item.cchTransId}}</td>
+																<td title="'Tên KH'"
+																	ng-click="getListSubscriberInfoPortIn(item)"
+																	style="min-width: 180px" align="center"
+																	sortable="'subdataSubscriberName'">{{item.subdataSubscriberName}}</td>
+																<td title="'Số Primary'"
+																	ng-click="getListSubscriberInfoPortIn(item)"
+																	style="min-width: 130px" align="center"
+																	sortable="'subdataContactNumber'">{{item.subdataContactNumber}}</td>
+																<td title="'DNO'" sortable="'donorStr'"
+																	ng-click="getListSubscriberInfoPortIn(item)"
+																	style="min-width: 100px" align="center">{{item.donorStr}}</td>
+																<td title="'Ghi chú'" style="min-width: 150px"
+																	ng-click="getListSubscriberInfoPortIn(item)"
+																	sortable="'comments'">{{item.comments}}</td>
+
+																<td title="'Thời gian CM tới VNM'"
+																	ng-click="getListSubscriberInfoPortIn(item)"
+																	sortable="'createdDateStr'">{{item.createdDateStr}}</td>
+
+																<td title="'Trạng thái YCCM'"
+																	ng-click="getListSubscriberInfoPortIn(item)"
+																	sortable="'stepStatus'">{{item.stepStatus}}</td>
+
+																<td title="'Thời gian hậu kiểm'"
+																	ng-click="getListSubscriberInfoPortIn(item)"
+																	sortable="'commitmentExpiryStr'">{{item.commitmentExpiryStr}}</td>
+
+																<td title="'Thông tin chi tiết'"
+																	sortable="'createdDateStr'"><a
+																	ng-click="viewInformationNPRDetialPortIn(item)">Chi
+																		tiết YCCM</a></td>
+															</tr>
+														</table>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+
+										<!--Begin table danh sach thue bao chuyển mạng đến -->
+										<div ng-show="dataTableSubscriberPortIn.length>0"
+											style="padding-top: 20px; padding-bottom: 30px">
+											<!-- table begin-->
+											<div class="form-group">
+												<fieldset class="fieldsetcustom">
+													<legend class="legendcustom">Danh sách thuê bao
+														chuyển mạng đến</legend>
+													<div class="col-md-12">
+														<div class="table-scrollable">
+															<table ng-table="tableParamListSubscriberPortIn"
+																class="table">
+																<tr ng-repeat="item in $data" ng-click="">
+																	<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																	<td title="'Số thuê bao'" align="center"
+																		sortable="'msisdn'">{{item.msisdn}}</td>
+
+																	<td title="'Lý do từ chối CM'" align="center"
+																		style="width: 40%; font-size: 12px;"
+																		sortable="'rejectReasonStr'">
+																		<div
+																			ng-repeat="itemReject in item.listRejectReasonText">
+																			{{itemReject.reasonText}}</div>
+																	</td>
+
+																	<td title="'Thông tin chi tiết'" align="center"
+																		sortable="'createdDateStr'"><a
+																		ng-click="viewInformationCustomerDetailPortIn(item)">Thông
+																			tin đăng ký thuê bao tại VNM</a></td>
+																</tr>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+										</div>
+										<!-- End table danh sach thue bao chuyển mạng đến -->
+									</div>
+									<!-- End Kết quả tra cứu Chuyển mạng đến -->
+
+									<!-- Begin Kết quả tra cứu Chuyển mạng đi -->
+									<div ng-show="nprSubscriberPortOutVisible">
+										<!-- table begin-->
+										<div class="form-group">
+											<fieldset class="fieldsetcustom">
+												<legend class="legendcustom">Yêu cầu chuyển mạng đi</legend>
+												<div class="col-md-12">
+													<div class="table-scrollable">
+														<table ng-table="tableParamsNPRPortOut" class="table">
+															<tr ng-repeat="item in $data"
+																ng-class="{true:'active', false:''}[item.nprId == rowHighlightNPRPortOut.nprId]">
+																<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+																<td title="'Mã YCCM'"
+																	ng-click="getListSubscriberInfoPortOut(item)"
+																	style="min-width: 180px" align="center"
+																	sortable="'cchTransId'">{{item.cchTransId}}</td>
+
+																<td title="'Tên KH'"
+																	ng-click="getListSubscriberInfoPortOut(item)"
+																	style="min-width: 180px" align="center"
+																	sortable="'subdataSubscriberName'">{{item.subdataSubscriberName}}</td>
+																<td title="'Thuê bao đại diện'"
+																	ng-click="getListSubscriberInfoPortOut(item)"
+																	style="min-width: 130px" align="center"
+																	sortable="'subdataContactNumber'">{{item.subdataContactNumber}}</td>
+																<td title="'RNO'" sortable="'receipientStr'"
+																	ng-click="getListSubscriberInfoPortOut(item)"
+																	style="min-width: 100px" align="center">{{item.receipientStr}}</td>
+																<td title="'Ghi chú'" style="min-width: 150px"
+																	ng-click="getListSubscriberInfoPortOut(item)"
+																	sortable="'comments'">{{item.comments}}</td>
+
+																<td title="'Thời gian CM tới VNM'"
+																	ng-click="getListSubscriberInfoPortOut(item)"
+																	sortable="'createdDateStr'">{{item.createdDateStr}}</td>
+
+																<td title="'Trạng thái YCCM'"
+																	ng-click="getListSubscriberInfoPortOut(item)"
+																	sortable="'stepStatus'">{{item.stepStatus}}</td>
+																<td title="'Thông tin chi tiết'"
+																	sortable="'createdDateStr'"><a
+																	ng-click="viewInformationNPRDetialPortOut(item)">Chi
+																		tiết YCCM</a></td>
+															</tr>
+														</table>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+
+										<!--Begin table danh sach thue bao chuyển mạng đi -->
+										<div ng-show="dataTableSubscriberPortOut.length>0"
+											style="padding-top: 20px; padding-bottom: 30px">
+											<!-- table begin-->
+											<div class="form-group">
+												<fieldset class="fieldsetcustom">
+													<legend class="legendcustom">Danh sách thuê bao
+														chuyển mạng đi</legend>
+													<div class="col-md-12">
+														<div class="table-scrollable">
+															<table ng-table="tableParamListSubscriberPortOut"
+																class="table">
+																<tr ng-repeat="item in $data" ng-click="">
+																	<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																	<td title="'Số thuê bao'" align="center"
+																		style="width: 15%" sortable="'msisdn'">{{item.msisdn}}</td>
+																	<!-- <td title="'Thông tin chi tiết'" align="center"
+																		sortable="'createdDateStr'"><a
+																		ng-click="viewInformationCustomerDetailPortOut(item)">Thông
+																			tin đăng ký thuê bao tại VNM</a></td> -->
+																	<td title="'Loại TB'" align="center" style="width: 20%"
+																		sortable="'accountTypeStr'">{{item.accountTypeStr}}</td>
+																	<td title="'Lý do từ chối CM'" align="center"
+																		style="width: 40%; font-size: 12px;"
+																		sortable="'rejectReasonStr'">
+																		<div
+																			ng-repeat="itemReject in item.listRejectReasonText">
+																			{{itemReject.reasonText}}</div>
+																	</td>
+
+																	<td title="'Loại từ chối'" align="center"
+																		style="width: 20%; font-size: 12px;"
+																		sortable="'rejectTypeStr'">{{item.rejectTypeStr}}</td>
+																</tr>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+										</div>
+										<!-- End table danh sach thue bao chuyển mạng đi -->
+									</div>
+									<!-- End Kết quả tra cứu Chuyển mạng đi -->
+
+									<!-- Begin Kết quả tra cứu Hủy chuyển mạng đến -->
+									<div ng-show="nprCancelRNOVisible">
+										<!-- table begin-->
+										<div class="form-group">
+											<fieldset class="fieldsetcustom">
+												<legend class="legendcustom">Hủy chuyển mạng đến</legend>
+												<div class="col-md-12">
+													<div class="table-scrollable">
+														<table ng-table="tableParamsRNOCancel" class="table">
+															<tr ng-repeat="item in $data"
+																ng-class="{true:'active', false:''}[item.nprId == rowHighlightNPRCancel.nprId]">
+																<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+																<td title="'Mã YCCM'"
+																	ng-click="getListSubscriberNPRCancel(item)"
+																	style="min-width: 180px" align="center"
+																	sortable="'cchTransId'">{{item.cchTransId}}</td>
+
+																<td title="'Tên KH'"
+																	ng-click="getListSubscriberNPRCancel(item)"
+																	style="min-width: 180px" align="center"
+																	sortable="'subdataSubscriberName'">{{item.subdataSubscriberName}}</td>
+																<td title="'Thuê bao đại diện'"
+																	ng-click="getListSubscriberNPRCancel(item)"
+																	style="min-width: 130px" align="center"
+																	sortable="'subdataContactNumber'">{{item.subdataContactNumber}}</td>
+																<td title="'DNO'" sortable="'donorStr'"
+																	ng-click="getListSubscriberNPRCancel(item)"
+																	style="min-width: 100px" align="center">{{item.donorStr}}</td>
+																<td title="'Ghi chú'" style="min-width: 150px"
+																	ng-click="getListSubscriberNPRCancel(item)"
+																	sortable="'comments'">{{item.comments}}</td>
+
+																<td title="'Thời gian CM tới VNM'"
+																	ng-click="getListSubscriberNPRCancel(item)"
+																	sortable="'createdDateStr'">{{item.createdDateStr}}</td>
+
+																<td title="'Trạng thái YCCM'"
+																	ng-click="getListSubscriberNPRCancel(item)"
+																	sortable="'stepStatus'">{{item.stepStatus}}</td>
+																<td title="'Thông tin chi tiết'"
+																	sortable="'createdDateStr'"><a
+																	ng-click="viewInformationNPRCancelDetial(item)">Chi
+																		tiết hủy CM</a></td>
+															</tr>
+														</table>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+
+										<!--Begin table danh sách thuê bao hủy chuyển mạng -->
+										<div ng-show="dataTableSubscriberNPRCancel.length>0"
+											style="padding-top: 20px; padding-bottom: 30px">
+											<!-- table begin-->
+											<div class="form-group">
+												<fieldset class="fieldsetcustom">
+													<legend class="legendcustom">Danh sách thuê bao
+														hủy chuyển mạng</legend>
+													<div class="col-md-12">
+														<div class="table-scrollable">
+															<table ng-table="tableParamListSubscriberNPRCancel"
+																class="table">
+																<tr ng-repeat="item in $data" ng-click="">
+																	<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																	<td title="'Tên thuê bao'" align="center"
+																		sortable="'subscriberName'">{{item.subscriberName}}</td>
+																	<td title="'Số thuê bao'" align="center"
+																		sortable="'msisdn'">{{item.msisdn}}</td>
+																	<td title="'Số sim'" align="center"
+																		sortable="'serialSim'">{{item.serialSim}}</td>
+																	<td title="'Loại TB ở DNO'" align="center"
+																		sortable="'accountTypeDNOStr'">{{item.accountTypeDNOStr}}</td>
+																	<td title="'Loại TB ở VNM'" align="center"
+																		sortable="'accountTypeStr'">{{item.accountTypeStr}}</td>
+																	<td title="'Gói cước'" align="center"
+																		sortable="'packageName'">{{item.packageName}}</td>
+
+																	<!-- 																	<td title="'Ảnh'" align="center" -->
+																	<!-- 																		sortable="'createdDateStr'"><div -->
+																	<!-- 																			style="width: 250px"> -->
+																	<!-- 																			<div class="thumbnailFile" -->
+																	<!-- 																				ng-repeat="attachFile in item.attachmentData"> -->
+																	<!-- 																				<img src="/images/mnp_image_preview_icon.png" -->
+																	<!-- 																					title="{{attachFile.fileName}}" width="20px" -->
+																	<!-- 																					height="25px" -->
+																	<!-- 																					ng-click="downloadFileAttachMent(attachFile)" /> -->
+																	<!-- 																			</div> -->
+																	<!-- 																		</div> -->
+																	<!-- 																	</td> -->
+																</tr>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+										</div>
+										<!-- End table danh sách thuê bao hủy chuyển mạng đi-->
+									</div>
+									<!-- End Kết quả tra cứu Hủy chuyển mạng -->
+
+									<!-- Begin Kết quả tra cứu Hủy chuyển mạng đến đi -->
+									<div ng-show="nprCancelDNOVisible">
+										<!-- table begin-->
+										<div class="form-group">
+											<fieldset class="fieldsetcustom">
+												<legend class="legendcustom">Hủy chuyển mạng đi</legend>
+												<div class="col-md-12">
+													<div class="table-scrollable">
+														<table ng-table="tableParamsDNOCancel" class="table">
+															<tr ng-repeat="item in $data"
+																ng-class="{true:'active', false:''}[item.nprId == rowHighlightDNOCancel.nprId]">
+																<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+																<td title="'Mã YCCM'"
+																	ng-click="getListSubscriberDNOCancel(item)"
+																	style="min-width: 180px" align="center"
+																	sortable="'cchTransId'">{{item.cchTransId}}</td>
+
+																<td title="'Tên KH'"
+																	ng-click="getListSubscriberDNOCancel(item)"
+																	style="min-width: 180px" align="center"
+																	sortable="'subdataSubscriberName'">{{item.subdataSubscriberName}}</td>
+																<td title="'Thuê bao đại diện'"
+																	ng-click="getListSubscriberDNOCancel(item)"
+																	style="min-width: 130px" align="center"
+																	sortable="'subdataContactNumber'">{{item.subdataContactNumber}}</td>
+																<td title="'RNO'" sortable="'receipientStr'"
+																	ng-click="getListSubscriberDNOCancel(item)"
+																	style="min-width: 100px" align="center">{{item.receipientStr}}</td>
+																<td title="'Ghi chú'" style="min-width: 150px"
+																	ng-click="getListSubscriberDNOCancel(item)"
+																	sortable="'comments'">{{item.comments}}</td>
+
+																<td title="'Thời gian CM đi'"
+																	ng-click="getListSubscriberDNOCancel(item)"
+																	sortable="'createdDateStr'">{{item.createdDateStr}}</td>
+
+																<td title="'Trạng thái YCCM'"
+																	ng-click="getListSubscriberDNOCancel(item)"
+																	sortable="'stepStatus'">{{item.stepStatus}}</td>
+																<td title="'Thông tin chi tiết'"
+																	sortable="'createdDateStr'"><a
+																	ng-click="viewInformationNPRCancelDetial(item)">Chi
+																		tiết hủy CM</a></td>
+															</tr>
+														</table>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+
+										<!--Begin table danh sách thuê bao hủy chuyển mạng đi -->
+										<div ng-show="dataTableSubscriberDNOCancel.length>0"
+											style="padding-top: 20px; padding-bottom: 30px">
+											<!-- table begin-->
+											<div class="form-group">
+												<fieldset class="fieldsetcustom">
+													<legend class="legendcustom">Danh sách thuê bao
+														hủy chuyển mạng đi</legend>
+													<div class="col-md-12">
+														<div class="table-scrollable">
+															<table ng-table="tableParamListSubscriberDNOCancel"
+																class="table">
+																<tr ng-repeat="item in $data" ng-click="">
+																	<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																	<td title="'Tên thuê bao'" align="center"
+																		sortable="'subscriberName'">{{item.subscriberName}}</td>
+																	<td title="'Số thuê bao'" align="center"
+																		sortable="'msisdn'">{{item.msisdn}}</td>
+																	<td title="'Số sim'" align="center"
+																		sortable="'serialSim'">{{item.serialSim}}</td>
+																	<td title="'Loại TB ở VNM'" align="center"
+																		sortable="'accountTypeStr'">{{item.accountTypeStr}}</td>
+																	<td title="'Gói cước'" align="center"
+																		sortable="'packageName'">{{item.packageName}}</td>
+
+																	<!-- 																	<td title="'Ảnh'" align="center" -->
+																	<!-- 																		sortable="'createdDateStr'"><div -->
+																	<!-- 																			style="width: 250px"> -->
+																	<!-- 																			<div class="thumbnailFile" -->
+																	<!-- 																				ng-repeat="attachFile in item.attachmentData"> -->
+																	<!-- 																				<img src="/images/mnp_image_preview_icon.png" -->
+																	<!-- 																					title="{{attachFile.fileName}}" width="20px" -->
+																	<!-- 																					height="25px" -->
+																	<!-- 																					ng-click="downloadFileAttachMent(attachFile)" /> -->
+																	<!-- 																			</div> -->
+																	<!-- 																		</div> -->
+																	<!-- 																	</td> -->
+																</tr>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+										</div>
+										<!-- End table danh sách thuê bao hủy chuyển mạng đi-->
+									</div>
+									<!-- End Kết quả tra cứu Hủy chuyển mạng đi -->
+
+									<!-- Begin Kết quả tra cứu Trả số về DNO -->
+									<div ng-show="reversalSubscriberDNOVisible">
+										<!-- table begin-->
+										<div class="form-group">
+											<fieldset class="fieldsetcustom">
+												<legend class="legendcustom">Trả số về DNO</legend>
+												<div class="col-md-12">
+													<div class="table-scrollable">
+														<table ng-table="tableParamsNPReversalDNO" class="table">
+															<tr ng-repeat="item in $data"
+																ng-class="{true:'active', false:''}[item.nprSubscriberId == rowHighlightNPRActionAudit.nprSubscriberId]">
+																<td title="'STT'" align="center" sortable="''"
+																	ng-click="getListActionAuditReversalDNO(item)"><strong>{{$index+1}}</strong></td>
+
+																<td title="'Trans_ID'" style="min-width: 130px"
+																	ng-click="getListActionAuditReversalDNO(item)"
+																	align="center" sortable="'cchTransId'">{{item.cchTransId}}</td>
+
+																<td title="'Loại khách hàng'" style="min-width: 130px"
+																	ng-click="getListActionAuditReversalDNO(item)"
+																	align="center" sortable="'subTypeStr'">{{item.subTypeStr}}</td>
+
+																<td title="'TB đại diện'"
+																	sortable="'subdataContactNumber'"
+																	ng-click="getListActionAuditReversalDNO(item)"
+																	style="min-width: 100px" align="center">{{item.subdataContactNumber}}</td>
+
+																<td title="'MSISDN'" sortable="'msisdn'"
+																	ng-click="getListActionAuditReversalDNO(item)">{{item.msisdn}}</td>
+
+																<td title="'Thời gian CM sang VNM'"
+																	sortable="'cratedDateOriginalStr'"
+																	ng-click="getListActionAuditReversalDNO(item)">{{item.cratedDateOriginalStr}}</td>
+
+																<td title="'Thời gian trả về DNO'"
+																	sortable="'createdDateNprStr'"
+																	ng-click="getListActionAuditReversalDNO(item)">{{item.createdDateNprStr}}</td>
+
+																<td title="'DNO'" sortable="'donorStr'"
+																	ng-click="getListActionAuditReversalDNO(item)">{{item.donorStr}}</td>
+
+																<td title="'Trạng thái'" sortable="'statusReversal'"
+																	ng-click="getListActionAuditReversalDNO(item)">{{item.statusReversal}}</td>
+															</tr>
+														</table>
+													</div>
+												</div>
+
+
+												<div class="col-md-12">
+													<h3 class="form-section">
+														<label
+															translate="vnm.form_mnp.mnp_prepaid.npr.file.title.attachment"></label>
+													</h3>
+													<table ng-table="tableAttachmentReversalDNO" class="table">
+														<tr ng-repeat="item in $data">
+															<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+															<td title="'Tên File'" style="min-width: 180px"
+																align="center" sortable="'fileName'">{{item.fileName}}</td>
+															<td title="'Thời gian'" style="min-width: 180px"
+																align="center" sortable="'createDateStr'">{{item.createDateStr}}</td>
+															<td title="'Ghi Chú'" style="min-width: 180px"
+																align="center" sortable="'note'">{{item.note}}</td>
+															<td title="'Download'" style="min-width: 130px"
+																align="center" sortable="'actionDateStr'"><img
+																src="/images/mnp_image_preview_icon.png"
+																title="{{item.fileName}}" width="20px" height="25px"
+																ng-click="downloadFileAttachMent(item)" /></td>
+														</tr>
+													</table>
+												</div>
+
+											</fieldset>
+										</div>
+									</div>
+									<!-- End Kết quả tra cứu Trả số về DNO -->
+
+
+									<!-- Begin Kết quả tra cứu nhận số về Vietnamobile  -->
+									<div ng-show="reversalSubscriberVNMVisible">
+										<!-- table begin-->
+										<div class="form-group">
+											<fieldset class="fieldsetcustom">
+												<legend class="legendcustom">Nhận số về VNM</legend>
+												<div class="col-md-12">
+													<div class="table-scrollable">
+														<table ng-table="tableParamsNPReceiveSubscriberVNM"
+															class="table">
+															<tr ng-repeat="item in $data"
+																ng-class="{true:'active', false:''}[item.nprSubscriberId == rowHighlightNPRActionAuditReceiveSubVNM.nprSubscriberId]">
+																<td title="'STT'" align="center" sortable="''"
+																	ng-click="getListActionAuditReceiveSubVNM(item)"><strong>{{$index+1}}</strong></td>
+
+																<td title="'Trans_ID'" style="min-width: 130px"
+																	ng-click="getListActionAuditReceiveSubVNM(item)"
+																	align="center" sortable="'cchTransId'">{{item.cchTransId}}</td>
+
+																<td title="'Loại khách hàng'" style="min-width: 130px"
+																	ng-click="getListActionAuditReceiveSubVNM(item)"
+																	align="center" sortable="'subTypeStr'">{{item.subTypeStr}}</td>
+
+																<td title="'TB đại diện'"
+																	sortable="'subdataContactNumber'"
+																	ng-click="getListActionAuditReceiveSubVNM(item)"
+																	style="min-width: 100px" align="center">{{item.subdataContactNumber}}</td>
+
+																<td title="'MSISDN'" sortable="'msisdn'"
+																	ng-click="getListActionAuditReceiveSubVNM(item)">{{item.msisdn}}</td>
+
+																<td title="'Thời gian CM sang RNO'"
+																	ng-click="getListActionAuditReceiveSubVNM(item)"></td>
+
+																<td title="'Thời gian nhận về VNM'"
+																	ng-click="getListActionAuditReceiveSubVNM(item)"
+																	sortable="'createdDateNprStr'">{{item.createdDateNprStr}}</td>
+
+																<td title="'RNO'" sortable="'receipientStr'"
+																	ng-click="getListActionAuditReceiveSubVNM(item)">{{item.receipientStr}}</td>
+
+																<td title="'Trạng thái'" sortable="'statusReversal'"
+																	ng-click="getListActionAuditReceiveSubVNM(item)">{{item.statusReversal}}</td>
+															</tr>
+														</table>
+													</div>
+												</div>
+
+
+												<div class="col-md-12">
+													<h3 class="form-section">
+														<label
+															translate="vnm.form_mnp.mnp_prepaid.npr.file.title.attachment"></label>
+													</h3>
+													<table ng-table="tableAttachmentReversalDNO" class="table">
+														<tr ng-repeat="item in $data">
+															<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+															<td title="'Tên File'" style="min-width: 180px"
+																align="center" sortable="'fileName'">{{item.fileName}}</td>
+
+															<td title="'Thời gian'" style="min-width: 180px"
+																align="center" sortable="'createDateStr'">{{item.createDateStr}}</td>
+
+															<td title="'Ghi Chú'" style="min-width: 180px"
+																align="center" sortable="'note'">{{item.note}}</td>
+															<td title="'Download'" style="min-width: 130px"
+																align="center" sortable="'actionDateStr'"><img
+																src="/images/mnp_image_preview_icon.png"
+																title="{{item.fileName}}" width="20px" height="25px"
+																ng-click="downloadFileAttachMent(item)" /></td>
+														</tr>
+													</table>
+												</div>
+											</fieldset>
+										</div>
+									</div>
+									<!-- End Kết quả tra cứu nhận số về Vietnamobile -->
+
+
+									<!-- Begin Kết quả tra cứu trả số về nhà mạng gốc  -->
+									<div ng-show="returnOriginalNetworkVisible">
+										<!-- table begin-->
+										<div class="form-group">
+											<fieldset class="fieldsetcustom">
+												<legend class="legendcustom">Trả số về nhà mạng gốc</legend>
+												<div class="col-md-12">
+													<div class="table-scrollable">
+														<table ng-table="tableParamsReversalOriginalNetwork"
+															class="table">
+															<tr ng-repeat="item in $data"
+																ng-class="{true:'active', false:''}[item.nprSubscriberId == rowHighlightAuditReversalOriginal.nprSubscriberId]">
+																<td title="'STT'" align="center" sortable="''"
+																	ng-click="getListActionAuditReturnOriginal(item)"><strong>{{$index+1}}</strong></td>
+
+																<td title="'Trans_ID'" style="min-width: 130px"
+																	ng-click="getListActionAuditReturnOriginal(item)"
+																	align="center" sortable="'cchTransId'">{{item.cchTransId}}</td>
+
+																<td title="'Loại khách hàng'" style="min-width: 130px"
+																	ng-click="getListActionAuditReturnOriginal(item)"
+																	align="center" sortable="'subTypeStr'">{{item.subTypeStr}}</td>
+
+																<td title="'TB đại diện'"
+																	sortable="'subdataContactNumber'"
+																	ng-click="getListActionAuditReturnOriginal(item)"
+																	style="min-width: 100px" align="center">{{item.subdataContactNumber}}</td>
+
+																<td title="'MSISDN'" sortable="'msisdn'"
+																	ng-click="getListActionAuditReturnOriginal(item)">{{item.msisdn}}</td>
+
+																<td title="'Thời gian CM sang VNM'"
+																	ng-click="getListActionAuditReturnOriginal(item)"
+																	sortable="'createdDateStr'">{{item.createdDateStr}}</td>
+
+																<td title="'DNO'"
+																	ng-click="getListActionAuditReturnOriginal(item)"></td>
+
+																<td title="'Thời gian trả về NM gốc'"
+																	ng-click="getListActionAuditReturnOriginal(item)"
+																	sortable="'createdDateNprStr'">{{item.createdDateNprStr}}</td>
+
+																<td title="'Trạng thái'" sortable="'statusReversal'">{{item.statusReversal}}</td>
+															</tr>
+														</table>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+									</div>
+									<!-- End Kết quả tra cứu trả số về nhà mạng gốc -->
+
+									<!-- Begin Kết quả tra cứu thu hồi số VNM -->
+									<div ng-show="returnSubscriberVNMVisible">
+										<!-- table begin-->
+										<div class="form-group">
+											<fieldset class="fieldsetcustom">
+												<legend class="legendcustom">Thu hồi số VNM</legend>
+												<div class="col-md-12">
+													<div class="table-scrollable">
+														<table ng-table="tableParamsRecoveryVNM" class="table">
+															<tr ng-repeat="item in $data"
+																ng-class="{true:'active', false:''}[item.nprSubscriberId == rowHighlightAuditRecoveryNumber.nprSubscriberId]">
+																<td title="'STT'" align="center"
+																	ng-click="getListActionAuditReturnSubscriberVNM(item)"
+																	sortable="''"><strong>{{$index+1}}</strong></td>
+
+																<td title="'Trans_ID'" style="min-width: 130px"
+																	ng-click="getListActionAuditReturnSubscriberVNM(item)"
+																	align="center" sortable="'cchTransId'">{{item.cchTransId}}</td>
+
+																<td title="'Loại khách hàng'" style="min-width: 130px"
+																	ng-click="getListActionAuditReturnSubscriberVNM(item)"
+																	align="center" sortable="'subTypeStr'">{{item.subTypeStr}}</td>
+
+																<td title="'TB đại diện'"
+																	sortable="'subdataContactNumber'"
+																	ng-click="getListActionAuditReturnSubscriberVNM(item)"
+																	style="min-width: 100px" align="center">{{item.subdataContactNumber}}</td>
+
+																<td title="'MSISDN'" sortable="'msisdn'">{{item.msisdn}}</td>
+
+																<td title="'Thời gian CM sang RNO'"
+																	ng-click="getListActionAuditReturnSubscriberVNM(item)"
+																	sortable="'createdDateStr'">{{item.createdDateStr}}</td>
+
+																<td title="'Thời gian thu hồi về VNM'"
+																	ng-click="getListActionAuditReturnSubscriberVNM(item)"
+																	sortable="'createdDateNprStr'">{{item.createdDateNprStr}}</td>
+
+																<td title="'Trạng thái'" sortable="'statusReversal'"
+																	ng-click="getListActionAuditReturnSubscriberVNM(item)">{{item.statusReversal}}</td>
+															</tr>
+														</table>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+									</div>
+									<!-- End Kết quả tra cứu thu hồi số VNM -->
+
+									<!-- BEGIN MODAL CHUYỂN MẠNG ĐẾN -->
+									<div class="modal fade" id="modalListNPRPortIn" role="dialog">
+										<div class="modal-dialog " style="min-width: 1100px">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal">&times;</button>
+													<h4 class="modal-title"
+														translate="vnm.form_mnp.mnp_prepaid.label.infor"></h4>
+												</div>
+												<div class="modal-body">
+													<div class="tabbable-custom ">
+														<ul class="nav nav-tabs ">
+															<li class="active"><a
+																href="#thong-tin-chuyen-mang-den" data-toggle="tab"
+																aria-expanded="false"
+																translate="vnm.form_mnp.mnp_prepaid.label.infor.detail"></a></li>
+															<li class=""><a href="#lich-su-chuyen-mang-den"
+																data-toggle="tab" aria-expanded="true"
+																translate="vnm.form_mnp.mnp_prepaid.label.history"></a></li>
+														</ul>
+														<div class="tab-content">
+															<div class="tab-pane  active"
+																id="thong-tin-chuyen-mang-den">
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cust.type"></label>
+																	<div class="col-md-4" id="idCustomerTypeNPRDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="nprDetailSelectedModal.subTypeStr"
+																			name="FullName" value="" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.name"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="nprDetailSelectedModal.subdataNprRegistrationName"
+																			name="FullName" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.paper"></label>
+																	<div class="col-md-4" id="idDocumentTypeDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="nprDetailSelectedModal.subdataDocTypeStr"
+																			name="FullName" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.paper.num"></label>
+																	<div class="col-md-4">
+																		<input id="Test" type="text" class="form-control"
+																			ng-model="nprDetailSelectedModal.subdataDocNumber"
+																			ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.paper.date"></label>
+																	<div class="col-md-4">
+																		<input id="documentIssueDate"
+																			ng-model="nprDetailSelectedModal.subdataDocIssueDateStr"
+																			name="DocumentIssueDate" ng-disabled="true"
+																			class="form-control" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.paper.place"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="nprDetailSelectedModal.subdataDocIssuePlace"
+																			class="form-control" name="DocumentIssuePlace"
+																			ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.country"></label>
+																	<div class="col-md-4" id="idCitizenDiv">
+																		<input type="text"
+																			ng-model="nprDetailSelectedModal.country"
+																			ng-disabled="true" class="form-control"
+																			value="{{nprDetailSelectedModal.country}}" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.email"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="nprDetailSelectedModal.subdataEmail"
+																			class="form-control" ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.province"></label>
+																	<div class="col-md-4" id="idSelectDivProvince">
+																		<input type="text"
+																			ng-model="nprDetailSelectedModal.province"
+																			class="form-control" ng-disabled="true" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.district"></label>
+																	<div class="col-md-4" id="divDistrictId">
+																		<input type="text"
+																			ng-model="nprDetailSelectedModal.district"
+																			class="form-control" ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.address"></label>
+																	<div class="col-md-10">
+																		<input type="text" class="form-control"
+																			ng-model="nprDetailSelectedModal.subdataAddress"
+																			name="Address" ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.represent"></label>
+																	<div class="col-md-4">
+																		<input
+																			ng-model="nprDetailSelectedModal.subdataSubReprentative"
+																			name="ReprentativeName" type="text"
+																			class="form-control" ng-disabled="true" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.represent.regency"></label>
+																	<div class="col-md-4">
+																		<input
+																			ng-model="nprDetailSelectedModal.subdataRepPosition"
+																			name="SubdataRepPosition" type="text"
+																			class="form-control" ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.represent.paper"></label>
+																	<div class="col-md-4">
+																		<input
+																			ng-model="nprDetailSelectedModal.subdataRepDocNumber"
+																			ng-disabled="true" name="RepresentativeDocNumber"
+																			type="text" class="form-control" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.represent.paper.date"></label>
+																	<div class="col-md-4">
+																		<input id="RepresentativeDocDate" ng-disabled="true"
+																			ng-model="nprDetailSelectedModal.subdataRepIssueDateStr"
+																			name="RepresentativeDocDate" class="form-control" />
+																	</div>
+
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.DNO"></label>
+																	<div class="col-md-4" id="idDonorDiv">
+																		<input id="RepresentativeDocDate" ng-disabled="true"
+																			ng-model="nprDetailSelectedModal.donorStr"
+																			name="Donor" class="form-control" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.RNO"></label>
+																	<div class="col-md-4">
+																		<p class="form-control-static">
+																			<span class="label label-vnm"
+																				translate="vnm.lable.vnm.name"> </span>
+																		</p>
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.isdn"></label>
+																	<div class="col-md-4">
+																		<input
+																			ng-model="nprDetailSelectedModal.subdataContactNumber"
+																			class="form-control" ng-disabled="true"
+																			name="SubdataDNONumber" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.DNO.num"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="nprDetailSelectedModal.subdataDnoContractNumber"
+																			name="DnoContractNumber" ng-disabled="true"
+																			class="form-control" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.DNO.date"></label>
+																	<div class="col-md-4">
+																		<input placeholder=" /  /  /"
+																			id="subDNOContractDateRes"
+																			ng-model="nprDetailSelectedModal.subdataDnoContractDateResStr"
+																			name="SubDNOContractDateRes" ng-disabled="true"
+																			class="form-control" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.note"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="nprDetailSelectedModal.comments"
+																			name="Comments" class="form-control"
+																			ng-disabled="true" />
+																	</div>
+																</div>
+
+																<h3 class="form-section">
+																	<label
+																		translate="vnm.form_mnp.mnp_prepaid.npr.file.title"></label>
+																</h3>
+																<table ng-table="tableAttachmentDataPortInDetail"
+																	class="table">
+																	<tr ng-repeat="item in $data">
+																		<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+																		<td title="'Tên File'" style="min-width: 180px"
+																			align="center" sortable="'fileName'">{{item.fileName}}</td>
+
+																		<td title="'Ghi Chú'" style="min-width: 180px"
+																			align="center" sortable="'note'">{{item.note}}</td>
+																		<td title="'Download'" style="min-width: 130px"
+																			align="center" sortable="'actionDateStr'"><img
+																			src="/images/mnp_image_preview_icon.png"
+																			title="{{item.fileName}}" width="20px" height="25px"
+																			ng-click="downloadFileAttachMent(item)" /></td>
+																	</tr>
+																</table>
+															</div>
+
+															<div class="tab-pane" id="lich-su-chuyen-mang-den">
+																<div class="form-group">
+																	<fieldset class="fieldsetcustom">
+																		<legend class="legendcustom">Lịch sử chuyển
+																			mạng đến</legend>
+																		<div class="col-md-12">
+																			<div class="table-scrollable">
+																				<table ng-table="tableParamListActionAuditPortIn"
+																					class="table">
+																					<tr ng-repeat="item in $data">
+																						<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+																						<td title="'Loại bản tin'"
+																							style="min-width: 180px" align="center"
+																							sortable="'actionType'">{{item.actionType}}</td>
+
+																						<td title="'Trạng thái'" style="min-width: 180px"
+																							align="center" sortable="'actionStatusStr'">{{item.actionStatusStr}}</td>
+																						<td title="'Thời gian Gửi/Nhận'"
+																							style="min-width: 130px" align="center"
+																							sortable="'actionDateStr'">{{item.actionDateStr}}</td>
+																						<td title="'Ghi chú'" style="min-width: 130px"
+																							align="center" sortable="'comments'">{{item.comments}}</td>
+																						<td title="'Lỗi Gửi/Nhận'"
+																							sortable="'errorMessage'"
+																							style="min-width: 100px" align="center">{{item.errorMessage}}</td>
+																						<td title="'Mã lỗi notification'"
+																							style="min-width: 150px"
+																							sortable="'errorCodeNotify'">{{item.errorCodeNotify}}</td>
+
+																						<td title="'Mô tả lỗi notification'"
+																							sortable="'errorDescNotify'">{{item.errorDescNotify}}</td>
+
+																						<td title="'Tên bản tin lỗi notification'"
+																							sortable="'errorMessageTypeNotify'">{{item.errorMessageTypeNotify}}</td>
+																					</tr>
+																				</table>
+																			</div>
+																		</div>
+																	</fieldset>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn red" data-dismiss="modal">
+														<i class="glyphicon"></i> Close
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END MODAL CHUYỂN MẠNG ĐẾN -->
+
+									<!-- BEGIN MODAL CHUYỂN MẠNG ĐI -->
+									<div class="modal fade" id="modalListNPRPortOut" role="dialog">
+										<div class="modal-dialog " style="min-width: 1100px">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal">&times;</button>
+													<h4 class="modal-title"
+														translate="vnm.form_mnp.mnp_prepaid.label.infor.out"></h4>
+												</div>
+												<div class="modal-body">
+													<div class="tabbable-custom ">
+														<ul class="nav nav-tabs ">
+															<li class="active"><a
+																href="#thong-tin-chuyen-mang-di" data-toggle="tab"
+																aria-expanded="false"
+																translate="vnm.form_mnp.mnp_prepaid.label.infor.detail.out"></a></li>
+
+															<li class=""><a href="#lich-su-chuyen-mang-di"
+																data-toggle="tab" aria-expanded="true"
+																translate="vnm.form_mnp.mnp_prepaid.label.history.out"></a></li>
+														</ul>
+														<div class="tab-content">
+															<div class="tab-pane  active"
+																id="thong-tin-chuyen-mang-di">
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cust.type"></label>
+																	<div class="col-md-4" id="idCustomerTypeNPRDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="nprDetailSelectedPortOutModal.subTypeStr"
+																			name="FullName" value="" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.name"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="nprDetailSelectedPortOutModal.subdataSubscriberName"
+																			name="FullName" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.paper"></label>
+																	<div class="col-md-4" id="idDocumentTypeDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="nprDetailSelectedPortOutModal.subdataDocTypeStr"
+																			name="FullName" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.paper.num"></label>
+																	<div class="col-md-4">
+																		<input id="Test" type="text" class="form-control"
+																			ng-model="nprDetailSelectedPortOutModal.subdataDocNumber"
+																			ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.paper.date"></label>
+																	<div class="col-md-4">
+																		<input id="documentIssueDate"
+																			ng-model="nprDetailSelectedPortOutModal.subdataDocIssueDateStr"
+																			name="DocumentIssueDate" ng-disabled="true"
+																			class="form-control" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.paper.place"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="nprDetailSelectedPortOutModal.subdataDocIssuePlace"
+																			class="form-control" name="DocumentIssuePlace"
+																			ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.country"></label>
+																	<div class="col-md-4" id="idCitizenDiv">
+																		<input type="text"
+																			ng-model="nprDetailSelectedPortOutModal.country"
+																			ng-disabled="true" class="form-control"
+																			value="{{nprDetailSelectedPortOutModal.country}}" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.email"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="nprDetailSelectedPortOutModal.subdataEmail"
+																			class="form-control" ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.province"></label>
+																	<div class="col-md-4" id="idSelectDivProvince">
+																		<input type="text"
+																			ng-model="nprDetailSelectedPortOutModal.province"
+																			class="form-control" ng-disabled="true" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.district"></label>
+																	<div class="col-md-4" id="divDistrictId">
+																		<input type="text"
+																			ng-model="nprDetailSelectedPortOutModal.district"
+																			class="form-control" ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.address"></label>
+																	<div class="col-md-10">
+																		<input type="text" class="form-control"
+																			ng-model="nprDetailSelectedPortOutModal.subdataAddress"
+																			name="Address" ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.represent"></label>
+																	<div class="col-md-4">
+																		<input
+																			ng-model="nprDetailSelectedPortOutModal.subdataSubReprentative"
+																			name="ReprentativeName" type="text"
+																			class="form-control" ng-disabled="true" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.represent.regency"></label>
+																	<div class="col-md-4">
+																		<input
+																			ng-model="nprDetailSelectedPortOutModal.subdataRepPosition"
+																			name="subdataRepPosition" type="text"
+																			class="form-control" ng-disabled="true" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.represent.paper"></label>
+																	<div class="col-md-4">
+																		<input
+																			ng-model="nprDetailSelectedPortOutModal.subdataRepDocNumber"
+																			ng-disabled="true" name="RepresentativeDocNumber"
+																			type="text" class="form-control" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.represent.paper.date"></label>
+																	<div class="col-md-4">
+																		<input id="RepresentativeDocDate" ng-disabled="true"
+																			ng-model="nprDetailSelectedPortOutModal.subdataRepIssueDate"
+																			name="RepresentativeDocDate" class="form-control" />
+																	</div>
+
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.DNO"></label>
+																	<div class="col-md-4" id="idDonorDiv">
+																		<p class="form-control-static">
+																			<span class="label label-vnm"
+																				translate="vnm.lable.vnm.name"> </span>
+																		</p>
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.RNO"></label>
+																	<div class="col-md-4">
+																		<input id="RepresentativeDocDate" ng-disabled="true"
+																			ng-model="nprDetailSelectedPortOutModal.receipientStr"
+																			name="receipientStr" class="form-control" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.isdn"></label>
+																	<div class="col-md-4">
+																		<input
+																			ng-model="nprDetailSelectedPortOutModal.subdataContactNumber"
+																			class="form-control" ng-disabled="true"
+																			name="SubdataDNONumber" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.DNO.num"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="nprDetailSelectedPortOutModal.subdataDnoContractNumber"
+																			name="DnoContractNumber" ng-disabled="true"
+																			class="form-control" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.DNO.date"></label>
+																	<div class="col-md-4">
+																		<input placeholder=" /  /  /"
+																			id="subDNOContractDateRes"
+																			ng-model="nprDetailSelectedPortOutModal.subdataDnoContractDateRes"
+																			name="SubDNOContractDateRes" ng-disabled="true"
+																			class="form-control" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.note"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="nprDetailSelectedPortOutModal.comments"
+																			name="Comments" class="form-control"
+																			ng-disabled="true" />
+																	</div>
+																</div>
+
+																<h3 class="form-section">
+																	<label
+																		translate="vnm.form_mnp.mnp_prepaid.npr.file.title"></label>
+																</h3>
+																<table ng-table="tableAttachmentDataPortOutDetail"
+																	class="table">
+																	<tr ng-repeat="item in $data">
+																		<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+																		<td title="'Tên File'" style="min-width: 180px"
+																			align="center" sortable="'fileName'">{{item.fileName}}</td>
+
+																		<td title="'Ghi Chú'" style="min-width: 180px"
+																			align="center" sortable="'note'">{{item.note}}</td>
+																		<td title="'Download'" style="min-width: 130px"
+																			align="center" sortable="'actionDateStr'"><img
+																			src="/images/mnp_image_preview_icon.png"
+																			title="{{item.fileName}}" width="20px" height="25px"
+																			ng-click="downloadFileAttachMent(item)" /></td>
+																	</tr>
+																</table>
+
+															</div>
+
+															<div class="tab-pane" id="lich-su-chuyen-mang-di">
+																<div class="form-group">
+																	<fieldset class="fieldsetcustom">
+																		<legend class="legendcustom">Lịch sử chuyển
+																			mạng đi</legend>
+																		<div class="col-md-12">
+																			<div class="table-scrollable">
+																				<table ng-table="tableParamListActionAuditPortIn"
+																					class="table">
+																					<tr ng-repeat="item in $data">
+																						<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+																						<td title="'Loại bản tin'"
+																							style="min-width: 180px" align="center"
+																							sortable="'actionType'">{{item.actionType}}</td>
+
+																						<td title="'Trạng thái'" style="min-width: 180px"
+																							align="center" sortable="'actionStatusStr'">{{item.actionStatusStr}}</td>
+																						<td title="'Thời gian Gửi/Nhận'"
+																							style="min-width: 130px" align="center"
+																							sortable="'actionDateStr'">{{item.actionDateStr}}</td>
+																						<td title="'Ghi chú'" style="min-width: 130px"
+																							align="center" sortable="'comments'">{{item.comments}}</td>
+																						<td title="'Lỗi Gửi/Nhận'"
+																							sortable="'errorMessage'"
+																							style="min-width: 100px" align="center">{{item.errorMessage}}</td>
+																						<td title="'Mã lỗi notification'"
+																							style="min-width: 150px"
+																							sortable="'errorCodeNotify'">{{item.errorCodeNotify}}</td>
+
+																						<td title="'Mô tả lỗi notification'"
+																							sortable="'errorDescNotify'">{{item.errorDescNotify}}</td>
+
+																						<td title="'Tên bản tin lỗi notification'"
+																							sortable="'errorMessageTypeNotify'">{{item.errorMessageTypeNotify}}</td>
+																					</tr>
+																				</table>
+																			</div>
+																		</div>
+																	</fieldset>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn red" data-dismiss="modal">
+														<i class="glyphicon"></i> Close
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END MODAL CHUYỂN MẠNG ĐI -->
+
+									<!-- BEGIN MODAL THÔNG TIN CHI TIẾT THUÊ BAO TRẢ TRƯỚC-->
+									<div class="modal fade"
+										id="modalSubcriberDetailInformationPortIn" role="dialog">
+										<div class="modal-dialog " style="min-width: 1100px">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal">&times;</button>
+													<h4 class="modal-title"
+														translate="vnm.form_mnp.mnp_prepaid.label.cus.infor"></h4>
+												</div>
+												<div class="modal-body">
+													<div class="tabbable-custom ">
+														<ul class="nav nav-tabs ">
+															<li class="active"><a href="#" data-toggle="tab"
+																aria-expanded="false"
+																translate="vnm.form_mnp.mnp_prepaid.label.cus.infor"></a></li>
+														</ul>
+														<div class="tab-content">
+															<div class="tab-pane  active">
+
+																<!-- DatBD2-->
+																<div class="form-group" ng-show="model.showFather">
+																	<div class="form-group">
+																		<label style="color: orange; font-size: x-large;">
+																			Khách hàng cha</label>
+																	</div>
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.cust.type"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-model="customerInforDetailSelectedFather.customerTypeStr"
+																				ng-disabled="true" name="CustomerType" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="Thanh toán"></label>
+																		<div class="col-md-4" id="DocumentNumberCustomerDiv">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="model.subPaymentTypeNameFather"
+																				name="DocumentNumberCustomer" />
+																		</div>
+
+
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.last.name"></label>
+																		<div class="col-md-4" id="SurNameCustomerDiv">
+																			<input type="text" class="form-control"
+																				ng-model="customerInforDetailSelectedFather.surname"
+																				ng-disabled="true" name="SurNameCustomer" />
+																		</div>
+
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.first.name"></label>
+																		<div class="col-md-4" id="NameCustomerDiv">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="customerInforDetailSelectedFather.name"
+																				name="NameCustomer" />
+																		</div>
+																	</div>
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="Loại giấy tờ cá nhân"></label>
+																		<div class="col-md-4" id="DocumentNumberCustomerDiv">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="model.typeCardNameFather"
+																				name="DocumentNumberCustomer" />
+																		</div>
+																		<label class="control-label col-md-2"
+																			translate="Số giấy tờ cá nhân"></label>
+																		<div class="col-md-4" id="DocumentNumberCustomerDiv">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="customerInforDetailSelectedFather.docNumber"
+																				name="DocumentNumberCustomer" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card.place"></label>
+																		<div class="col-md-4"
+																			id="DocumentIssuePlaceCustomerDiv">
+																			<input type="text"
+																				ng-model="customerInforDetailSelectedFather.docIssuePlace"
+																				class="form-control" ng-disabled="true"
+																				name="DocumentIssuePlaceCustomer" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card.date"></label>
+																		<div class="col-md-4"
+																			id="DocumentIssueDateCustomerDiv">
+
+																			<input id="DocumentIssueDateCustomer"
+																				ng-disabled="true"
+																				ng-model="customerInforDetailSelectedFather.docIssueDateStr"
+																				name="DocumentIssueDateCustomer"
+																				class="form-control" />
+																		</div>
+																	</div>
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.birth.date"></label>
+																		<div class="col-md-4" id="CustomerBirthDayDiv">
+																			<input id="CustomerBirthDay"
+																				ng-model="customerInforDetailSelectedFather.birthdayStr"
+																				ng-disabled="true" class="form-control" />
+																		</div>
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.gender"></label>
+																		<div class="col-md-4" id="idGenderDiv">
+																			<ui-select
+																				ng-model="customerInforDetailSelectedFather.gender"
+																				class="" ng-disabled="true" style="width: 100%;">
+																			<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																			<ui-select-choices
+																				repeat="x.Id as x in GenderTypeSource | filter:$select.search">
+																			{{x.Title}} </ui-select-choices> </ui-select>
+																		</div>
+																	</div>
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.country"></label>
+																		<div class="col-md-4" id="CitizenCustomerDiv">
+																			<input id="GitizenCustomer"
+																				ng-model="customerInforDetailSelectedFather.country"
+																				ng-disabled="true" class="form-control" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.company.name"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="customerInforDetailSelectedFather.companyName"
+																				name="CompanyName" />
+																		</div>
+																	</div>
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="Loại giấy tờ tổ chức"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="model.typeCardCompanyNameFather"
+																				name="TaxIdentificationNumber" />
+																		</div>
+																		<label class="control-label col-md-2"
+																			translate="Số giấy tờ tổ chức"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="customerInforDetailSelectedFather.taxIdentificationNumber"
+																				name="TaxIdentificationNumber" />
+																		</div>
+
+																	</div>
+																	<div class="form-group">
+																	<!-- 	<label class="control-label col-md-2"
+																			translate="Đối tượng sử dụng"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true" ng-model="model.subUseTypeFather"
+																				name="TaxIdentificationNumber" />
+																		</div>
+ -->
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.province"></label>
+																		<div class="col-md-4" id="ProvinceCustomerDiv">
+
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="customerInforDetailSelectedFather.province"
+																				name="ProvinceCustomer" />
+																		</div>
+																		<label class="control-label col-md-2"
+																			translate="Địa chỉ của người đại diện"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-model="customerInforDetailSelectedFather.address"
+																				ng-disabled="true" name="AddressCustomer" />
+																		</div>
+																	</div>
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.district"></label>
+																		<div class="col-md-4" id="DistrictCustomerDiv">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="customerInforDetailSelectedFather.district"
+																				name="DistrictCustomer" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="Địa chỉ của công ty"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-model="customerInforDetailSelectedFather.addressCompany"
+																				ng-disabled="true" name="AddressCustomer" />
+																		</div>
+																	</div>
+
+																	<!-- <div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.shop"></label>
+																		<div class="col-md-4">
+																			<input type="text" ng-disabled="true"
+																				class="form-control"
+																				ng-model="customerInforDetailSelectedFather.shopCode"
+																				name="ShopNameCustomer" />
+																		</div>
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.package"></label>
+																		<div class="col-md-4" id="idPackageTypeDiv">
+																			<input type="text" ng-disabled="true"
+																				class="form-control"
+																				ng-model="dataSubscriberInforFather.packageName"
+																				name="PackageType" />
+																		</div>
+																	</div> -->
+
+																	<!-- <div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.isdn"></label>
+																		<div class="col-md-4">
+																			<input ng-disabled="true"
+																				ng-model="dataSubscriberInforFather.msisdn"
+																				name="SubScriberCustomerNumber" type="text"
+																				class="form-control" />
+																		</div>
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.serial"></label>
+																		<div class="col-md-4">
+																			<input ng-model="dataSubscriberInforFather.serialSim"
+																				name="NumberSIM" type="text" class="form-control"
+																				ng-disabled="true" />
+																		</div>
+																	</div> -->
+																</div>
+																<!-- End DatBD2 -->
+																<div class="form-group" ng-show="model.showFather">
+																	<label style="color: orange; font-size: x-large;">
+																		Khách hàng con</label>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.cust.type"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-model="customerInforDetailSelected.customerTypeStr"
+																			ng-disabled="true" name="CustomerType" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="Thanh toán"></label>
+																	<div class="col-md-4" id="DocumentNumberCustomerDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="model.subPaymentTypeName"
+																			name="DocumentNumberCustomer" />
+																	</div>
+
+
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.last.name"></label>
+																	<div class="col-md-4" id="SurNameCustomerDiv">
+																		<input type="text" class="form-control"
+																			ng-model="customerInforDetailSelected.surname"
+																			ng-disabled="true" name="SurNameCustomer" />
+																	</div>
+
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.first.name"></label>
+																	<div class="col-md-4" id="NameCustomerDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.name"
+																			name="NameCustomer" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="Loại giấy tờ cá nhân"></label>
+																	<div class="col-md-4" id="DocumentNumberCustomerDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true" ng-model="model.typeCardName"
+																			name="DocumentNumberCustomer" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="Số giấy tờ cá nhân"></label>
+																	<div class="col-md-4" id="DocumentNumberCustomerDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.docNumber"
+																			name="DocumentNumberCustomer" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card.place"></label>
+																	<div class="col-md-4"
+																		id="DocumentIssuePlaceCustomerDiv">
+																		<input type="text"
+																			ng-model="customerInforDetailSelected.docIssuePlace"
+																			class="form-control" ng-disabled="true"
+																			name="DocumentIssuePlaceCustomer" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card.date"></label>
+																	<div class="col-md-4" id="DocumentIssueDateCustomerDiv">
+
+																		<input id="DocumentIssueDateCustomer"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.docIssueDateStr"
+																			name="DocumentIssueDateCustomer" class="form-control" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.birth.date"></label>
+																	<div class="col-md-4" id="CustomerBirthDayDiv">
+																		<input id="CustomerBirthDay"
+																			ng-model="customerInforDetailSelected.birthdayStr"
+																			ng-disabled="true" class="form-control" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.gender"></label>
+																	<div class="col-md-4" id="idGenderDiv">
+																		<ui-select
+																			ng-model="customerInforDetailSelected.gender"
+																			class="" ng-disabled="true" style="width: 100%;">
+																		<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																		<ui-select-choices
+																			repeat="x.Id as x in GenderTypeSource | filter:$select.search">
+																		{{x.Title}} </ui-select-choices> </ui-select>
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.country"></label>
+																	<div class="col-md-4" id="CitizenCustomerDiv">
+																		<input id="GitizenCustomer"
+																			ng-model="customerInforDetailSelected.country"
+																			ng-disabled="true" class="form-control" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.company.name"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.companyName"
+																			name="CompanyName" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="Loại giấy tờ tổ chức"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="model.typeCardCompanyName"
+																			name="TaxIdentificationNumber" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="Số giấy tờ tổ chức"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.taxIdentificationNumber"
+																			name="TaxIdentificationNumber" />
+																	</div>
+
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="Đối tượng sử dụng"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true" ng-model="model.subUseType"
+																			name="TaxIdentificationNumber" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.province"></label>
+																	<div class="col-md-4" id="ProvinceCustomerDiv">
+
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.province"
+																			name="ProvinceCustomer" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.district"></label>
+																	<div class="col-md-4" id="DistrictCustomerDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.district"
+																			name="DistrictCustomer" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.address"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-model="customerInforDetailSelected.address"
+																			ng-disabled="true" name="AddressCustomer" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.shop"></label>
+																	<div class="col-md-4">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="customerInforDetailSelected.shopCode"
+																			name="ShopNameCustomer" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.package"></label>
+																	<div class="col-md-4" id="idPackageTypeDiv">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="subscriberInforselected.packageName"
+																			name="PackageType" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.isdn"></label>
+																	<div class="col-md-4">
+																		<input ng-disabled="true"
+																			ng-model="subscriberInforselected.msisdn"
+																			name="SubScriberCustomerNumber" type="text"
+																			class="form-control" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.serial"></label>
+																	<div class="col-md-4">
+																		<input ng-model="subscriberInforselected.serialSim"
+																			name="NumberSIM" type="text" class="form-control"
+																			ng-disabled="true" />
+																	</div>
+																</div>
+																
+																<!-- DatBD2 -->
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="Nhân viên giao dịch"></label>
+																	<div class="col-md-4">
+																		<input ng-disabled="true"
+																			ng-model="subscriberInforselected.staffInfor"
+																			name="SubScriberCustomerNumber" type="text"
+																			class="form-control" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="Địa chỉ điểm giao dịch"></label>
+																	<div class="col-md-4">
+																		<input ng-model="subscriberInforselected.shopInformationSearchAllTransfer.shopAddress"
+																			name="NumberSIM" type="text" class="form-control"
+																			ng-disabled="true" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="Tỉnh/Thành phố diễn ra GD"></label>
+																	<div class="col-md-4">
+																		<input ng-disabled="true"
+																			ng-model="subscriberInforselected.shopInformationSearchAllTransfer.provinceShop"
+																			name="SubScriberCustomerNumber" type="text"
+																			class="form-control" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="Số điện thoại điểm GD"></label>
+																	<div class="col-md-4">
+																		<input ng-model="subscriberInforselected.shopInformationSearchAllTransfer.telephone"
+																			name="NumberSIM" type="text" class="form-control"
+																			ng-disabled="true" />
+																	</div>
+																</div>
+																<!-- END -->
+
+
+																<h3 class="form-section">
+																	<label
+																		translate="vnm.form_mnp.mnp_prepaid.cus.file.title"></label>
+																</h3>
+																<table ng-table="tableAttachmentImageCUSPortIn"
+																	class="table">
+																	<tr ng-repeat="item in $data">
+																		<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+																		<td title="'Tên File'" style="min-width: 180px"
+																			align="center" sortable="'fileName'">{{item.fileName}}</td>
+
+																		<td title="'Download'" style="min-width: 130px"
+																			align="center" sortable="'actionDateStr'"><img
+																			src="/images/mnp_image_preview_icon.png"
+																			title="{{item.fileName}}" width="20px" height="25px"
+																			ng-click="downloadFileAttachMent(item)" /></td>
+																	</tr>
+																</table>
+															</div>
+
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn red" data-dismiss="modal">
+														<i class="glyphicon"></i> Close
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END MODAL THÔNG TIN CHI TIẾT THUÊ BAO TRẢ TRƯỚC-->
+
+									<!-- BEGIN MODAL THÔNG TIN CHI TIẾT THUÊ BAO TRẢ SAU-->
+									<div class="modal fade"
+										id="modalSubcriberDetailInformationPortInPostpaid"
+										role="dialog">
+										<div class="modal-dialog " style="min-width: 1100px">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal">&times;</button>
+													<h4 class="modal-title"
+														translate="vnm.form_mnp.mnp_prepaid.label.infor.parent"></h4>
+												</div>
+												<div class="modal-body">
+													<div class="tabbable-custom ">
+														<ul class="nav nav-tabs ">
+															<li class="active"><a href="#parent-customer"
+																data-toggle="tab" aria-expanded="false"
+																translate="vnm.form_mnp.mnp_prepaid.label.infor.postpaid"></a></li>
+															<li class=""><a href="#sub-customer-and-subscriber"
+																data-toggle="tab" aria-expanded="true"
+																translate="vnm.form_mnp.mnp_prepaid.label.infor.child"></a></li>
+														</ul>
+														<div class="tab-content">
+															<div class="tab-pane active" id="parent-customer">
+																<!--  Thông tin đại diện -->
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.cust.type"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="parentCustomer.customerType"
+																			ng-disabled="true" class="form-control"
+																			name="CustomerType" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.cust.segment"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="parentCustomer.customerSegment"
+																			ng-disabled="true" class="form-control"
+																			name="CustomerSegment" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.last.name"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true" ng-model="parentCustomer.surname"
+																			name="ParentSurname" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.first.name"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true" ng-model="parentCustomer.name"
+																			name="ParentName" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.phone"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="parentCustomer.mobilePhone"
+																			name="ParentPhoneNumber" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.gender"></label>
+																	<div class="col-md-4" id="idGenderDiv">
+																		<ui-select ng-model="parentCustomer.gender" class=""
+																			ng-disabled="true" style="width: 100%;">
+																		<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																		<ui-select-choices
+																			repeat="x.Id as x in GenderTypeSource | filter:$select.search">
+																		{{x.Title}} </ui-select-choices> </ui-select>
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.birth.date"></label>
+																	<div class="col-md-4">
+																		<input id="ParentBirthDay" ng-disabled="true"
+																			ng-model="parentCustomer.birthDay"
+																			class="form-control" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-model="parentCustomer.docNumber"
+																			ng-disabled="true" name="ParentDocumentNumber" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card.place"></label>
+																	<div class="col-md-4">
+																		<input type="text" ng-model="parentCustomer.docPlace"
+																			id="ParentDocumentIssuePlace" class="form-control"
+																			ng-disabled="true" name="ParentDocumentIssuePlace" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card.date"></label>
+																	<div class="col-md-4">
+																		<input id="ParentDocumentIssueDate"
+																			placeholder=" /  /  /"
+																			ng-model="parentCustomer.docDate" ng-disabled="true"
+																			class="form-control" />
+																	</div>
+
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.language"></label>
+																	<div class="col-md-4">
+																		<input id="ParentDocumentIssueDate"
+																			ng-model="parentCustomer.customerLang"
+																			ng-disabled="true" name="CustomerLang"
+																			class="form-control" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.email"></label>
+																	<div class="col-md-4">
+																		<input type="text" ng-model="parentCustomer.email"
+																			ng-disabled="true" class="form-control"
+																			name="ParentEmail" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.company.name"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="parentCustomer.companyName"
+																			ng-disabled="true" class="form-control"
+																			name="CompanyName" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.tax.code"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="parentCustomer.taxIdentificationNumber"
+																			ng-disabled="true" class="form-control"
+																			name="ParentTaxcode" />
+																	</div>
+																</div>
+
+																<fieldset class="fieldsetcustom"
+																	style="margin-top: 30px;">
+																	<!-- End add -->
+																	<div class="form-group">
+																		<div class="col-md">
+																			<legend class="legendcustom"
+																				style="margin-left: 40px;"
+																				translate="vnm.form_mnp.mnp_prepaid.label.cus.address"></legend>
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.region"></label>
+																		<div class="col-md-4">
+																			<ui-select ng-model="parentCustomer.addRegion"
+																				style="width: 100%;" ng-disabled="true">
+																			<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																			<ui-select-choices
+																				repeat="x.Id as x in RegionSource | filter:$select.search">
+																			{{x.Title}} </ui-select-choices> </ui-select>
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.province"></label>
+
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-model="parentCustomer.addProvince"
+																				ng-disabled="true" name="AddProvince" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.district"></label>
+
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-model="parentCustomer.addDistrict"
+																				ng-disabled="true" name="AddDistrict" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.precinct"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-model="parentCustomer.addTown" ng-disabled="true"
+																				name="ParentAddTown" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.street"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true" ng-model="parentCustomer.addRoad"
+																				name="ParentAddRoad" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.home.number"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="parentCustomer.addNumberHome"
+																				name="AddNumberHome" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.building"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="parentCustomer.addBuildingName"
+																				name="AddBuildingName" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.room.number"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-model="parentCustomer.addRoomNumber"
+																				ng-disabled="true" name="AddRoomNumber" />
+																		</div>
+																	</div>
+
+																</fieldset>
+																<!-- End add -->
+
+																<fieldset class="fieldsetcustom"
+																	style="margin-top: 30px;">
+																	<!-- Begin add price -->
+																	<div class="form-group">
+																		<div class="col-md">
+																			<legend class="legendcustom"
+																				style="margin-left: 40px;"
+																				translate="vnm.form_mnp.mnp_prepaid.label.cus.postal.address"></legend>
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.region"></label>
+																		<div class="col-md-4">
+																			<ui-select ng-model="parentCustomer.priceAddRegion"
+																				ng-disabled="true" style="width: 100%;">
+																			<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																			<ui-select-choices
+																				repeat="x.Id as x in RegionSource | filter:$select.search">
+																			{{x.Title}} </ui-select-choices> </ui-select>
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.province"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-model="parentCustomer.priceAddProvince"
+																				ng-disabled="true" name="PriceAddProvince" />
+																		</div>
+
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.district"></label>
+
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-model="parentCustomer.priceDddDistrict"
+																				ng-disabled="true" name="PriceDddDistrict" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.precinct"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="parentCustomer.priceAddTown"
+																				name="ParPriceTown" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.street"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-model="parentCustomer.priceAddRoad"
+																				ng-disabled="true" name="ParentPriceRoad" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.home.number"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="parentCustomer.priceAddNumber_home"
+																				name="PriceNumberHome" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.building"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="parentCustomer.priceAddBuildingName"
+																				name="PriceBuildingName" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.room.number"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="parentCustomer.priceAddRoomNumber"
+																				name="PriceRoomNumber" />
+																		</div>
+																	</div>
+
+																</fieldset>
+																<!-- end add price -->
+															</div>
+
+															<div class="tab-pane" id="sub-customer-and-subscriber">
+																<!-- Begin khach-hang-va-thue-bao -->
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.cust.type"></label>
+																	<div class="col-md-4" id="idCustomerTypeSub">
+																		<input type="text" ng-model="subCustomer.customerType"
+																			ng-disabled="true" class="form-control"
+																			name="SubCustomerType" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.cust.segment"></label>
+																	<div class="col-md-4" id="idLevelCustomerSub">
+																		<input type="text"
+																			ng-model="subCustomer.customerSegment"
+																			ng-disabled="true" class="form-control"
+																			name="SubCustomerSegment" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.last.name"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true" ng-model="subCustomer.surname"
+																			name="SubSurname" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.first.name"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true" ng-model="subCustomer.name"
+																			name="SubName" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.phone"></label>
+																	<div class="col-md-4">
+																		<input type="text" ng-model="subCustomer.mobilePhone"
+																			ng-disabled="true" class="form-control"
+																			name="SubContactNumber" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.gender"></label>
+																	<div class="col-md-4" id="subGenderId">
+																		<ui-select ng-model="subCustomer.gender" class=""
+																			ng-disabled="true" style="width: 100%;">
+																		<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																		<ui-select-choices
+																			repeat="x.Id as x in GenderTypeSource | filter:$select.search">
+																		{{x.Title}} </ui-select-choices> </ui-select>
+																	</div>
+
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.birth.date"></label>
+																	<div class="col-md-4">
+																		<input id="SubBirthDay"
+																			ng-model="subCustomer.birthDay" ng-disabled="true"
+																			placeholder=" /  /  /" name="SubBirthDay"
+																			datetime-picker="" date-only=""
+																			date-format="DD/MM/YYYY" class="form-control" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true" ng-model="subCustomer.docNumber"
+																			name="SubDocumentNumber" />
+																	</div>
+
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card.place"></label>
+																	<div class="col-md-4">
+																		<input type="text" ng-model="subCustomer.docPlace"
+																			ng-disabled="true" class="form-control"
+																			name="SubDocumentIssuePlace" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card.date"></label>
+																	<div class="col-md-4">
+																		<input id="SubDateOfIssue"
+																			ng-model="subCustomer.docDate" ng-disabled="true"
+																			class="form-control" />
+																	</div>
+
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.language"></label>
+																	<div class="col-md-4">
+																		<input id="ParentDocumentIssueDate"
+																			ng-model="subCustomer.customerLang"
+																			ng-disabled="true" name="SubCustomerLang"
+																			class="form-control" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.email"></label>
+																	<div class="col-md-4">
+																		<input type="text" ng-model="subCustomer.email"
+																			ng-disabled="true" class="form-control"
+																			name="SubEmail" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.company.name"></label>
+																	<div class="col-md-4">
+																		<input type="text" ng-model="subCustomer.companyName"
+																			ng-disabled="true" class="form-control"
+																			name="SubCompanyName" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.tax.code"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="subCustomer.taxIdentificationNumber"
+																			ng-disabled="true" class="form-control"
+																			name="SubTaxcode" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.business.license"></label>
+																	<div class="col-md-4">
+																		<input type="text"
+																			ng-model="model.busRegistrationNumber"
+																			ng-disabled="true" class="form-control"
+																			name="BusRegistrationNumber" />
+																	</div>
+																</div>
+
+																<!-- Begin địa chỉ hóa đơn khách hàng con-->
+																<fieldset class="fieldsetcustom"
+																	style="margin-top: 30px;">
+																	<!-- End add -->
+																	<div class="form-group">
+																		<div class="col-md">
+																			<legend class="legendcustom"
+																				style="margin-left: 40px;"
+																				translate="vnm.form_mnp.mnp_prepaid.label.cus.bill.address"></legend>
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.region"></label>
+																		<div class="col-md-4">
+																			<ui-select ng-model="subCustomer.addRegion"
+																				ng-disabled="true" style="width: 100%;">
+																			<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																			<ui-select-choices
+																				repeat="x.Id as x in RegionSource | filter:$select.search">
+																			{{x.Title}} </ui-select-choices> </ui-select>
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.province"></label>
+																		<div class="col-md-4">
+																			<input type="text" ng-model="subCustomer.addProvince"
+																				ng-disabled="true" class="form-control"
+																				name="SubAddProvince" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.district"></label>
+																		<div class="col-md-4">
+																			<input type="text" ng-model="subCustomer.addDistrict"
+																				ng-disabled="true" class="form-control"
+																				name="SubAddDistrict" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.precinct"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true" ng-model="subCustomer.addTown"
+																				name="SubAddTown" />
+																		</div>
+
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.street"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true" ng-model="subCustomer.addRoad"
+																				name="SubBillAddRoad" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.home.number"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="subCustomer.addNumberHome"
+																				name="SubBillAddNumberHome" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.building"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="subCustomer.addBuildingName"
+																				name="SubBillAddBuildingName" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.room.number"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="subCustomer.addRoomNumber"
+																				name="SubBillAddRoomNumber" />
+																		</div>
+																	</div>
+																</fieldset>
+																<!-- End địa chỉ hóa đơn -->
+
+																<!-- Begin địa chỉ thông báo cước khách hàng con -->
+																<fieldset class="fieldsetcustom"
+																	style="margin-top: 30px;">
+																	<!-- End add -->
+																	<div class="form-group">
+																		<div class="col-md">
+																			<legend class="legendcustom"
+																				style="margin-left: 40px;"
+																				translate="vnm.form_mnp.mnp_prepaid.label.cus.postal.address"></legend>
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.region"></label>
+																		<div class="col-md-4">
+																			<ui-select ng-model="subCustomer.priceAddRegion"
+																				ng-disabled="true" style="width: 100%;">
+																			<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																			<ui-select-choices
+																				repeat="x.Id as x in RegionSource | filter:$select.search">
+																			{{x.Title}} </ui-select-choices> </ui-select>
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.province"></label>
+																		<div class="col-md-4">
+																			<input type="text"
+																				ng-model="subCustomer.priceAddProvince"
+																				ng-disabled="true" class="form-control"
+																				name="SubPriceAddProvince" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.district"></label>
+																		<div class="col-md-4">
+																			<input type="text"
+																				ng-model="subCustomer.priceDddDistrict"
+																				ng-disabled="true" class="form-control"
+																				name="SubPriceDddDistrict" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.precinct"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="subCustomer.priceAddTown"
+																				name="SubNotiAddTown" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.street"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="subCustomer.priceAddRoad"
+																				name="SubNotiAddRoad" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.home.number"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="subCustomer.priceAddNumber_home"
+																				name="SubNotiAddNumberHome" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.building"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="subCustomer.priceAddBuildingName"
+																				name="SubNotiAddBuildingName" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.room.number"></label>
+																		<div class="col-md-4">
+																			<input type="text" class="form-control"
+																				ng-disabled="true"
+																				ng-model="subCustomer.priceAddRoomNumber"
+																				name="SubNotiAddRoomNumber" />
+																		</div>
+																	</div>
+
+																</fieldset>
+																<!-- End địa chỉ hóa đơn  cước khách hàng con-->
+
+																<!-- Begin Thông tin tài khoản cước khách hàng con -->
+																<fieldset class="fieldsetcustom"
+																	style="margin-top: 20px; margin-bottom: 20px;">
+																	<div class="form-group">
+																		<div class="col-md">
+																			<legend class="legendcustom"
+																				style="margin-left: 40px;"
+																				translate="vnm.form_mnp.mnp_prepaid.label.cus.bill.account"></legend>
+																		</div>
+																	</div>
+
+																	<!-- 1190 hide thông tin tài khoản cước -->
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.payment.method"></label>
+																		<div class="col-md-4" id="idDivSubPaymentsMethod">
+																			<input type="text" ng-disabled="true"
+																				class="form-control"
+																				ng-model="subCustomer.paymentMethod"
+																				name="PackageType" />
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.payment.type"></label>
+																		<div class="col-md-4" id="idDivSubPaymentsType">
+																			<input type="text" ng-disabled="true"
+																				class="form-control"
+																				ng-model="subCustomer.paymentType"
+																				name="PackageType" />
+																		</div>
+
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.bill.type"></label>
+																		<div class="col-md-4" id="idDivSubBillType">
+																			<input type="text" ng-disabled="true"
+																				class="form-control"
+																				ng-model="subCustomer.packageNotiType"
+																				name="PackageType" />
+																		</div>
+
+																		<!-- 1190 <label class="control-label col-md-2">Tài khoản cước</label>
+												<div class="col-md-4">
+													<input type="text" ng-model="model.subAccountBill"
+														ng-disabled="true" class="form-control"
+														name="SubPayAccountBill" />
+												</div> -->
+																	</div>
+
+																	<div class="form-group" ng-show="false">
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.label.due"></label>
+																		<div class="col-md-4">
+																			<ui-select ng-model="model.subAddressPayments"
+																				class="" ng-disabled="true" style="width: 100%;">
+																			<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																			<ui-select-choices
+																				repeat="x.Id as x in AddressPaymentsSource | filter:$select.search">
+																			{{x.Title}} </ui-select-choices> </ui-select>
+																		</div>
+
+																		<label class="control-label col-md-2"
+																			translate="vnm.form_mnp.mnp_prepaid.label.cus.deposit.account"></label>
+																		<div class="col-md-4">
+																			<ui-select ng-model="model.subAccountDeposit"
+																				ng-disabled="true" style="width: 100%;">
+																			<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																			<ui-select-choices
+																				repeat="x.Id as x in SubAccountDepositSource | filter:$select.search">
+																			{{x.Title}} </ui-select-choices> </ui-select>
+																		</div>
+																	</div>
+																</fieldset>
+
+																<fieldset class="fieldsetcustom"
+																	style="margin-top: 10px; margin-bottom: 30px;">
+																	<div class="form-group">
+																		<div class="col-md">
+																			<legend class="legendcustom"
+																				style="margin-left: 40px;"
+																				translate="vnm.form_mnp.mnp_prepaid.label.cus.regis"></legend>
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"><label
+																			translate="vnm.form_mnp.mnp_prepaid.cus.label.package.type"></label>
+																			<span class="red" ng-show="packageTypeCus">(*)</span>
+																		</label>
+
+																		<div class="col-md-4" id="idPackageTypeDiv">
+																			<input type="text" ng-disabled="true"
+																				class="form-control"
+																				ng-model="subscriberInforselected.packageName"
+																				name="PackageType" />
+																		</div>
+
+																		<label class="control-label col-md-2"><label
+																			translate="vnm.form_mnp.mnp_prepaid.npr.subdata.number"></label>
+																			<span class="red" ng-show="subscriberNumberNPR">(*)</span>
+																		</label>
+
+																		<div class="col-md-4">
+																			<input ng-model="subscriberInforselected.msisdn"
+																				name="SubDataNumber" ng-disabled="true" type="text"
+																				class="form-control" />
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-2"><label
+																			translate="vnm.form_mnp.mnp_prepaid.cus.label.serial"></label>
+																			<span class="red" ng-show="serialSimSub">(*)</span> </label>
+
+																		<div class="col-md-4">
+																			<input ng-model="subscriberInforselected.serialSim"
+																				name="SerialSim" ng-disabled="true" type="text"
+																				class="form-control" />
+																		</div>
+																	</div>
+
+
+																</fieldset>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn red" data-dismiss="modal">
+														<i class="glyphicon"></i> Close
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END MODAL THÔNG TIN CHI TIẾT THUÊ BAO TRẢ SAU-->
+
+									<!-- BEGIN MODAL MODAL THÔNG TIN CHUYỂN MẠNG ĐI -->
+									<div class="modal fade"
+										id="modalSubcriberDetailInformationPortOut" role="dialog">
+										<div class="modal-dialog " style="min-width: 1100px">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal">&times;</button>
+													<h4 class="modal-title"
+														translate="vnm.form_mnp.mnp_prepaid.label.cus.infor"></h4>
+												</div>
+												<div class="modal-body">
+													<div class="tabbable-custom ">
+														<ul class="nav nav-tabs ">
+															<li class="active"><a href="#" data-toggle="tab"
+																aria-expanded="false"
+																translate="vnm.form_mnp.mnp_prepaid.label.cus.infor"></a></li>
+														</ul>
+														<div class="tab-content">
+															<div class="tab-pane  active">
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.cust.type"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-model="customerInforDetailSelected.customerTypeStr"
+																			ng-disabled="true" name="CustomerType" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.last.name"></label>
+																	<div class="col-md-4" id="SurNameCustomerDiv">
+																		<input type="text" class="form-control"
+																			ng-model="customerInforDetailSelected.surname"
+																			ng-disabled="true" name="SurNameCustomer" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.first.name"></label>
+																	<div class="col-md-4" id="NameCustomerDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.name"
+																			name="NameCustomer" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card"></label>
+																	<div class="col-md-4" id="DocumentNumberCustomerDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.docNumber"
+																			name="DocumentNumberCustomer" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card.place"></label>
+																	<div class="col-md-4"
+																		id="DocumentIssuePlaceCustomerDiv">
+																		<input type="text"
+																			ng-model="customerInforDetailSelected.docIssuePlace"
+																			class="form-control" ng-disabled="true"
+																			name="DocumentIssuePlaceCustomer" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.id.card.date"></label>
+																	<div class="col-md-4" id="DocumentIssueDateCustomerDiv">
+
+																		<input id="DocumentIssueDateCustomer"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.docIssueDateStr"
+																			name="DocumentIssueDateCustomer" class="form-control" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.birth.date"></label>
+																	<div class="col-md-4" id="CustomerBirthDayDiv">
+																		<input id="CustomerBirthDay"
+																			ng-model="customerInforDetailSelected.birthdayStr"
+																			ng-disabled="true" class="form-control" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.gender"></label>
+																	<div class="col-md-4" id="idGenderDiv">
+																		<ui-select
+																			ng-model="customerInforDetailSelected.gender"
+																			class="" ng-disabled="true" style="width: 100%;">
+																		<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																		<ui-select-choices
+																			repeat="x.Id as x in GenderTypeSource | filter:$select.search">
+																		{{x.Title}} </ui-select-choices> </ui-select>
+
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.country"></label>
+																	<div class="col-md-4" id="CitizenCustomerDiv">
+																		<input id="GitizenCustomer"
+																			ng-model="customerInforDetailSelected.country"
+																			ng-disabled="true" class="form-control" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.company.name"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.companyName"
+																			name="CompanyName" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.tax.code"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.taxIdentificationNumber"
+																			name="TaxIdentificationNumber" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.province"></label>
+																	<div class="col-md-4" id="ProvinceCustomerDiv">
+
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.province"
+																			name="ProvinceCustomer" />
+																	</div>
+																</div>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.district"></label>
+																	<div class="col-md-4" id="DistrictCustomerDiv">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="customerInforDetailSelected.district"
+																			name="DistrictCustomer" />
+																	</div>
+
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.address"></label>
+																	<div class="col-md-4">
+																		<input type="text" class="form-control"
+																			ng-model="customerInforDetailSelected.address"
+																			ng-disabled="true" name="AddressCustomer" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.shop"></label>
+																	<div class="col-md-4">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="customerInforDetailSelected.shopCode"
+																			name="ShopNameCustomer" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.package"></label>
+																	<div class="col-md-4" id="idPackageTypeDiv">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="subscriberInforselected.packageName"
+																			name="PackageType" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.isdn"></label>
+																	<div class="col-md-4">
+																		<input ng-disabled="true"
+																			ng-model="subscriberInforselected.msisdn"
+																			name="SubScriberCustomerNumber" type="text"
+																			class="form-control" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cus.serial"></label>
+																	<div class="col-md-4">
+																		<input ng-model="subscriberInforselected.serialSim"
+																			name="NumberSIM" type="text" class="form-control"
+																			ng-disabled="true" />
+																	</div>
+																</div>
+															</div>
+
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn red" data-dismiss="modal">
+														<i class="glyphicon"></i> Close
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END MODAL MODAL THÔNG TIN CHUYỂN MẠNG ĐI -->
+
+									<!-- BEGIN MODAL MODAL THÔNG TIN HỦY CHUYỂN MẠNG -->
+									<div class="modal fade" id="modalNPRCancelPopup" role="dialog">
+										<div class="modal-dialog " style="min-width: 1100px">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal">&times;</button>
+													<h4 class="modal-title"
+														translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans"></h4>
+												</div>
+												<div class="modal-body">
+													<div class="tabbable-custom ">
+														<ul class="nav nav-tabs ">
+															<li class="active"><a href="#huy-chuyen-mang"
+																data-toggle="tab" aria-expanded="false"
+																translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.detail"></a></li>
+															<li class=""><a href="#lich-su-huy-chuyen-mang"
+																data-toggle="tab" aria-expanded="true"
+																translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.history"></a></li>
+														</ul>
+														<div class="tab-content">
+															<div class="tab-pane  active" id="huy-chuyen-mang">
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.cust.name"></label>
+																	<div class="col-md-3">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="nprCancelDetail.subdataSubscriberName"
+																			name="FullNameCustomer" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.isdn"></label>
+																	<div class="col-md-3">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="nprCancelDetail.subdataContactNumber"
+																			name="msisdn" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.paper.type"></label>
+																	<div class="col-md-3">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="nprCancelDetail.subdataDocTypeStr"
+																			name="DocumentType" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.paper.num"></label>
+																	<div class="col-md-3">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="nprCancelDetail.subdataDocNumber"
+																			name="DocumentIssueNumber" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.paper.date"></label>
+																	<div class="col-md-3">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="nprCancelDetail.subdataDocIssueDateStr"
+																			name="DocumentIssueDate" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.paper.place"></label>
+																	<div class="col-md-3">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="nprCancelDetail.subdataDocIssuePlace"
+																			name="DocumentIssuePlace" />
+																	</div>
+																</div>
+
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.code"></label>
+																	<div class="col-md-3">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="nprCancelDetail.cchTransId"
+																			name="TransactionIDInfo" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.time"></label>
+																	<div class="col-md-3">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="nprCancelDetail.createdDateStr"
+																			name="CreateDate" />
+																	</div>
+																</div>
+
+																<div class="form-group" style="padding-bottom: 30px;">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.note"></label>
+																	<div class="col-md-3">
+																		<input type="text" ng-disabled="true"
+																			class="form-control"
+																			ng-model="nprCancelDetail.comments" name="Comments" />
+																	</div>
+																</div>
+
+																<h3 class="form-section"
+																	translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.reason"></h3>
+																<div class="form-group">
+																	<label class="control-label col-md-2"></label>
+																	<textarea class="control-label col-md-6"
+																		ng-disabled="true" style="height: 100px;"
+																		ng-model="model.cancelReasonList">
+
+  																	</textarea>
+																</div>
+
+																<h3 class="form-section"
+																	translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.infor"></h3>
+																<div class="form-group">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.name"></label>
+																	<div class="col-md-3">
+																		<input type="text" class="form-control"
+																			ng-model="nprDetailInfor.contactFullname"
+																			ng-disabled="true" name="FullNameContact" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.phone"></label>
+																	<div class="col-md-3">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="nprDetailInfor.contactNumber"
+																			name="NumberContact" />
+																	</div>
+																</div>
+																<div class="form-group" style="padding-bottom: 30px;">
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.email"></label>
+																	<div class="col-md-3">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="nprDetailInfor.contactEmail"
+																			name="EmailContact" />
+																	</div>
+																	<label class="control-label col-md-2"
+																		translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.address"></label>
+																	<div class="col-md-3">
+																		<input type="text" class="form-control"
+																			ng-disabled="true"
+																			ng-model="nprDetailInfor.contactAddress"
+																			name="AddressContact" />
+																	</div>
+																</div>
+																<h3 class="form-section"
+																	translate="vnm.form_mnp.mnp_prepaid.label.cancel.trans.coupon"></h3>
+																<div class="form-group">
+																	<label class="control-label col-md-8"><strong><a
+																			ng-click="downloadFileAttachMent(nprDetailAttachMent)">{{
+																				nprDetailInfor.attachFileName }}</a></strong> </label>
+																</div>
+															</div>
+
+															<div class="tab-pane" id="lich-su-huy-chuyen-mang">
+																<div class="form-group">
+																	<fieldset class="fieldsetcustom">
+																		<legend class="legendcustom">Lịch sử chuyển
+																			mạng đến</legend>
+																		<div class="col-md-12">
+																			<div class="table-scrollable">
+																				<table ng-table="tableParamListActionAuditPortIn"
+																					class="table">
+																					<tr ng-repeat="item in $data">
+																						<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+																						<td title="'Loại bản tin'"
+																							style="min-width: 180px" align="center"
+																							sortable="'actionType'">{{item.actionType}}</td>
+
+																						<td title="'Trạng thái'" style="min-width: 180px"
+																							align="center" sortable="'actionStatusStr'">{{item.actionStatusStr}}</td>
+																						<td title="'Thời gian Gửi/Nhận'"
+																							style="min-width: 130px" align="center"
+																							sortable="'actionDateStr'">{{item.actionDateStr}}</td>
+																						<td title="'Ghi chú'" style="min-width: 130px"
+																							align="center" sortable="'comments'">{{item.comments}}</td>
+																						<td title="'Lỗi Gửi/Nhận'"
+																							sortable="'errorMessage'"
+																							style="min-width: 100px" align="center">{{item.errorMessage}}</td>
+																						<td title="'Mã lỗi notification'"
+																							style="min-width: 150px"
+																							sortable="'errorCodeNotify'">{{item.errorCodeNotify}}</td>
+
+																						<td title="'Mô tả lỗi notification'"
+																							sortable="'errorDescNotify'">{{item.errorDescNotify}}</td>
+
+																						<td title="'Tên bản tin lỗi notification'"
+																							sortable="'errorMessageTypeNotify'">{{item.errorMessageTypeNotify}}</td>
+																					</tr>
+																				</table>
+																			</div>
+																		</div>
+																	</fieldset>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn red" data-dismiss="modal">
+														<i class="glyphicon"></i> Close
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END MODAL THÔNG TIN HỦY CHUYỂN MẠNG-->
+
+									<!-- BEGIN LỊCH SỬ CHUYỂN MẠNG -->
+									<div ng-show="nprActionAudit.length>0"
+										style="padding-top: 20px; padding-bottom: 30px">
+										<!-- table begin-->
+										<div class="form-group">
+											<fieldset class="fieldsetcustom">
+												<legend class="legendcustom">Lich sử</legend>
+												<div class="col-md-12">
+													<div class="table-scrollable">
+														<table ng-table="tableParamListActionAudit" class="table">
+															<tr ng-repeat="item in $data">
+																<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+
+																<td title="'Loại bản tin'" style="min-width: 180px"
+																	align="center" sortable="'actionType'">{{item.actionType}}</td>
+
+																<td title="'Trạng thái'" style="min-width: 180px"
+																	align="center" sortable="'actionStatusStr'">{{item.actionStatusStr}}</td>
+																<td title="'Thời gian Gửi/Nhận'"
+																	style="min-width: 130px" align="center"
+																	sortable="'actionDateStr'">{{item.actionDateStr}}</td>
+																<td title="'Ghi chú'" style="min-width: 130px"
+																	align="center" sortable="'comments'">{{item.comments}}</td>
+																<td title="'Lỗi Gửi/Nhận'" sortable="'errorMessage'"
+																	style="min-width: 100px" align="center">{{item.errorMessage}}</td>
+																<td title="'Mã lỗi notification'"
+																	style="min-width: 150px" sortable="'errorCodeNotify'">{{item.errorCodeNotify}}</td>
+
+																<td title="'Mô tả lỗi notification'"
+																	sortable="'errorDescNotify'">{{item.errorDescNotify}}</td>
+
+																<td title="'Tên bản tin lỗi notification'"
+																	sortable="'errorMessageTypeNotify'">{{item.errorMessageTypeNotify}}</td>
+															</tr>
+														</table>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+									</div>
+									<!-- END LỊCH SỬ CHUYỂN MẠNG -->
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- controller end -->
+	</div>
+
+
+</body>
+</html>

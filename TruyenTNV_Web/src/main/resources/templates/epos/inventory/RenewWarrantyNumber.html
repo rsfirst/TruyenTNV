@@ -1,0 +1,591 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Cấp lại phiếu bảo hành</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+.selectRow {
+	background-color: gray;
+}
+</style>
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/inventory/RenewWarrantyNumber.js"
+			type="text/javascript"></script>
+		<div ng-controller="RenewWarrantyNumberController" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<!-- <div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.ExportToInferior.page.title"></span>
+					</div>
+				</div> -->
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.RenewWarrantyNumber.page.title"></b>
+						</legend>
+						<form name="frm_prepaid" class="form-horizontal  form-bordered"
+							method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+
+									<div class="tab-content" style="margin-right: 5px;">
+
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.RenewWarrantyNumber.label.infor"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.RenewWarrantyNumber.label.reason">
+													</label>
+													<div class="col-md-3">
+														<ui-select ng-model="model.lowReason" class=""
+															ng-disabled="disabledReason" style="width: 100%;">
+														<ui-select-match>{{$select.selected.code}}-{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listReason | filter:$select.search">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+													<div class="col-md-1"></div>
+
+													<label class="control-label col-md-2"
+														translate="vnm.RenewWarrantyNumber.label.fromstock">
+													</label>
+													<div class="col-md-3">
+														<ui-select ng-model="model.lowAgent" class=""
+															ng-disabled="disabledLowAgent" style="width: 100%;">
+														<ui-select-match>{{$select.selected.shopCode}}-{{$select.selected.shopName}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listLowAgent | filter:$select.search">
+														{{x.shopCode}} - {{x.shopName}} </ui-select-choices></ui-select>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.RenewWarrantyNumber.label.fromdate">
+													</label>
+													<div class="col-md-3">
+														<input ng-model="model.dtFromDate" id="fromDate"
+															ng-disabled="disabledDtFromDate" name="searchFromDate"
+															datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+															class="form-control" />
+													</div>
+
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-2"
+														translate="vnm.RenewWarrantyNumber.label.deliverstock">
+													</label>
+													<!-- <div class="col-md-3">
+														<ui-select ng-model="model.lowReceiverAgent" class=""
+															ng-disabled="disabledLowReceiverAgent"
+															style="width: 100%;"> <ui-select-match>{{$select.selected.code}}-{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listReceiverAgent | filter:$select.search | limitTo: limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div> -->
+													<div class="col-md-1">
+														<input type="text" class="form-control" ng-disabled="disabledLowReceiverAgent"
+															ng-model="model.receiverAgentCode" id="fShopCode"
+															data-toggle="tooltip" data-placement="top" title="" />
+
+													</div>
+													<div class="col-md-2">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.receiverAgentName" id="fShopName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+												</div>
+
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.RenewWarrantyNumber.label.fromstaff">
+													</label>
+												<!-- 	<div class="col-md-3">
+														<ui-select ng-model="model.lowStaff" class=""
+															ng-disabled="disabledLowStaff" style="width: 100%;">
+														<ui-select-match>{{$select.selected.code}}-{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listLowStaff | filter:$select.search | limitTo:limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div> -->
+													<div class="col-md-1">
+														<input type="text" class="form-control" ng-disabled="disabledLowStaff"
+															ng-model="model.staffCode" id="fStaffCode"
+															data-toggle="tooltip" data-placement="top" title="" />
+
+													</div>
+													<div class="col-md-2">
+														<input ng-disabled="true" type="text" class="form-control"
+															ng-model="model.staffName2" id="fStaffName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+													
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-2"
+														translate="vnm.RenewWarrantyNumber.label.staffname">
+													</label>
+													<div class="col-md-3">
+														<input type="text" class="form-control"
+															ng-disabled="disabledStaffName"
+															ng-model="model.staffName" />
+													</div>
+
+
+
+												</div>
+
+												<div class="form-gropup">
+													<div class="col-md-5"></div>
+													<div class="col-md-6">
+														<button class="btn btn-primary" ng-click="btnOnSearch()"
+															ng-disabled="disabledSearch">
+															<span class="glyphicon glyphicon-search"></span> <label
+																translate="vnm.ExportToDealer.label.btn.search"></label>
+														</button>
+													</div>
+												</div>
+											</fieldset>
+
+											<div class="form-group">
+												<fieldset class="fieldset-primary">
+
+
+
+													<div class="form-group">
+														<div class="col-md-12">
+															<div class="table-scrollable">
+																<table id="tableOne"
+																	class="table-bordered"
+																	style="width: 100%">
+																	<thead class="ng-table-sort-header">
+
+																		<tr>
+																			<th width="17%"><label
+																				translate="vnm.RenewWarrantyNumber.label.fromstock">
+																			</label></th>
+																			<th width="17%"><label
+																				translate="vnm.RenewWarrantyNumber.label.deliverstock">
+																			</label></th>
+																			<th width="17%"><label
+																				translate="vnm.RenewWarrantyNumber.label.fromstaff">
+																			</label></th>
+																			<th width="16%"><label
+																				translate="vnm.RenewWarrantyNumber.label.staffname">
+																			</label></th>
+																			<th width="17%"><label
+																				translate="vnm.RenewWarrantyNumber.label.reason">
+																			</label></th>
+																			<th width="16"><label
+																				translate="vnm.RenewWarrantyNumber.label.refromdate">
+																			</label></th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																	</tbody>
+
+																</table>
+															</div>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+
+											<div class="form-group">
+												<div class="col-md-6 md-height-300">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.ExportToInferior.fieldset.title.list.item"></b>
+
+														</legend>
+
+														<div class="form-group">
+															<div class="col-md-12">
+																<div class="table-scrollable">
+																	<table id="tableTwo" class="table-bordered"
+																		style="width: 100%">
+																		<thead class="ng-table-sort-header">
+
+																			<tr>
+																				<th width="20%"><label
+																					translate="vnm.ExportToDealer.label.tbl.goods.code"></label></th>
+																				<th width="20%"><label
+																					translate="vnm.ExportToDealer.label.tbl.goods.name"></label></th>
+																				<th width="20%"><label
+																					translate="vnm.ExportToDealer.label.tbl.status"></label></th>
+																				<th width="20%"><label
+																					translate="vnm.ExportToDealer.label.tbl.goods.unit"></label></th>
+																				<th width="20%"><label
+																					translate="vnm.ExportToDealer.label.tbl.goods.quantity"></label></th>
+
+																			</tr>
+
+																		</thead>
+																		<tbody>
+																		</tbody>
+																	</table>
+																</div>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+												<!-- Đàm Nguyên Hùng -->
+
+												<div class="col-md-6 md-height-300">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.form_new_warranty_no.label.input.detail"></b>
+														</legend>
+
+														<div class="form-group">
+															<label class="control-label col-md-2"
+																translate="vnm.form_new_warranty_no.label.good.source"></label>
+
+															<div class="col-md-10">
+																<ui-select ng-model="model.resourceCodeForm" class=""
+																	ng-disabled="disableAdd"
+																	on-select="onChooseResourceCodeForm()"
+																	style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x in listResourceCode | filter:$select.search">
+																{{x.code}} - {{x.name}} </ui-select-choices> </ui-select>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-2"
+																translate="vnm.form_new_warranty_no.label.good.type"></label>
+
+															<div class="col-md-10">
+																<ui-select ng-model="model.stockInternalTypeForm"
+																	class="" ng-disabled="disableAdd"
+																	on-select="onChooseInternalStockForm()"
+																	style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x in listInternalStock | filter:$select.search">
+																{{x.code}} - {{x.name}} </ui-select-choices> </ui-select>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-2"
+																translate="vnm.form_new_warranty_no.label.good"></label>
+
+															<div class="col-md-3">
+																<ui-select ng-model="model.goodsForm" class=""
+																	ng-disabled="disableAdd" id="goodsForm"
+																	on-select="onChooseGoodsForm()" style="width: 100%;">
+																<ui-select-match>{{$select.selected.goodsCode}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x in lstGoodsForm | filter:$select.search | limitTo:40">
+																{{x.goodsCode}} - {{x.name}} </ui-select-choices> </ui-select>
+															</div>
+
+															<div class="col-md-5">
+																<input type="text" class="form-control"
+																	ng-disabled="true" ng-model="model.goodsForm.name" />
+															</div>
+
+															<div class="col-md-2">
+																<button type="button" name="viewStock"
+																	ng-disabled="disabledViewStock" style="width: 100%"
+																	class="btn btn-primary" ng-click="viewStock()">
+																	<i class="glyphicon glyphicon-cd"></i> <label
+																		translate="vnm.form_new_warranty_no.label.button.view.stock"></label>
+																</button>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-2"
+																translate="vnm.form_new_warranty_no.label.good.status"></label>
+
+															<div class="col-md-3">
+																<ui-select ng-model="model.statesForm" class=""
+																	ng-disabled="disableAdd" style="width: 100%;">
+																<ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x in listStatesList | filter:$select.search">
+																{{x.stateId}} - {{x.name}} </ui-select-choices> </ui-select>
+															</div>
+
+															<label class="control-label col-md-2"
+																translate="vnm.form_new_warranty_no.label.good.quantity"></label>
+
+															<div class="col-md-3">
+																<input type="text" class="form-control"
+																	id="goodsQuantity" ng-disabled="disableAdd"
+																	ng-model="model.goodQuantity"
+																	onkeypress="return valid_numbers(event)" />
+															</div>
+
+															<div class="col-md-2">
+																<button type="button" name="viewDetail"
+																	id="disableAddViewDetail"
+																	ng-disabled="disableAddViewDetail" style="width: 100%"
+																	class="btn btn-primary" ng-click="viewDetail()">
+																	<i class="glyphicon glyphicon-zoom-in"></i> <label
+																		translate="vnm.form_new_warranty_no.label.button.view.detail"></label>
+																</button>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-2"
+																translate="vnm.form_new_warranty_no.label.good.note"></label>
+
+															<div class="col-md-10">
+																<textarea name="Text1" style="width: 100%;"
+																	ng-disabled="disableAdd" ng-model="model.goodNote"></textarea>
+															</div>
+														</div>
+														<div class="form-group" style="padding-top: 10px">
+															<div class="col-md-12" style="text-align: center;"
+																id="pnlButtonAction">
+																<button type="button" name="btnAdd"
+																	ng-disabled="isDisabledBtnAdd"
+																	class="btn btn-primary btn-primary-70"
+																	ng-click="btnAddOnclick()">
+																	<span class="glyphicon glyphicon-plus"></span> <label
+																		translate="vnm.common.btn.add"></label>
+																</button>
+																<button type="button" name="btnEdit"
+																	ng-disabled="isDisabledBtnEdit"
+																	class="btn btn-primary btn-primary-70"
+																	ng-click="btnEditOnclick()">
+																	<span class="glyphicon glyphicon-edit"></span> <label
+																		translate="vnm.common.btn.edit"></label>
+																</button>
+
+																<button type="button" name="btnDelete"
+																	ng-disabled="isDisabledBtnDelete"
+																	class="btn btn-primary btn-primary-70"
+																	ng-click="btnDeleteOnclick()">
+																	<span class="glyphicon glyphicon-delete"></span> <label
+																		translate="vnm.common.btn.delete"></label>
+																</button>
+															</div>
+
+															<div class="col-md-12" style="text-align: center;"
+																id="pnlButtonOK">
+																<button type="button" name="btnOk"
+																	class="btn btn-primary btn-primary-70"
+																	ng-click="btnOkOnclick()">
+																	<i></i> <label translate="vnm.common.btn.approve"></label>
+																</button>
+																<button type="button" name="btnCancel"
+																	class="btn btn-primary btn-primary-70"
+																	ng-click="btnCancelOnclick()">
+																	<i></i> <label translate="vnm.common.btn.cancel"></label>
+																</button>
+															</div>
+														</div>
+
+
+													</fieldset>
+												</div>
+
+
+												<!-- Bùi ĐÌnh Đạt -->
+
+
+
+											</div>
+											<div class="form-group" ng-show="showButtonSupplyAndPrint"
+												style="padding-top: 20px; padding-bottom: 20px;">
+
+												<div class="col-md-12" style="text-align: center;">
+
+
+
+
+													<button type="button" name="btnDuyet" style="width: 100px"
+														ng-disabled="" class="btn btn-primary"
+														ng-click="btnSupplyAgainOnClick()">
+														<i class="glyphicon glyphicon-repeat"></i> 
+														<label
+															translate="vnm.RenewWarrantyNumber.label.refly"></label>
+													</button>
+													<button type="button" name="btnPrint" style="width: 100px"
+														ng-disabled="disablePrint" class="btn btn-primary"
+														ng-click="btnPrintWarrantyOnclick()">
+														<i class="glyphicon glyphicon-print"></i> <label
+															translate="vnm.RenewWarrantyNumber.label.btn.print"></label>
+													</button>
+
+
+
+
+
+												</div>
+											</div>
+											<!-- button cham nhan va bo qua cho tim kiem -->
+
+											<div class="form-group" ng-show="showButtonAcceptSearch"
+												style="padding-top: 20px; padding-bottom: 20px;">
+
+												<div class="col-md-12" style="text-align: center;">
+
+													<button type="button" name="btnExportRequest"
+														style="width: 100px" ng-disabled="disableAcceptSearch"
+														class="btn btn-primary" ng-click="btnAcceptSearch()">
+														<i class="glyphicon glyphicon-search"></i> <label
+															translate="vnm.RenewWarrantyNumber.label.accept"></label>
+													</button>
+
+													<button type="button" name="btnPrint" style="width: 100px"
+														ng-disabled="fasle" class="btn btn-primary"
+														ng-click="btnCancelSearch()">
+														<i class="glyphicon glyphicon-menu-left"></i> <label
+															translate="vnm.RenewWarrantyNumber.label.cancel"></label>
+													</button>
+
+
+												</div>
+											</div>
+
+											<!-- button cham nhan va bo qua cho cấp lại -->
+
+
+											<div class="form-group" ng-show="showButtonAccept"
+												style="padding-top: 20px; padding-bottom: 20px;">
+
+												<div class="col-md-12" style="text-align: center;">
+
+													<button type="button" name="btnExportRequest"
+														style="width: 100px" ng-disabled="disableXuatLenh"
+														class="btn btn-primary" ng-click="btnAcceptCaplai()">
+														<i class="glyphicon glyphicon-hand-up"></i> <label
+															translate="vnm.RenewWarrantyNumber.label.accept"></label>
+													</button>
+
+													<button type="button" name="btnPrint" style="width: 100px"
+														ng-disabled="fasle" class="btn btn-primary"
+														ng-click="btnCancel()">
+														<i class="glyphicon glyphicon-menu-left"></i> <label
+															translate="vnm.RenewWarrantyNumber.label.cancel"></label>
+													</button>
+
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 1190 modal xem thong tin kho -->
+							<div class="modal fade" id="modalStockInfo" role="dialog"
+								data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title"
+												translate="vnm.common.label.view.stock.info"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/stockViewInfo'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalSerialList" role="dialog"
+								data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 900px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title"
+												translate="vnm.common.label.list.serials"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/serialList'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalStockDetail" role="dialog"
+								data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close"
+												ng-click="btnBackSerial()">&times;</button>
+											<h4 class="modal-title"
+												translate="vnm.common.label.list.out.serials"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogRenewWarrantyDetail'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalAddSerial" role="dialog"
+								data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title"
+												translate="vnm.common.label.input.goods"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogButtonDetail'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalListShop" role="dialog"
+								data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title"
+												translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListShop'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalListStaff" role="dialog"
+								data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title"
+												translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListStaff'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 1190 modal xem thong tin kho -->
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+
+			<nav class="navbar navbar-inverse" th:fragment="topmenu" ng-controller="ctrl-topfragment">
+				<div class="container">
+					<div class="navbar-header">
+						<a href="/" class="navbar-logo hidden-sm hidden-xs"> <img
+							class="img-responsive " src="/css/images/logo.png" alt=""/>
+						</a> <a href="#"
+							class="navbar-search-btn js-open-search-box-mobile visible-xs visible-sm">
+							<i class="truyencv-icon icon-search"></i>
+						</a>
+						<div class="navbar-category">
+							<button class="navbar-category-btn js-open-sidebar">
+								<span class="lines"> 
+								 <span class="line"></span>
+								 <span class="line"></span>
+								 <span class="line"></span>
+								</span>
+								<span class="hidden-xs hidden-sm"> Danh muc</span>
+							</button>
+							<ul class="navbar-category-list">
+								<li class="col-xs-4">
+								<a href="https://truyencv.com/danh-sach/moi-cap-nhat/">Truyen moi</a></li>
+								<li class="col-xs-4">
+								<a href="https://truyencv.com/danh-sach/moi-cap-nhat/">Truyen hoan thanh</a></li>
+								<li class="col-xs-4">
+								<a href="https://truyencv.com/danh-sach/moi-cap-nhat/">Truyen de cu</a></li>
+								<li class="col-xs-4">
+								<a href="https://truyencv.com/danh-sach/moi-cap-nhat/">Truyen sang tac</a></li>
+							</ul>
+						</div>
+						<div class="navbar-category">
+							<button class="navbar-category-btn js-open-sidebar">
+								<span class="lines"> 
+								 <span class="line"></span>
+								 <span class="line"></span>
+								 <span class="line"></span>
+								</span>
+								<span class="hidden-xs hidden-sm"> The loai</span>
+							</button>
+							<ul class="navbar-category-list">
+								<li class="col-xs-4">
+								<a href="https://truyencv.com/danh-sach/moi-cap-nhat/">Kiem hiep</a></li>
+								<li class="col-xs-4">
+								<a href="https://truyencv.com/danh-sach/moi-cap-nhat/">Vien tuong</a></li>
+								<li class="col-xs-4">
+								<a href="https://truyencv.com/danh-sach/moi-cap-nhat/">Truyen hai</a></li>
+								<li class="col-xs-4">
+								<a href="https://truyencv.com/danh-sach/moi-cap-nhat/">Tieu thuyet</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="collapse navbar-collapse">
+						<ul class="nav navbar-nav navbar-right">
+							<li>
+								<div class="search-block">
+									<div class="actions">
+										<button type="submit" title="Tim kiem" class="search-toggle-btn" id="js-search-toggle">
+										<i class="truyencv-icon icon-search"></i></button>
+									</div>
+									<form id="js-search-panel" class="search-panel" onsubmit="do_search(1);return false;">
+										<input type="text" name="txtKeyword" id="txtKeyword" placeholder="Ten truyen hoac tac gia" class="form-control" 
+										autocomplete="off"/>
+										<button class="btn btn-search" type="submit"><i class="truyencv-icon icon-search-primary"></i></button> 
+									</form>
+								</div>
+							</li>
+							<li>
+								<div class="user-block">
+									<i class="truyencv-icon icon-user"></i>
+									<a href="#modal-login" data-toggle="modal">Dang nhap</a>
+									<span class="diver">|</span>
+									<a href="#modal-register" data-toggle="modal">Dang ky</a>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+

@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<!-- FormImportStaffBalance -->
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/sales/formWarTransaction.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-formWarTransaction" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.FormWarTransaction.page.title"></b>
+						</legend>
+						<form name="frm_prepaid" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom " style="padding-right: 4px;">
+
+									<div class="tab-pane active" id="tab_5_1">
+										<fieldset class="fieldset-primary">
+											<legend class="lengend-primary">
+												<b translate="vnm.FormWarTransaction.fieldset.title.search"></b>
+											</legend>
+											<div class="form-group" style="padding-right: 3px;">
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.warranty.receip"> </label>
+												<div class="col-md-3">
+													<input type="text" class="form-control" maxlength="50" ng-model="model.warrantyReceip" id="fWarrantyReceip" ng-disabled="dWarrantyReceip"
+														data-toggle="tooltip" data-placement="top" title="" />
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.to.receip"></label>
+												<div class="col-md-3">
+													<input type="text" class="form-control" maxlength="50" ng-model="model.toReceip" id="fToReceip" ng-disabled="dToReceip" data-toggle="tooltip"
+														data-placement="top" title="" />
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.start.date"></label>
+												<div class="col-md-3">
+													<input placeholder="dd/MM/yyyy" id="fStartDate" ng-model="model.startDate" ng-blur="checkStartDate()" maxlength="10" name="startDate"
+														datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" ng-disabled="dStartDate" />
+												</div>
+
+											</div>
+											<div class="form-group" style="padding-right: 3px;">
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.customer"> </label>
+												<div class="col-md-3">
+													<input type="text" class="form-control" maxlength="50" ng-model="model.customer" id="fCustomer" ng-disabled="dCustomer" data-toggle="tooltip"
+														data-placement="top" title="" />
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.cust.contact"></label>
+												<div class="col-md-3">
+													<input type="text" class="form-control" maxlength="50" ng-model="model.custContact" id="fCustContact" ng-disabled="dCustContact"
+														data-toggle="tooltip" data-placement="top" title="" />
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.status"> </label>
+												<div class="col-md-3">
+													<ui-select ng-model="model.status" class="" id="fStatus" ng-disabled="dStatus"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+													<ui-select-choices style="width: auto;" repeat="x in lstStatus | filter:$select.search"> <span
+														ng-bind-html="x.code | highlight: $select.search"></span> <span>-</span> <span ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+												</div>
+											</div>
+											<div class="form-group" style="padding-right: 3px; text-align: center;">
+												<div>
+													<button type="button" name="search" ng-disabled="disableSearch" class="btn btn-primary btn-primary-100" ng-click="search()">
+														<i class="fa fa-search"></i> <label translate="vnm.common.btn.search"></label>
+													</button>
+												</div>
+											</div>
+										</fieldset>
+										<fieldset class="fieldset-primary-1">
+											<legend class="lengend-primary">
+												<b translate="vnm.FormWarTransaction.fieldset.title.list.transaction"></b>
+											</legend>
+											<div class="form-group" id="divTable">
+												<div class="col-md-12 md-height-300 table-scrollable" style="border-top: none; border-bottom: none; overflow: scroll;">
+													<table id="tableTransaction" class="table-bordered table" style="min-width: 3100px">
+														<thead class="ng-table-sort-header">
+															<tr>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.customerS"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.cust.contact"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.warranty.receip"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.goods.name"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.receive.date"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.level"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.to.receip"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.receip"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.comment"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.staff.receive.name"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.staff.receive.code"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.staff.process.name"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.staff.process.code"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.estimate.date"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.process.date"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.dating.date"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.result"></th>
+																<th style="width: 5%" translate="vnm.FormWarTransaction.label.status"></th>
+																<th style="width: 10%" translate="vnm.FormWarTransaction.label.process.status"></th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+											</div>
+										</fieldset>
+
+										<fieldset class="fieldset-primary-1">
+											<legend class="lengend-primary">
+												<b translate="vnm.FormWarTransaction.fieldset.title.detail.transaction"></b>
+											</legend>
+											<div class="form-group" style="padding-right: 3px;">
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.warranty.receip"> </label>
+												<div class="col-md-1p13">
+													<input type="text" class="form-control" ng-model="model.warrantyReceipDetail" id="fWarrantyReceipDetail" ng-disabled="dWarrantyReceipDetail"
+														data-toggle="tooltip" data-placement="top" title="" />
+												</div>
+												<div class="col-md-1p3">
+													<button type="button" name="viewInfo" class="btn btn-primary" style="width: 100%" ng-click="addInfo()" ng-disabled="isDisabledBtnInfo">
+														<i></i> <label translate="vnm.FormWarTransaction.label.button.choose"></label>
+													</button>
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.customer"></label>
+												<div class="col-md-2">
+													<input type="text" class="form-control" maxlength="50" ng-model="model.customerDetail" id="fCustomerDetail" ng-disabled="dCustomerDetail"
+														data-toggle="tooltip" data-placement="top" title="" />
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.cust.contact"></label>
+												<div class="col-md-5">
+													<input type="text" class="form-control" maxlength="50" ng-model="model.custContactDetail" id="fCustContactDetail" ng-disabled="dCustContactDetail"
+														data-toggle="tooltip" data-placement="top" title="" />
+												</div>
+
+											</div>
+											<div class="form-group" style="padding-right: 3px;">
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.lov.receive"> </label>
+												<div class="col-md-1p6">
+													<input type="text" class="form-control" ng-model="model.lovReceiveCode" id="fLovReceiveCode" data-toggle="tooltip" data-placement="top" title=""
+														ng-disabled="dLovReceiveCode" />
+												</div>
+												<div class="col-md-10p6">
+													<input type="text" class="form-control" ng-model="model.lovReceiveName" id="fLovReceiveName" data-toggle="tooltip" data-placement="top" title=""
+														ng-disabled="dLovReceiveName" />
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.receive.date"></label>
+												<div class="col-md-2">
+													<input placeholder="dd/MM/yyyy" id="fReceiveDateDetail" ng-model="model.receiveDateDetail" ng-blur="checkReceiveDateDetail()" maxlength="10"
+														name="receiveDateDetail" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" ng-disabled="dReceiveDateDetail" />
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.level"> </label>
+												<div class="col-md-2">
+													<ui-select ng-model="model.levelDetail" class="" id="fLevelDetail" ng-disabled="dLevelDetail"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+													<ui-select-choices style="width: auto;" repeat="x.code as x in lstLevelDetail | filter:$select.search | limitTo: limitCbb"> <span
+														ng-bind-html="x.code | highlight: $select.search"></span> <span>-</span> <span ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.to.receip"></label>
+												<div class="col-md-2">
+													<input type="text" class="form-control" maxlength="50" ng-model="model.toReceipDetail" id="fToReceipDetail" ng-disabled="dToReceipDetail"
+														data-toggle="tooltip" data-placement="top" title="" />
+												</div>
+											</div>
+											<div class="form-group" style="padding-right: 3px;">
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.receip"> </label>
+												<div class="col-md-5">
+													<textarea name="Text1" class="form-control" rows="2" ng-model="model.receipDetail" id="fReceipDetail" data-toggle="tooltip" data-placement="top"
+														title="" ng-disabled="dReceipDetail"></textarea>
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.comment"> </label>
+												<div class="col-md-5">
+													<textarea name="Text1" class="form-control" rows="2" ng-model="model.commentDetail" id="fCommentDetail" data-toggle="tooltip" data-placement="top"
+														title="" ng-disabled="dCommentDetail"></textarea>
+												</div>
+											</div>
+											<div class="form-group" style="padding-right: 3px;">
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.lov.process"> </label>
+												<div class="col-md-1p6">
+													<input type="text" class="form-control" ng-model="model.lovProcessCode" style="text-transform: uppercase;" ng-disabled="dLovProcessCode"
+														id="fLovProcessCode" data-toggle="tooltip" data-placement="top" title="" ng-blur="checkF9Staff()" />
+												</div>
+												<div class="col-md-10p6">
+													<input type="text" class="form-control" ng-model="model.lovProcessName" ng-disabled="dLovProcessName" id="fLovProcessName" data-toggle="tooltip"
+														data-placement="top" title="" />
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.estimate.date"></label>
+												<div class="col-md-2">
+													<input placeholder="dd/MM/yyyy" id="fEstimateDateDetail" ng-model="model.estimateDateDetail" ng-blur="checkEstimateDateDetail()" maxlength="10"
+														name="estimateDateDetail" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" ng-disabled="dEstimateDateDetail" />
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.process.date"> </label>
+												<div class="col-md-2">
+													<input placeholder="dd/MM/yyyy" id="fProcessDateDetail" ng-model="model.processDateDetail" ng-blur="checkProcessDateDetail()" maxlength="10"
+														name="processDateDetail" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" ng-disabled="dProcessDateDetail" />
+												</div>
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.dating.date"></label>
+												<div class="col-md-2">
+													<input placeholder="dd/MM/yyyy" id="fDatingDateDetail" ng-model="model.datingDateDetail" ng-blur="checkDatingDateDetail()" maxlength="10"
+														name="datingDateDetail" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" ng-disabled="dDatingDateDetail" />
+												</div>
+											</div>
+											<div class="form-group" style="padding-right: 3px;">
+												<label class="control-label col-md-1" translate="vnm.FormWarTransaction.label.result"> </label>
+												<div class="col-md-11">
+													<textarea name="Text1" class="form-control" rows="2" ng-model="model.resultDetail" id="fResultDetail" data-toggle="tooltip" data-placement="top"
+														title="" ng-disabled="dResultDetail"></textarea>
+												</div>
+											</div>
+										</fieldset>
+										<div class="form-group" style="padding-right: 3px; text-align: center;">
+											<div class="form-group">
+												<div class="col-md-12" style="text-align: center;" id="pnlButtonAction">
+													<button type="button" name="btnReceip" ng-disabled="isDisabledBtnReceip" class="btn btn-primary btn-primary-100" ng-click="btnReceip()">
+														<i class="fa fa-plus-circle"></i> <label translate="vnm.FormWarTransaction.label.receip"></label>
+													</button>
+													<button type="button" name="btnBResult" ng-disabled="isDisabledBtnBResult" class="btn btn-primary btn-primary-100" ng-click="btnBResult()">
+														<i class="fa fa-check-square-o"></i> <label translate="vnm.FormWarTransaction.label.button.BResult"></label>
+													</button>
+
+													<button type="button" name="btnBGoods" ng-disabled="isDisabledBtnBGoods" class="btn btn-primary btn-primary-100" ng-click="btnBGoods()">
+														<i class="fa fa-arrow-circle-o-down"></i> <label translate="vnm.FormWarTransaction.label.button.BGoods"></label>
+													</button>
+													<button type="button" name="btnBModify" ng-disabled="isDisabledBtnBModify" class="btn btn-primary btn-primary-100" ng-click="btnBModify()">
+														<i class="fa fa-edit"></i> <label translate="vnm.FormWarTransaction.label.button.BModify"></label>
+													</button>
+													<button type="button" name="btnBPrint" ng-disabled="isDisabledBtnBPrint" class="btn btn-primary btn-primary-100" ng-click="btnBPrint()">
+														<i class="fa fa-print"></i> <label translate="vnm.FormWarTransaction.label.button.BPrint"></label>
+													</button>
+
+<!-- 													<button type="button" disabled="disabled" name="btnBPushUp" class="btn btn-primary btn-primary-100" ng-click="btnBPushUp()">
+														ng-disabled="isDisabledBtnBPushUp" 
+														<i class="fa fa-arrow-circle-o-up"></i> <label translate="vnm.FormWarTransaction.label.button.BPushUp"></label>
+													</button> -->
+												</div>
+
+												<div class="col-md-12" style="text-align: center;" id="pnlButtonOK">
+													<button type="button" name="search" class="btn btn-primary btn-primary-100" ng-click="accept()">
+														<i class="fa fa-thumbs-o-up"></i> <label translate="vnm.FormWarTransaction.label.button.accept"></label>
+													</button>
+													<button type="button" name="search" class="btn btn-primary btn-primary-100" ng-click="destroy()">
+														<i class="fa fa-trash"></i> <label translate="vnm.FormWarTransaction.label.button.destroy"></label>
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalEnqueryWarranty" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1000px; min-height: 800px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="dlgReturn()">&times;</button>
+											<h4 class="modal-title" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.page.title"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogEnqueryWarranty'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalListStaff" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 700px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="dialogListStaffActionBack()">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.staff"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListStaff'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

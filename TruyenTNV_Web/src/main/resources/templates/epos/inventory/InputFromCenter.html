@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/inventory/InputFromCenter.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-inputFromCenter" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset
+						style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+						<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+							<b translate="vnm.InputFromCenter.page.title"></b>
+						</legend>
+						<form name="frm_prepaid" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+
+									<div class="tab-content">
+
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset
+												style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+												<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+													<b translate="vnm.InputFromCenter.label.fieldset"></b>
+
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.InputFromCenter.label.shipment"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control" ng-disabled="uploader.queue.length" ng-model="model.shipment" />
+													</div>
+
+													<label class="control-label col-md-1" translate="vnm.InputFromCenter.label.Warehouse"></label>
+													<div class="col-md-1">
+														<ui-select id="stockCode" ng-model="model.stockCode" ng-change="changeStockName()" class="" style="width: 100%;"
+														remove-selected="false" data-toggle="tooltip"
+															data-placement="top" title="" theme="bootstrap"
+														> <ui-select-match>{{$select.selected.code}}</ui-select-match>
+														<ui-select-choices repeat="x in GetAllNameStockShop | filter:$select.search"> {{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+													<div class="col-md-3">
+														<ui-select id="stockName" ng-model="model.stockCode" ng-disabled="true" class="" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices repeat="x in GetAllNameStockShop | filter:$select.search"> {{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+
+													</div>
+													<div class="col-md-2" style="text-align: center;">
+														<button type="button" name="Search" class="btn btn-primary" ng-click="onSearchInputForm()">
+															<i class="fa glyphicon glyphicon-search"></i> <label translate="vnm.InputFromCenter.label.btn.search.serial"></label>
+														</button>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-1">Lý do</label>
+													<div class="col-md-1">
+														<input type="text" class="form-control" ng-disabled="true" ng-model="model.ReasonCodeInputFom" />
+													</div>
+													<div class="col-md-3">
+														<input type="text" class="form-control" ng-disabled="true" ng-model="model.ReasonNameInputFom" />
+													</div>
+
+													<label class="control-label col-md-1" translate="vnm.InputFromCenter.label.status"></label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.StatusInputFom" class="" ng-disabled="uploader.queue.length" ng-init="model.numberType = StatusInputFom[0]"
+															style="width: 100%;height: 25px;" on-select="onNumberTypeChange()" > <ui-select-match placeholder="">{{$select.selected.Title}}</ui-select-match> <ui-select-choices
+															repeat="x.Id as x in StatusInputFom | filter:$select.search"> {{x.Id}} - {{x.Title}} </ui-select-choices> </ui-select>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.InputFromCenter.label.from.date"></label>
+													<div class="col-md-4">
+														<input  ng-model="model.searchFromDate" ng-blur="checkfromdate()" id="fromDate" name="searchFromDate" datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+															class="form-control" />
+													</div>
+
+													<label class="control-label col-md-1" translate="vnm.InputFromCenter.label.to.date"></label>
+													<div class="col-md-4">
+														<input ng-model="model.searchToDate" ng-blur="checktodate()" id="toDate" name="searchToDate" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" />
+													</div>
+												</div>
+
+											</fieldset>
+
+											<div class="form-group">
+												<div class="col-md-12">
+													<fieldset
+														style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+														<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+															<b translate="vnm.InputFromCenter.label.fieldset2"></b>
+
+														</legend>
+														<div class="form-group">
+															<div class="col-md-12">
+																<div class="table-scrollable">
+																	<table id="example" class="table-bordered" style="width: 100%">
+																		<thead class="ng-table-sort-header">
+																			<tr>
+																				<th>Số shipment</th>
+																				<th>Kho xuất</th>
+																				<th>Ngày xuất</th>
+																				<th>Kho nhập</th>
+																				<th>Ngày nhập</th>
+																				<th>Người nhập</th>
+																				<th>Trạng thái</th>
+
+																			</tr>
+																		</thead>
+																		<tbody>
+																		</tbody>
+																	</table>
+																</div>
+															</div>
+
+
+														</div>
+
+													</fieldset>
+
+												</div>
+												<div class="col-md-12">
+													<fieldset
+														style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+														<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+															<b translate="vnm.InputFromCenter.label.fieldset3"></b>
+														</legend>
+														<div class="form-group">
+															<div class="col-md-12">
+																<div class="table-scrollable">
+																		<table id="example1" class="table-bordered" style="width: 100%">
+																			<thead class="ng-table-sort-header">
+																				<tr>
+																					<th>Mã MH</th>
+																					<th>Tên MH</th>
+																					<th>Đơn vị</th>
+																					<th>Số lượng</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																			</tbody>
+																		</table>
+																	</div>
+																</div>
+														</div>
+													</fieldset>
+												</div>
+
+												<div class="form-group" style="padding-top: 20px; padding-bottom: 20px;">
+
+													<div class="col-md-12" style="text-align: center;">
+
+														<button type="button" name="btnSave" style="width: 100px" ng-disabled="isDisabledBtnAdjust" class="btn btn-primary" ng-click="btnSave()">
+															<i class="fa fa-save"></i> <label translate="vnm.InputFromCenter.label.btn.save"></label>
+														</button>
+														<button type="button" name="btnSerial" style="width: 100px" ng-disabled="disableBtnserian" class="btn btn-primary" ng-click="btnSerial()">
+															<i class="fa fa-info-circle"></i> <label translate="vnm.FormSuperiorGoodImport.label.btn.serial"></label>
+														</button>
+														<button type="button" name="btnPrint" style="width: 100px" ng-disabled="disableBtnPrin" class="btn btn-primary" ng-click="exportfile()">
+															<i class="fa fa-print"></i> <label translate="vnm.InputFromCenter.label.btn.export"></label>
+														</button>
+													</div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalSerialList" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 900px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.FormSuperiorGoodImport.label.btn.serial2"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/serialListGoods'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

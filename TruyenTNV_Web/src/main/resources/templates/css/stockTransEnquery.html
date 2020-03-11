@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Tra cứu thông tin giao dịch xuất nhập kho</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/inventory-management/stockTransEnquery.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-stockTransEnquery"
+			id="stockTransEnqueryContent" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase">Tra cứu
+							thông tin giao dịch xuất nhập kho</span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_stockTransEnquery"
+						class="form-horizontal  form-bordered" method="post"
+						ng-validate="validationOptions">
+						<div class="form-body">
+							<h3 class="form-section">Tìm kiếm đơn hàng - {{shopName}}</h3>
+							<div class="form-group">
+								<div class="form-group">
+									<label class="control-label col-md-15">Kho</label>
+									<div class="col-md-40">
+										<ui-select ng-model="model.stock.selected" class=""
+											style="width: 100%;"> <ui-select-match
+											allow-clear="true">{{$select.selected.name}}</ui-select-match>
+										<ui-select-choices
+											repeat="x in listStock | filter:$select.search">
+										<span ng-bind-html="x.code | highlight: $select.search"></span>
+										<span>-</span> <span
+											ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+									</div>
+									<label class="control-label col-md-15">Kho chuyển</label>
+									<div class="col-md-40">
+										<ui-select ng-model="model.receiveStock.selected" class=""
+											style="width: 100%;"> <ui-select-match
+											allow-clear="true">{{$select.selected.name}}</ui-select-match>
+										<ui-select-choices
+											repeat="x in listReceiveStock | filter:$select.search">
+										<span ng-bind-html="x.code | highlight: $select.search"></span>
+										<span>-</span> <span
+											ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-15">Mã phiếu</label>
+									<div class="col-md-40">
+										<input type="text" class="form-control"
+											ng-model="model.inspectCmdCode" name="inspectCmdCode" />
+									</div>
+									<label class="control-label col-md-15">Lý do</label>
+									<div class="col-md-40">
+										<ui-select ng-model="model.reason.selected" class=""
+											style="width: 100%;"> <ui-select-match
+											allow-clear="true">{{$select.selected.name}}</ui-select-match>
+										<ui-select-choices
+											repeat="x in listReason | filter:$select.search">
+										<span ng-bind-html="x.code | highlight: $select.search"></span>
+										<span>-</span> <span
+											ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-15">Loại giao dịch</label>
+									<div class="col-md-40">
+										<ui-select ng-model="model.transType.selected" on-select=""
+											class="" style="width: 100%;"> <ui-select-match
+											allow-clear="true">{{$select.selected.name}}</ui-select-match>
+										<ui-select-choices
+											repeat="x in listTransType | filter:$select.search">
+										<span ng-bind-html="x.code | highlight: $select.search"></span>
+										<span>-</span> <span
+											ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+									</div>
+									<label class="control-label col-md-15">Trạng thái</label>
+									<div class="col-md-40">
+										<ui-select ng-model="model.status.selected" on-select=""
+											class="" style="width: 100%;"> <ui-select-match
+											allow-clear="true">{{$select.selected.name}}</ui-select-match>
+										<ui-select-choices
+											repeat="x in listStatus | filter:$select.search">
+										<span ng-bind-html="x.code | highlight: $select.search"></span>
+										<span>-</span> <span
+											ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-15">Từ ngày</label>
+									<div class="col-md-40">
+										<input ng-model="model.fromDate" id="fromDate" name="fromDate"
+											datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+											class="form-control" />
+									</div>
+									<label class="control-label col-md-15">Đến ngày</label>
+									<div class="col-md-40">
+										<input ng-model="model.toDate" id="toDate" name="toDate"
+											datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+											class="form-control" />
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-md-12" style="text-align: center;">
+										<button type="button" name="Search" class="btn btn-primary"
+											ng-click="onSearch()" style="margin-right: 30px;">
+											<i class="fa glyphicon glyphicon-search"></i> Tìm kiếm
+										</button>
+									</div>
+								</div>
+							</div>
+							<h3 class="form-section">Đơn hàng</h3>
+							<div class="form-group">
+								<div class="col-md-12">
+								<!--<div class="panel-body">
+										<table ng-table="tblStock"
+											class="table table-striped table-bordered">
+											<tr ng-repeat="item in $data"
+												ng-click="getDetailStockTrans(item)"
+												ng-class="{true:'active', false:''}[selectedTrans===item]">
+												<td title="'Kho'">{{item.shopName}}</td>
+												<td title="'Loại GD'">{{item.typeName}}</td>
+												<td title="'Lý do'">{{item.reasonName}}</td>
+												<td title="'Kho chuyển'">{{item.shopDeliveryName}}</td>
+												<td title="'Mã phiếu'">{{item.cmdCode}}</td>
+												<td title="'Ngày lập'">{{item.cmdDate}}</td>
+												<td title="'Người duyệt'">{{item.cmdStaffName}}</td>
+												<td title="'Trạng thái'">{{item.cmdStatusName}}</td>
+												<td title="'Ngày hủy'">{{item.destroyDate}}</td>
+												<td title="'Người hủy'">{{item.destroyStaffName}}</td>
+												<td title="'Ghi chú'">{{item.note}}</td>
+											</tr>
+											<tr ng-if="$data.length == 0">
+												<td colspan="11">Không có dữ liệu</td>
+											</tr>
+											<tr>
+												<td colspan="11" align="right">
+													<h3 class="form-section">Tổng Số: {{tblStockItems}}</h3>
+												</td>
+											</tr>
+										</table>
+									</div> -->
+									<div class="table-responsive">
+										<table class="table table-striped table-bordered">
+											<thead class="ng-table-sort-header">
+												<tr>
+													<th>Kho</th>
+													<th>Loại GD</th>
+													<th>Lý do</th>
+													<th>Kho chuyển</th>
+													<th>Mã phiếu</th>
+													<th>Ngày lập</th>
+													<th>Người duyệt</th>
+													<th>Trạng thái</th>
+													<th>Ngày hủy</th>
+													<th>Người hủy</th>
+													<th>Ghi chú</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="item in dataTable" ng-click="getDetailStockTrans(item)"
+												ng-class="{true:'active', false:''}[selectedTrans===item]">
+													<td>{{item.shopName}}</td>
+													<td>{{item.typeName}}</td>
+													<td>{{item.reasonName}}</td>
+													<td>{{item.shopDeliveryName}}</td>
+													<td>{{item.cmdCode}}</td>
+													<td>{{item.cmdDate}}</td>
+													<td>{{item.cmdStaffName}}</td>
+													<td>{{item.cmdStatusName}}</td>
+													<td>{{item.destroyDate}}</td>
+													<td>{{item.destroyStaffName}}</td>
+													<td>{{item.note}}</td>
+												</tr>
+												<tr ng-if="dataTable.length == 0">
+													<td colspan="12">Không có dữ liệu</td>
+												</tr>
+												<tr>
+													<td colspan="12" align="right">
+														<h3 class="form-section">Tổng Số: {{totalCount}}</h3>
+													</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td align="center" colspan="12">
+														<div ng-show="totalCount>0">
+															<uib-pagination total-items="totalCount" max-size="5"
+																boundary-link-numbers="true" ng-model="model.currentPage"
+																ng-change="pageChanged()" items-per-page="maxSize"></uib-pagination>
+														</div>
+													</td>
+													
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+							</div>
+							<h3 class="form-section">Thông tin đơn hàng</h3>
+							<div class="form-group">
+								<div class="col-md-12">
+									<div class="panel-body">
+										<table ng-table="tblStockDetail"
+											class="table table-striped table-bordered">
+											<tr ng-repeat="item in $data" ng-click="getDetailGood(item)"
+												ng-class="{true:'active', false:''}[selectedGood===item]">
+												<td title="'Mã Mặt hàng'">{{item.goodsId}}</td>
+												<td title="'Tên mặt hàng'">{{item.goodName}}</td>
+												<td title="'Trạng thái'">{{item.goodsStatus}}</td>
+												<td title="'Đơn vị'">{{item.stateId}}</td>
+												<td title="'Số lượng'">{{item.quantityIssue}}</td>
+												<td title="'Số lượng thực'">{{item.quantityEffect}}</td>
+												<td title="'Đơn giá'">{{item.price}}</td>
+												<td title="'Thành tiền'">{{item.amount}}</td>
+												<td title="'Ghi chú'">{{item.note}}</td>
+												<!-- 												<td title="'SerialIsDenied'">{{item.destroyStaffId}}</td> -->
+											</tr>
+											<tr ng-if="$data.length == 0">
+												<td colspan="10">Không có dữ liệu</td>
+											</tr>
+											<tr>
+												<td colspan="10" align="right">
+													<h3 class="form-section">Tổng Số:
+														{{tblStockDetailItems}}</h3>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<h3 class="form-section" ng-show="showViewGoods">Chi tiết
+								hàng trong đơn</h3>
+							<div class="form-group" ng-show="showViewGoods">
+								<div class="col-md-12">
+									<div class="panel-body">
+										<table ng-table="tblGoodDetail"
+											class="table table-striped table-bordered">
+											<tr ng-repeat="item in $data">
+												<td title="'Mã Mặt hàng'">{{item.goodsId}}</td>
+												<td title="'Tên mặt hàng'">{{item.goodName}}</td>
+												<td title="'Dải serial'">{{item.fromSerial}}-{{item.toSerial}}</td>
+												<td title="'Số lượng'">{{item.quantity}}</td>
+											</tr>
+											<tr ng-if="$data.length == 0">
+												<td colspan="10">Không có dữ liệu</td>
+											</tr>
+											<tr>
+												<td colspan="10" align="right">
+													<h3 class="form-section">Tổng Số:
+														{{tblStockSerialItems}}</h3>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

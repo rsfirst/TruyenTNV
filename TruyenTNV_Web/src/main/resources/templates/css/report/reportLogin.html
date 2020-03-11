@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Báo cáo đăng nhập</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/report/reportLogin.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-reportLogin" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.report.report_login.title"></span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_reportLogin"
+						class="form-horizontal  form-bordered" method="post"
+						ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.report.common.label.fromDate"></label>
+											<div class="col-md-25">
+												<input ng-model="model.fromDate" id="fromDate"
+													name="fromDate" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+											<label class="control-label col-md-15"
+												translate="vnm.report.common.label.toDate"></label>
+											<div class="col-md-25">
+												<input ng-model="model.toDate" id="toDate" name="toDate"
+													datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" />
+											</div>
+											<div class="col-md-15" style="text-align: center;">
+												<button type="button" class="btn btn-primary"
+													ng-click="exportfile()">
+													<i class="fa fa-download"></i> Xuất báo cáo
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

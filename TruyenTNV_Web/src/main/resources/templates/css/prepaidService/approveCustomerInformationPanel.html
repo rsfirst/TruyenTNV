@@ -1,0 +1,83 @@
+<div ng-show="isShowCustomerInfor">
+
+	<div class="form-group">
+		<label class="control-label col-md-2"
+			translate="vnm.form_ownership.popup.label.request.code"></label>
+		<div class="col-md-3">
+			<input type="text" class="form-control" ng-disabled="isDisabledPanel"
+				ng-model="model.cusInfor_requestId" name="CusInforRequestId" />
+		</div>
+
+		<label class="control-label col-md-2"
+			translate="vnm.form_ownership.label.msisdn.number"></label>
+		<div class="col-md-3">
+			<input type="text" class="form-control" ng-model="model.cusInfor_Mdn"
+				ng-disabled="isDisabledPanel" name="CusInforMdn" />
+		</div>
+	</div>
+
+	<h3 class="form-section"
+		translate="vnm.form_ownership.label.customer.title"></h3>
+
+	<div class="form-group">
+		<label class="control-label col-md-2"
+			translate="vnm.form_ownership.popup.label.customer.name"></label>
+		<div class="col-md-3">
+			<input type="text" class="form-control" ng-disabled="isDisabledPanel"
+				ng-model="model.cusInfor_fullName" name="ChangeSimFullName" />
+		</div>
+
+		<label class="control-label col-md-2"
+			translate="vnm.form_ownership.popup.label.birth.date"> </label>
+		<div class="col-md-3">
+			<input ng-model="model.cusInfor_birthday" id="changeSimBirthDay"
+				ng-disabled="isDisabledPanel" name="ChangeSimBirthDay"
+				datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+				class="form-control" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2"
+			translate="vnm.form_ownership.popup.label.address"></label>
+		<div class="col-md-8">
+			<input type="text" class="form-control" ng-disabled="isDisabledPanel"
+				ng-model="model.cusInfor_address" name="ChangeSimAddress" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2"
+			translate="vnm.form_ownership.popup.label.phone.number"></label>
+		<div class="col-md-3">
+			<input type="text" class="form-control" ng-disabled="isDisabledPanel"
+				ng-model="model.cusInfor_phoneNumber" name="ChangeSimPhoneNumber" />
+		</div>
+
+		<label class="control-label col-md-2"
+			translate="vnm.form_ownership.popup.label.issue.card"></label>
+		<div class="col-md-3">
+			<input type="text" class="form-control" ng-disabled="isDisabledPanel"
+				ng-model="model.cusInfor_cardId" name="ChangeSimCardId" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2"
+			translate="vnm.form_ownership.popup.label.place.issue"></label>
+		<div class="col-md-3">
+			<input type="text" class="form-control" ng-disabled="isDisabledPanel"
+				ng-model="model.cusInfor_placeOfIssue" name="ChangeSimPlaceOfIssue" />
+		</div>
+
+		<label class="control-label col-md-2"
+			translate="vnm.form_ownership.popup.label.date.issue"></label>
+		<div class="col-md-3">
+			<input ng-model="model.cusInfor_dateOfIssue"
+				ng-disabled="isDisabledPanel" id="changeSimDateOfIssue"
+				name="ChangeSimDateOfIssue" datetime-picker="" date-only=""
+				date-format="DD/MM/YYYY" class="form-control" />
+		</div>
+	</div>
+
+</div>

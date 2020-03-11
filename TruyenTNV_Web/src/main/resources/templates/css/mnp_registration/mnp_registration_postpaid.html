@@ -1,0 +1,1415 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Đăng ký chuyển mạng trả sau đơn lẻ</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+.selectize-dropdown-content {
+	height: 40px;
+}
+</style>
+</head>
+
+<body>
+
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/mnp_registration/mnp_registration_postpaid.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctr-postpaid" class="ng-cloak">
+			<div class="portlet light bordered">
+			<input type="hidden" ng-model="model.checkinsert" />
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							translate="vnm.form_mnp.mnp_postpaid.label.register.port.in"
+							class="caption-subject font-orange bold uppercase"></span>
+					</div>
+					<div class="actions">
+						<a class="btn btn-circle btn-icon-only btn-default fullscreen"
+							href="#" data-original-title="" title=""> </a>
+					</div>
+				</div>
+				<div class="portlet-body form">
+
+					<form name="frm_registration_postpaid"
+						class="form-horizontal  form-bordered" method="post"
+						ng-validate="validationOptions">
+						<div class="form-body">
+
+							<div class="tabbable-custom ">
+								<ul class="nav nav-tabs ">
+									<li class="active"><a href="#thong-tin-chuyen-mang"
+										translate="vnm.form_mnp.mnp_postpaid.label.infor"
+										data-toggle="tab" aria-expanded="false"></a></li>
+									<li><a href="#parent-customer" data-toggle="tab"
+										translate="vnm.form_mnp.mnp_postpaid.label.tab.manager.parent.cus"
+										aria-expanded="true"></a></li>
+									<li><a href="#sub-customer-and-subscriber"
+										translate="vnm.form_mnp.mnp_postpaid.label.tab.manager.children.cus"
+										data-toggle="tab" aria-expanded="true"></a></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane  active" id="thong-tin-chuyen-mang">
+										<div class="form-group">
+									  <fieldset style="border: 1px groove #ddd !important;padding: 0 1.4em 1.4em 1.4em !important;
+													    margin: 0 0 1.5em 0 !important;-webkit-box-shadow:  0px 0px 0px 0px #000;box-shadow:  0px 0px 0px 0px #000;">
+									    <legend style="width:inherit;padding:0 10px; border-bottom:none;"><b>Tìm kiếm số pre-order:</b></legend>
+									    <div class="form-group" style="margin-top: 10px">
+											<label class="control-label col-md-2">
+												Số thuê bao
+											</label>
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+														ng-disabled="uploader.queue.length"
+														ng-model="model.mnpIsdnPreorder" />
+												</div>
+												<div class="col-md-6" style="text-align: left;">
+												<button type="button" name="Search" class="btn btn-primary"
+													ng-click="onSearchGroupMnpOrder()">
+													<i class="fa glyphicon glyphicon-search"></i> <label
+														translate="vnm.category_group_mdn.lable.btn.search"></label>
+												</button>
+												</div>
+										</div>
+									  </fieldset>
+								</div>
+								
+								<fieldset style="border: 1px groove #ddd !important;padding: 0 1.4em 1.4em 1.4em !important;
+													    margin: 0 0 1.5em 0 !important;-webkit-box-shadow:  0px 0px 0px 0px #000;box-shadow:  0px 0px 0px 0px #000;">
+									    <legend style="width:inherit;padding:0 10px; border-bottom:none;"><b>Thông tin chuyển mạng:</b></legend>
+									 
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.npr.customertype"></label>
+												<span class="red" ng-show="customerTypeNPR">(*)</span>
+											</label>
+											<div class="col-md-4" id="idCustomerTypeNPRDiv">
+												<ui-select ng-model="model.customerTypeNPR" class=""
+													style="width: 100%;" on-select="onCustomerNPRChange()">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in CustomerTypeSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.npr.fullName"></label><span
+												class="red" ng-show="fullNameNPR">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+													ng-change="copyNameCustomer()" ng-model="model.fullName"
+													name="FullName" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.npr.document.type"></label>
+												<span class="red" ng-show="documentIssueTypeNPR">(*)</span>
+											</label>
+											<div class="col-md-4" id="idDocumentTypeDiv">
+												<ui-select ng-model="model.documentType" class=""
+													style="width: 100%;" on-select="onDocumentTypeNPRChange()">
+												<ui-select-match>{{$select.selected.documentName}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.documentType as x in IdentityTypeSource | filter:$select.search">
+												{{x.documentName}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.npr.doc.issue.number"></label>
+												<span class="red" ng-show="documentIssueNumberNPR">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input id="Test" type="text" class="form-control"
+													ng-model="model.documentNumber"
+													ng-change="copyValueDocumentType()" name="DocumentNumber" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.npr.document.issue.date"></label>
+												<span class="red" ng-show="documentIssueDateNPR">(*)</span></label>
+											<div class="col-md-4">
+												<input placeholder=" /  /  /" id="documentIssueDate"
+													ng-model="model.documentIssueDate" name="DocumentIssueDate"
+													datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.npr.document.issue.place"></label><span
+												class="red" ng-show="documentIssuePlaceNPR">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.documentIssuePlace"
+													class="form-control" name="DocumentIssuePlace" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.country"></label> <span
+												class="red" ng-show="countryNPR">(*)</span> </label>
+
+											<div class="col-md-4" id="idCitizenDiv">
+												<ui-select name="Citizen" ng-model="model.citizen" class=""
+													style="width: 100%;" on-select="onCountryChange()">
+												<ui-select-match>{{$select.selected.countryName}}</ui-select-match>
+												<ui-select-choices
+													repeat="x as x in CountrySource | filter:$select.search">
+												{{x.countryName}} </ui-select-choices> </ui-select>
+												<!-- 						                            <label id="Citizen-error" style = "display: none;" class="help-block">Yêu cầu nhập quốc tịch</label> -->
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.email"></label></label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.email"
+													ng-change="copyValueToOtherInput('email','emailRep')"
+													class="form-control" name="Email" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.province"></label>
+												<span class="red" ng-show="provinceNPR">(*)</span> </label>
+											<div class="col-md-4" id="idSelectDivProvince">
+												<ui-select id="Province" name="Province"
+													ng-model="model.province" class="" style="width: 100%;"
+													on-select="onProvinceChange()"> <ui-select-match
+													placeholder="Tỉnh/Thành phố...">
+												{{$select.selected.provinceName}}</ui-select-match> <ui-select-choices
+													repeat="x as x in ProvinceSource | filter:$select.search">
+												<span class="ng-binding">{{x.provinceName}}</span> </ui-select-choices> </ui-select>
+												<!-- 						                            <label id="Province-error" style = "display: none;" class="help-block">Yêu cầu nhập tỉnh thành</label> -->
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.district"></label>
+												<span class="red" ng-show="districtNPR">(*)</span> </label>
+
+											<div class="col-md-4" id="divDistrictId">
+												<ui-select ng-model="model.district" class=""
+													style="width: 100%;" on-select="onDistrictChange()">
+												<ui-select-match placeholder="Quận /Huyện...">{{$select.selected.districtName}}</ui-select-match>
+												<ui-select-choices
+													repeat="x as x in DistrictSource | filter:$select.search">
+												{{x.districtName}} </ui-select-choices> </ui-select>
+												<!-- 						                            <label id="District-error" style = "display: none;" class="help-block">Yêu cầu nhập quận/huyện</label> -->
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.address"></label> <span
+												class="red" ng-show="addressNPR">(*)</span> </label>
+
+											<div class="col-md-10">
+												<input type="text" class="form-control"
+													ng-model="model.address" name="Address"
+													ng-change="copyValueToOtherInput('address','addressCustomer')" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.reprentative.name"></label></label>
+											<div class="col-md-4">
+												<input ng-model="model.reprentativeName"
+													ng-change="copyNameCustomer()" name="ReprentativeName"
+													type="text" class="form-control" />
+											</div>
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.representative.position"></label></label>
+											<div class="col-md-4">
+												<input ng-model="model.representativePosition"
+													name="RepresentativePosition" type="text"
+													class="form-control" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.representative.docnumber"></label></label>
+											<div class="col-md-4">
+												<input ng-model="model.representativeDocNumber"
+													name="RepresentativeDocNumber" type="text"
+													class="form-control" />
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.representative.doc.date"></label></label>
+											<div class="col-md-4">
+												<input id="RepresentativeDocDate" placeholder="   /  /  /"
+													ng-model="model.representativeDocDate"
+													name="RepresentativeDocDate" datetime-picker=""
+													date-only="" date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.donor"></label> <span
+												class="red" ng-show="donorNPR">(*)</span> </label>
+
+											<div class="col-md-4" id="idDonorDiv">
+												<ui-select ng-model="model.donor" class=""
+													style="width: 100%;" on-select="onDonorNPRChange()">
+												<ui-select-match placeholder="Chọn nhà mạng...">{{$select.selected.networkName}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.networkId as x in DonorSource | filter:$select.search">
+												{{x.networkName}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.receipient"></label></label>
+											<div class="col-md-4">
+												<p class="form-control-static">
+													<span class="label label-vnm"
+														translate="vnm.lable.vnm.name"></span>
+												</p>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.subdata.number"></label>
+												<span class="red" ng-show="subscriberNumberNPR">(*)</span> </label>
+											<div class="col-md-4">
+												<input ng-model="model.subDataNumber" class="form-control"
+													ng-keyup="removeZezoFirstPosition($event);"
+													data-toggle="tooltip" data-placement="top"
+													title="Số thuê bao không bắt đầu bằng số 0!"
+													ng-keydown="removeZezoFirstPosition($event);"
+													name="SubdataDNONumber" />
+											</div>
+
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.account.type.dno"></label>
+												<span class="red" ng-show="accountTypeNPR">(*)</span> </label>
+
+											<div class="col-md-4" id="idAccountTypeDiv">
+												<ui-select ng-model="model.accountType" class=""
+													style="width: 100%;" on-select="onAccountTypeNPRChange()">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in AccountTypeDNOSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.dno.contract.number"></label>
+												<span class="red" ng-show="dnoContractNumberNPR">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.dnoContractNumber"
+													name="DnoContractNumber" class="form-control" />
+											</div>
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_prepaid.npr.sub.dno.contract.date"></label><span
+												class="red" ng-show="dnoContractDateNPR">(*)</span> </label>
+
+											<div class="col-md-4">
+												<input placeholder=" /  /  /" id="subDNOContractDateRes"
+													ng-model="model.subDNOContractDateRes"
+													name="SubDNOContractDateRes" datetime-picker=""
+													date-only="" date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><label
+												translate="vnm.form_mnp.mnp_postpaid.npr.comments"></label></label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.comments" name="Comments"
+													class="form-control" />
+											</div>
+										</div>
+
+										<h3 class="form-section">
+											<label translate="vnm.form_mnp.mnp_postpaid.npr.file.title"></label>
+										</h3>
+
+										<div class="form-group">
+											<div class="col-md-12">
+												<span class="btn blue-hoki  btn-file"> <span
+													class="fileinput-new"> <span
+														translate="vnm.form_mnp.mnp_postpaid.npr.file.choose.file"></span>
+												</span> <input type="file" nv-file-select="" uploader="uploader"
+													multiple="" />
+												</span>
+												<div class="table-scrollable">
+													<table class="table table-hover">
+														<thead class="ng-table-sort-header">
+															<tr>
+																<th width=""><span
+																	translate="vnm.form_mnp.mnp_postpaid.npr.file.index"></span></th>
+																<th width=""><span
+																	translate="vnm.form_mnp.mnp_postpaid.npr.file.name"></span></th>
+																<th ng-show="uploader.isHTML5"><span
+																	translate="vnm.form_mnp.mnp_postpaid.npr.file.size"></span></th>
+																<th width="200px"><span
+																	translate="vnm.form_mnp.mnp_postpaid.npr.file.type"></span></th>
+																<th width="200px"><span
+																	translate="vnm.form_mnp.mnp_postpaid.npr.file.note"></span></th>
+																<th width="50px"><span
+																	translate="vnm.form_mnp.mnp_postpaid.npr.file.status"></span></th>
+																<th width="120px"></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="item in uploader.queue">
+																<td><strong>{{
+																		uploader.getIndexOfItem(item)+1 }}</strong></td>
+																<td><strong><a
+																		ng-click="downloadFileUploadClient(item)">{{
+																			item.file.name }}</a></strong></td>
+																<td ng-show="uploader.isHTML5" nowrap="">{{
+																	item.file.size/1024/1024|number:2 }} MB</td>
+																<td nowrap=""><select class="form-control"
+																	ng-disabled="item.disabledAttachType"
+																	ng-model="item.documentType"
+																	ng-options="value.Id as value.Title for value in DocumentTypeSource"
+																	ng-init="item.documentType = DocumentTypeSource[0].Id"
+																	ng-change="angular.element(this).scope().changeStatusFile(this)">
+																</select></td>
+																<td><input type="text"
+																	ng-model="item.identityDocNote"
+																	ng-disabled="item.disabledNote" class="form-control" />
+																	<input type="text" style="display: none;"
+																	ng-model="item.attachMentId" class="form-control" /></td>
+																<td class="text-center"><span
+																	ng-show="item.isSuccess"><i
+																		class="glyphicon glyphicon-ok"></i></span> <span
+																	ng-show="item.isCancel"><i
+																		class="glyphicon glyphicon-ban-circle"></i></span> <span
+																	ng-show="item.isError"><i
+																		class="glyphicon glyphicon-remove"></i></span></td>
+																<td nowrap="">
+																	<button type="button" class="btn btn-danger btn-xs"
+																		ng-click="removeElementAttachmenByItem(item)">
+																		<span class="glyphicon glyphicon-trash"></span> <label
+																			translate="vnm.form_mnp.mnp_postpaid.npr.item.delete"></label>
+																	</button>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+													<div>
+														<div>
+															<p></p>
+															<div class="progress" style="">
+																<div class="progress-bar" role="progressbar"
+																	ng-style="{ 'width': uploader.progress + '%' }">{{uploader.progress}}%</div>
+															</div>
+														</div>
+														<button type="button" class="btn btn-danger btn-s"
+															ng-click="removeAllItem()"
+															ng-disabled="!uploader.queue.length">
+															<span class="glyphicon glyphicon-trash"></span> <label
+																translate="vnm.form_mnp.mnp_postpaid.npr.file.clear.all.file"></label>
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</fieldset>
+									</div>
+
+									<div class="tab-pane" id="parent-customer">
+										<!--  Thông tin đại diện -->
+										<div class="form-group">
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.cust.type"></label>
+												<span class="red" ng-show="true">(*)</span>
+											</label>
+
+											<div class="col-md-4" id="idCustomerTypePar">
+												<ui-select ng-model="model.customerTypeNPR"
+													on-select="onCustomerNPRChange()" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in CustomerTypeSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.cust.segment"></label>
+												<span class="red" ng-show="true">(*)</span>
+											</label>
+											<div class="col-md-4" id="idLevelCustomerPar">
+												<ui-select ng-model="model.levelCustomer"
+													on-select="onCustomerLevelChange()" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.value}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.value as x in LevelCustomerSource | filter:$select.search">
+												{{x.value}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.last.name"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+													ng-model="model.parentSurname" name="ParentSurname" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.first.name"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+													ng-model="model.parentName" name="ParentName" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.phone"></label> <span
+												class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+													ng-model="model.parentPhoneNumber" name="ParentPhoneNumber" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.gender"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4" id="idGenderDiv">
+												<ui-select ng-model="model.genderType" class=""
+													on-select="onGenderParentChange()" style="width: 100%;">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in GenderTypeSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.birth.date"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input id="ParentBirthDay" ng-model="model.parentBirthDay"
+													placeholder=" /  /  /" name="ParentBirthDay"
+													datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.id.card"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+													ng-model="model.parentDocumentNumber"
+													name="ParentDocumentNumber" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.place.id.card"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.parentDocumentIssuePlace"
+													id="ParentDocumentIssuePlace" class="form-control"
+													name="ParentDocumentIssuePlace" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.date.id.card"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input id="ParentDocumentIssueDate" placeholder=" /  /  /"
+													ng-model="model.parentDocumentIssueDate"
+													name="ParentDocumentIssueDate" datetime-picker=""
+													date-only="" date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.language"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4" id="idParentCountryDiv">
+												<ui-select ng-model="model.parentCountry"
+													on-select="onParentCountryChange()" style="width: 100%;">
+												<ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.glCodeValueEn as x in CountryPostpaidSource | filter:$select.search">
+												{{x.glCodeValueVn}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.email"></label> <span
+												class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.emailParent"
+													class="form-control" name="ParentEmail" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.company.name"></label>
+												<span class="red" ng-show="isMandatoryFieldCompany">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.parentCompanyName"
+													ng-disabled="isDisParCompanyName" class="form-control"
+													name="ParentCompanyName" />
+											</div>
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.tax.code"></label>
+												<span class="red" ng-show="isMandatoryFieldCompany">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.parentTaxcode"
+													ng-disabled="isDisParTaxCode" class="form-control"
+													name="ParentTaxcode" />
+											</div>
+										</div>
+
+										<fieldset class="fieldsetcustom" style="margin-top: 30px;">
+											<!-- End add -->
+											<div class="form-group">
+												<div class="col-md">
+													<legend class="legendcustom" style="margin-left: 40px;"
+														translate="vnm.form_mnp.mnp_postpaid.label.address"></legend>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.region"></label>
+												<div class="col-md-4">
+													<ui-select ng-model="model.parentAddRegion"
+														style="width: 100%;" ng-disabled="true"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in RegionSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.province"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+												</label>
+												<div class="col-md-4" id="idDivPostalParentProvince">
+													<ui-select name="AddProvince"
+														ng-model="model.parentAddProvince" class=""
+														style="width: 100%;"
+														on-select="onSelectedChangeParentAddProvince()">
+													<ui-select-match>{{$select.selected.provinceName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in ProvinceSource | filter:$select.search">
+													<span class="ng-binding">{{x.provinceName}}</span> </ui-select-choices> </ui-select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.district"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+												</label>
+												<div class="col-md-4" id="idDivPostalParentDistrict">
+													<ui-select ng-model="model.parentAddDistrict" class=""
+														on-select="onSelectedParentAddDistrictChange()"
+														style="width: 100%;"> <ui-select-match>{{$select.selected.districtName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in DistrictSourceParentAddress | filter:$select.search">
+													{{x.districtName}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.precinct"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.parentAddTown" name="ParentAddTown" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.street"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.parentAddRoad" name="ParentAddRoad" />
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.home.number"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.parentAddNumberHome" name="AddNumberHome" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.building"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.parentAddBuildingName"
+														name="AddBuildingName" />
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.room.number"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.parentAddRoomNumber" name="AddRoomNumber" />
+												</div>
+											</div>
+
+										</fieldset>
+										<!-- End add -->
+
+										<fieldset class="fieldsetcustom" style="margin-top: 30px;">
+											<!-- Begin add price -->
+											<div class="form-group">
+												<div class="col-md">
+													<legend class="legendcustom" style="margin-left: 40px;"
+														translate="vnm.form_mnp.mnp_postpaid.label.postal.address"></legend>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.region"></label>
+												<div class="col-md-4">
+													<ui-select ng-model="model.parentPriceRegion"
+														ng-disabled="true" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in RegionSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.province"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+												</label>
+												<div class="col-md-4" id="idDivParPriceProvince">
+													<ui-select name="PriceProvince"
+														ng-model="model.parentPriceProvince" class=""
+														style="width: 100%;"
+														on-select="onSelectedChangeParentProvincePrice()">
+													<ui-select-match>{{$select.selected.provinceName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in ProvinceSource | filter:$select.search">
+													<span class="ng-binding">{{x.provinceName}}</span> </ui-select-choices> </ui-select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.district"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+												</label>
+												<div class="col-md-4" id="idDivParPriceDistrict">
+													<ui-select ng-model="model.parentPriceDistrict" class=""
+														on-select="onSelectedParentPriceDistrictChange()"
+														style="width: 100%;"> <ui-select-match>{{$select.selected.districtName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in DistrictSourcePrice | filter:$select.search">
+													{{x.districtName}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.precinct"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.parentPriceTown" name="ParPriceTown" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.street"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.parentPriceRoad" name="ParentPriceRoad" />
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.home.number"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.parentPriceNumberHome"
+														name="PriceNumberHome" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.building"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.parentPriceBuildingName"
+														name="PriceBuildingName" />
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.room.number"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-model="model.parentPriceRoomNumber"
+														name="PriceRoomNumber" />
+												</div>
+											</div>
+
+										</fieldset>
+										<!-- end add price -->
+
+										<br /> <br /> <br />
+									</div>
+									<!-- End Thông tin đại diện -->
+
+									<div class="tab-pane" id="sub-customer-and-subscriber">
+										<!-- Begin khach-hang-va-thue-bao -->
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.cust.type"></label>
+												<span class="red" ng-show="true">(*)</span>
+
+											</label>
+
+											<div class="col-md-4" id="idCustomerTypeSub">
+												<ui-select ng-model="model.customerTypeNPR"
+													ng-disabled="true" on-select="onCustomerNPRChange()"
+													class="" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in CustomerTypeSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.cust.segment"></label>
+												<span class="red" ng-show="true">(*)</span>
+
+											</label>
+											<div class="col-md-4" id="idLevelCustomerSub">
+												<ui-select ng-model="model.levelCustomer"
+													on-select="onCustomerLevelChange()" class=""
+													ng-disabled="true" style="width: 100%;"> <ui-select-match>{{$select.selected.value}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.value as x in LevelCustomerSource | filter:$select.search">
+												{{x.value}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.last.name"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+											</label>
+
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+													ng-disabled="isDisSubSurName" ng-model="model.subSurname"
+													name="SubSurname" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.first.name"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+													ng-disabled="isDisSubName" ng-model="model.subName"
+													name="SubName" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.phone"></label> <span
+												class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.subContactNumber"
+													ng-disabled="isDisSubContactNumber" class="form-control"
+													name="SubContactNumber" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.gender"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4" id="subGenderId">
+												<ui-select ng-model="model.subGenderType" class=""
+													ng-disabled="isDisSubGender"
+													on-select="onGenderSubChange()" style="width: 100%;">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in GenderTypeSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.birth.date"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input id="SubBirthDay" ng-model="model.subBirthDay"
+													ng-disabled="isDisSubBirthday" placeholder=" /  /  /"
+													name="SubBirthDay" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.mnp_postpaid.label.id.card"></label>
+											<div class="col-md-4">
+												<input type="text" class="form-control"
+													ng-disabled="isDisSubNumberIssue"
+													ng-model="model.subDocumentNumber" name="SubDocumentNumber" />
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.place.id.card"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.subDocumentIssuePlace"
+													ng-disabled="isDisSubPlaceIssue" class="form-control"
+													name="SubDocumentIssuePlace" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.date.id.card"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input id="SubDateOfIssue" ng-model="model.subDateIssue"
+													ng-disabled="isDisSubDateIssue" placeholder=" /  /  /"
+													name="SubDateOfIssue" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.language"></label>
+												<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+											</label>
+											<div class="col-md-4" id="idSubCountryDiv">
+												<ui-select ng-model="model.subCountry"
+													ng-disabled="isDisSubLanguage"
+													on-select="onSubCountryChange()" style="width: 100%;">
+												<ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.glCodeValueEn as x in CountryPostpaidSource | filter:$select.search">
+												{{x.glCodeValueVn}} </ui-select-choices> </ui-select>
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.email"></label> <span
+												class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.subEmail"
+													ng-disabled="isDisSubEmail" class="form-control"
+													name="SubEmail" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.company.name"></label>
+												<span class="red" ng-show="isMandatoryFieldCompany">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.subCompanyName"
+													ng-disabled="true" class="form-control"
+													name="SubCompanyName" />
+											</div>
+
+											<label class="control-label col-md-2"> <label
+												translate="vnm.form_mnp.mnp_postpaid.label.tax.code"></label>
+												<span class="red" ng-show="isMandatoryFieldCompany">(*)</span>
+
+											</label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.subTaxcode"
+													ng-disabled="true" class="form-control" name="SubTaxcode" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"
+												translate="vnm.form_mnp.mnp_postpaid.label.business.license"></label>
+											<div class="col-md-4">
+												<input type="text" ng-model="model.busRegistrationNumber"
+													ng-disabled="isDisSubBusRegistrationNumber"
+													class="form-control" name="BusRegistrationNumber" />
+											</div>
+										</div>
+
+										<!-- Begin địa chỉ hóa đơn khách hàng con-->
+										<fieldset class="fieldsetcustom" style="margin-top: 30px;">
+											<!-- End add -->
+											<div class="form-group">
+												<div class="col-md">
+													<legend class="legendcustom" style="margin-left: 40px;"
+														translate="vnm.form_mnp.mnp_postpaid.label.bill.address"></legend>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.region"></label>
+												<div class="col-md-4">
+													<ui-select ng-model="model.subBillAddRegion"
+														ng-disabled="true" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in RegionSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.province"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4" id="idDivSubBillProvince">
+													<ui-select name="SubBillAddProvince"
+														ng-disabled="isDisSubBillProvince"
+														ng-model="model.subBillAddProvince" class=""
+														style="width: 100%;"
+														on-select="onSelectedChangeBillSubProvinceAdd()">
+													<ui-select-match>{{$select.selected.provinceName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in ProvinceSource | filter:$select.search">
+													<span class="ng-binding">{{x.provinceName}}</span> </ui-select-choices> </ui-select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.district"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4" id="idDivSubBillDistrict">
+													<ui-select ng-model="model.subBillAddDistrict" class=""
+														ng-disabled="isDisSubBillDistrict"
+														on-select="onSelectedSubAddDistrictChange()"
+														style="width: 100%;"> <ui-select-match>{{$select.selected.districtName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in DistrictSourceSubBillPrice | filter:$select.search">
+													{{x.districtName}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.precinct"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="isDisSubBillTown"
+														ng-model="model.subBillAddTown" name="SubAddTown" />
+												</div>
+
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.street"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="isDisSubBillRoad"
+														ng-model="model.subBillAddRoad" name="SubBillAddRoad" />
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.home.number"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="isDisSubBillNumberHome"
+														ng-model="model.subBillAddNumberHome"
+														name="SubBillAddNumberHome" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.building"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="isDisSubBillBuildingName"
+														ng-model="model.subBillAddBuildingName"
+														name="SubBillAddBuildingName" />
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.room.number"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="isDisSubBillAddRoomNumber"
+														ng-model="model.subBillAddRoomNumber"
+														name="SubBillAddRoomNumber" />
+												</div>
+											</div>
+										</fieldset>
+										<!-- End địa chỉ hóa đơn -->
+
+										<!-- Begin địa chỉ thông báo cước khách hàng con -->
+										<fieldset class="fieldsetcustom" style="margin-top: 30px;">
+											<!-- End add -->
+											<div class="form-group">
+												<div class="col-md">
+													<legend class="legendcustom" style="margin-left: 40px;"
+														translate="vnm.form_mnp.mnp_postpaid.label.postal.address">
+													</legend>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.region"></label>
+												<div class="col-md-4">
+													<ui-select ng-model="model.subNotiAddRegion"
+														ng-disabled="true" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in RegionSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.province"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+
+												</label>
+												<div class="col-md-4" id="idDivSubNotiAddProvince">
+													<ui-select name="AddProvince"
+														ng-disabled="isDisSubNotiAddProvince"
+														ng-model="model.subNotiAddProvince" class=""
+														style="width: 100%;"
+														on-select="onSelectedChangeNotiSubProvinceAdd()">
+													<ui-select-match>{{$select.selected.provinceName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in ProvinceSource | filter:$select.search">
+													<span class="ng-binding">{{x.provinceName}}</span> </ui-select-choices> </ui-select>
+												</div>
+
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.district"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4" id="idDivSubNotiAddDistrict">
+													<ui-select ng-model="model.subNotiAddDistrict" class=""
+														ng-disabled="isDisSubNotiAddDistrict"
+														on-select="onSelectedChangeNotiSubDistrictAdd()"
+														style="width: 100%;"> <ui-select-match>{{$select.selected.districtName}}</ui-select-match>
+													<ui-select-choices
+														repeat="x as x in DistrictSourceSubNoti | filter:$select.search">
+													{{x.districtName}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.precinct"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="isDisSubNotiAddTown"
+														ng-model="model.subNotiAddTown" name="SubNotiAddTown" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.street"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="isDisSubNotiAddRoad"
+														ng-model="model.subNotiAddRoad" name="SubNotiAddRoad" />
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.home.number"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="isDisSubNotiAddNumberHome"
+														ng-model="model.subNotiAddNumberHome"
+														name="SubNotiAddNumberHome" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.building"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="isDisSubNotiAddBuildingName"
+														ng-model="model.subNotiAddBuildingName"
+														name="SubNotiAddBuildingName" />
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.room.number"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control"
+														ng-disabled="isDisSubNotiAddRoomNumber"
+														ng-model="model.subNotiAddRoomNumber"
+														name="SubNotiAddRoomNumber" />
+												</div>
+											</div>
+
+										</fieldset>
+										<!-- End địa chỉ hóa đơn  cước khách hàng con-->
+
+										<!-- Begin Thông tin tài khoản cước khách hàng con -->
+										<fieldset class="fieldsetcustom"
+											style="margin-top: 20px; margin-bottom: 20px;">
+											<div class="form-group">
+												<div class="col-md">
+													<legend class="legendcustom" style="margin-left: 40px;"
+														translate="vnm.form_mnp.mnp_postpaid.label.postal.infor"></legend>
+												</div>
+											</div>
+
+											<!-- 1190 hide thông tin tài khoản cước -->
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.payment.method"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+
+												</label>
+												<div class="col-md-4" id="idDivSubPaymentsMethod">
+													<ui-select ng-model="model.subPaymentsMethod" class=""
+														on-select="onSelectedChangeSubPaymentsMethod()"
+														style="width: 100%;"> <ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.glCodeValueEn as x in PaymentMethodSource | filter:$select.search">
+													{{x.glCodeValueVn}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.payment.type"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4" id="idDivSubPaymentsType">
+													<ui-select ng-model="model.subPaymentsType" class=""
+														on-select="onSelectedChangeSubSubPaymentsType()"
+														style="width: 100%;"> <ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.glCodeValueEn as x in PaymentTypeSource | filter:$select.search">
+													{{x.glCodeValueVn}} </ui-select-choices> </ui-select>
+												</div>
+
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"> <label
+													translate="vnm.form_mnp.mnp_postpaid.label.bill.type"></label>
+													<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label>
+												<div class="col-md-4" id="idDivSubBillType">
+													<ui-select ng-model="model.subBillType"
+														on-select="onSelectedChangeSubBillType()"
+														style="width: 100%;"> <ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.glCodeValueEn as x in BillTypeSource | filter:$select.search">
+													{{x.glCodeValueVn}} </ui-select-choices> </ui-select>
+												</div>
+
+												<!-- 1190 <label class="control-label col-md-2">Tài khoản cước</label>
+												<div class="col-md-4">
+													<input type="text" ng-model="model.subAccountBill"
+														ng-disabled="true" class="form-control"
+														name="SubPayAccountBill" />
+												</div> -->
+											</div>
+
+											<div class="form-group" ng-show="false">
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.due"></label>
+												<div class="col-md-4">
+													<ui-select ng-model="model.subAddressPayments" class=""
+														ng-disabled="true" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in AddressPaymentsSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.form_mnp.mnp_postpaid.label.deposit.acc"></label>
+												<div class="col-md-4">
+													<ui-select ng-model="model.subAccountDeposit"
+														ng-disabled="true" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in SubAccountDepositSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+											</div>
+										</fieldset>
+
+										<fieldset class="fieldsetcustom"
+											style="margin-top: 10px; margin-bottom: 30px;">
+											<div class="form-group">
+												<div class="col-md">
+													<legend class="legendcustom" style="margin-left: 40px;"
+														translate="vnm.form_mnp.mnp_postpaid.label.regis.infor"></legend>
+												</div>
+											</div>
+
+											<div class="form-group">
+
+												<label class="control-label col-md-2"><label>
+
+														<label
+														translate="vnm.form_mnp.mnp_prepaid.cus.label.package.type"></label>
+														<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label> <span class="red" ng-show="packageTypeCus">(*)</span> </label>
+
+												<div class="col-md-4" id="idPackageTypeDiv">
+													<ui-select ng-model="model.packageType"
+														on-select="onPackageTypePostpaidChange()"
+														style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.value as x in PackageTypeSource | filter:$select.search">
+													{{x.name}} </ui-select-choices> </ui-select>
+												</div>
+
+												<label class="control-label col-md-2"><label
+													translate="vnm.form_mnp.mnp_prepaid.npr.subdata.number"></label>
+													<span class="red" ng-show="subscriberNumberNPR">(*)</span>
+												</label>
+
+												<div class="col-md-4">
+													<input ng-model="model.subDataNumber" class="form-control"
+														ng-disabled="true"
+														ng-keyup="removeZezoFirstPosition($event);"
+														data-toggle="tooltip" data-placement="top"
+														title="Số thuê bao không bắt đầu bằng số 0!"
+														ng-keydown="removeZezoFirstPosition($event);"
+														name="SubdataDNONumber" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2"><label>
+
+														<label
+														translate="vnm.form_mnp.mnp_prepaid.cus.label.serial"></label>
+														<span class="red" ng-show="isMandatoryFieldPrivate">(*)</span>
+
+												</label> <span class="red" ng-show="serialSimSub">(*)</span> </label>
+
+												<div class="col-md-4">
+													<input ng-model="model.serialSim" name="SerialSim"
+														type="text" class="form-control" />
+												</div>
+											</div>
+
+
+										</fieldset>
+									</div>
+									<!-- End khach-hang-va-thue-bao -->
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12" style="text-align: center;">
+								<button type="button" class="btn btn-primary"
+									ng-click="onclickConfirmSave()">
+									<i class="fa fa-save"></i> <label
+										translate="vnm.form_mnp.mnp_postpaid.npr.btn.registration"></label>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal fade" id="dialogAttetion" role="dialog">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Thông báo</h4>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn red" data-dismiss="modal">
+								<i class="glyphicon"></i> Close
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

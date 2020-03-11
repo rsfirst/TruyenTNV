@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Báo cáo pre-order theo trạng thái</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/report/reportPreOrderByStatus.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-reportPreOrderByStatus" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase">Báo cáo
+							pre-order theo trạng thái</span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_reportPreOrderByStatus"
+						class="form-horizontal  form-bordered" method="post"
+						ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+
+										<div class="form-group">
+											<label class="control-label col-md-1">Loại báo cáo</label>
+											<div class="col-md-3">
+												<ui-select ng-model="model.reportType" class=""
+													style="width: 100%;"> <ui-select-match
+													placeholder="Chọn loại báo cáo...">{{$select.selected.reportName}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.reportId as x in ReportSource | filter:$select.search">
+												{{x.reportName}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-1">Từ ngày</label>
+											<div class="col-md-3">
+												<input ng-model="model.fromDate" id="fromDate"
+													name="fromDate" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+											<label class="control-label col-md-2"
+												style="margin-left: 50px">Đến ngày</label>
+											<div class="col-md-4">
+												<input ng-model="model.toDate" id="toDate" name="toDate"
+													datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" />
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="control-label col-md-1">Kênh tiếp nhận</label>
+											<div class="col-md-3">
+												<ui-select ng-model="model.channel" class=""
+													style="width: 100%;"> <ui-select-match
+													placeholder="Chọn kênh...">{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.code as x in ChannelSource | filter:$select.search">
+												{{x.name}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-2" style="margin-left: 50px">Trạng thái</label>
+											<div class="col-md-4">
+												<ui-select ng-model="model.status" class=""
+													style="width: 100%;"> <ui-select-match
+													placeholder="Chọn trạng thái...">{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.code as x in StatusSource | filter:$select.search">
+												{{x.name}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="col-md-9" style="text-align: center;">
+												<button type="button" class="btn btn-primary"
+													ng-click="exportfile()">
+													<i class="fa fa-download"></i> Xuất báo cáo
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

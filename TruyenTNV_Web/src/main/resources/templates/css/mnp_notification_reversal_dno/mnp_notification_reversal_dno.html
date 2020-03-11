@@ -1,0 +1,195 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Thông báo trả thuê bao về DNO</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/mnp_notification_reversal_dno/mnp_notification_reversal_dno_controller.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-sub-return-dno" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span translate="vnm.mnp_message.mnpNotificationReversalDNO.label.report.return.DNO"
+							class="caption-subject font-orange bold uppercase"></span>
+					</div>
+					<div class="actions">
+						<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title=""> </a>
+					</div>
+				</div>
+
+				<div class="portlet-body form">
+
+					<form name="frm_createticket" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<fieldset class="fieldsetcustom">
+										<legend class="legendcustom" translate="vnm.mnp_message.mnpNotificationReversalDNO.label.send.report.return.DNO"></legend>
+										<div class="tab-content">
+											<div class="form-group">
+												<label class="control-label col-md-2" translate="vnm.mnp_message.mnpNotificationReversalDNO.label.DNO"></label>
+												<div class="col-md-4">
+													<ui-select ng-model="model.donor" ng-init="model.donor = DonorSource[0].networkId" class="" on-select="onDonorChange()" style="width: 100%;">
+													<ui-select-match placeholder="Chọn nhà mạng...">{{$select.selected.networkName}}</ui-select-match> <ui-select-choices
+														repeat="x.networkId as x in DonorSource | filter:$select.search"> {{x.networkName}} </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-2" translate="vnm.mnp_message.mnpNotificationReversalDNO.label.isdn"></label>
+												<div class="col-md-4" id="idDivSubscriberNumber">
+													<input type="text" class="form-control" id="idMsisdn" ng-keyup="removeZezoFirstPosition($event);" ng-keydown="removeZezoFirstPosition($event);"
+														ng-model="model.subscriberNumber" name="SubscriberNumber" />
+												</div>
+											</div>
+
+
+											<div class="form-group">
+												<label class="control-label col-md-2" translate="vnm.mnp_message.mnpNotificationReversalDNO.label.reason"></label>
+												<div class="col-md-4">
+													<ui-select ng-model="model.subReturnReason" ng-init="model.subReturnReason = SubReturnReason[0].Id" class="" style="width: 100%;"> <ui-select-match
+														placeholder="Chọn lý do...">{{$select.selected.Title}}</ui-select-match> <ui-select-choices
+														repeat="x.Id as x in SubReturnReason | filter:$select.search"> {{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+												<label class=" col-md-2"></label>
+												<div class="col-md-4" align="center">
+													<button type="button" class="btn btn-primary" translate="vnm.mnp_message.mnpNotificationReversalDNO.button.add.isdn"
+														ng-click="addSubscriberNumber()">
+														<i class="fa fa-save"></i>
+													</button>
+
+													<span class="btn blue-hoki  btn-file"> <span class=" glyphicon glyphicon-file"></span><span class="fileinput-new"> <span
+															translate="vnm.mnp_message.mnpNotificationReversalDNO.button.add.isdn.from.list"></span>
+													</span> <input type="file" nv-file-select="" ng-click="addSubscriberNumberFormTemplate($event)" uploader="uploaderListSubscriber" multiple="" />
+													</span>
+
+												</div>
+
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-2" translate="vnm.mnp_message.mnpNotificationReversalDNO.label.comment"></label>
+												<div class="col-md-4">
+													<input type="text" class="form-control" ng-model="model.comments" name="Comments" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<!-- <label class="control-label col-md-2">Tài liệu đính kèm</label> -->
+												<div class="col-md-12">
+													<div class="col-md-6" align="center">
+														<h3 class="form-section" translate="vnm.mnp_message.mnpNotificationReversalDNO.label.list.papers"></h3>
+													</div>
+
+													<div class="col-md-6" align="center">
+														<h3 class="form-section" translate="vnm.mnp_message.mnpNotificationReversalDNO.label.list.isdns"></h3>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="table-scrollable">
+														<table class="table table-hover">
+															<thead class="ng-table-sort-header">
+																<tr>
+																	<th width="">STT</th>
+																	<th width="">Tên file</th>
+																	<th>Trạng thái</th>
+																	<th>Xóa</th>
+
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="item in uploader.queue">
+																	<td><strong>{{ uploader.getIndexOfItem(item)+1 }}</strong></td>
+																	<td><strong><a ng-click="downloadFileUploadClient(item)">{{ item.file.name }}</a></strong></td>
+																	<td class="text-center"><span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span> <span ng-show="item.isCancel"><i
+																			class="glyphicon glyphicon-ban-circle"></i></span> <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span></td>
+																	<td nowrap="">
+																		<button type="button" class="btn btn-danger btn-xs" translate="vnm.mnp_message.mnpNotificationReversalDNO.button.delete"
+																			ng-click="removeElementAttachmenByItem(item)">
+																			<span class="glyphicon glyphicon-trash"></span>
+																		</button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+														<div>
+															<div>
+																<p></p>
+																<div class="progress" style="">
+																	<div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }">{{uploader.progress}}%</div>
+																</div>
+															</div>
+
+															<div class="col-md-3">
+																<span class="btn blue-hoki  btn-file"> <span class=" glyphicon glyphicon-file"></span><span
+																	translate="vnm.mnp_message.mnpNotificationReversalDNO.button.select.file" class="fileinput-new"></span> <input type="file" nv-file-select=""
+																	uploader="uploader" multiple="" />
+																</span>
+															</div>
+
+															<div class="col-md-3">
+																<button type="button" class="btn btn-danger btn-s" translate="vnm.mnp_message.mnpNotificationReversalDNO.button.delete.all"
+																	ng-click="removeAllItem()" ng-disabled="!uploader.queue.length">
+																	<span class="glyphicon glyphicon-trash"></span>
+																</button>
+															</div>
+
+														</div>
+													</div>
+												</div>
+
+												<!-- Begin Danh sách số thông báo -->
+												<div class="col-md-6">
+													<div class="col-md-12">
+														<div class="table-scrollable">
+															<table ng-table="tableListMSDI" class="table">
+																<tr ng-repeat="item in $data" ng-click="">
+																	<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																	<td title="'Số thuê bao'" align="center" sortable="'msisdn'">{{item.msisdn}}</td>
+
+																	<td title="'Trạng thái'" align="center" style="white-space: pre-line;" sortable="'note'">{{item.note}}</td>
+
+																	<td title="'Xóa'" align="center" sortable="'msisdn'"><img src="/images/mnp_delete_icon.png" title="{{item.msisdn}}" width="20px"
+																		height="25px" ng-click="deleteMSISDN(item)" /></td>
+																</tr>
+															</table>
+
+															<div style="padding-top: 40px;">
+																<div class="col-md-3">
+																	<button type="button" class="btn btn-danger btn-s" translate="vnm.mnp_message.mnpNotificationReversalDNO.button.delete.list.isdns"
+																		ng-click="removeAllIListSubscriber()" ng-disabled="!listMSISDI.length">
+																		<span class="glyphicon glyphicon-trash"></span>
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- End Danh sách số thông báo -->
+											</div>
+
+
+											<div class="form-actions">
+												<div class="col-md-12" style="text-align: center;">
+													<button type="button" class="btn btn-primary" translate="vnm.mnp_message.mnpNotificationReversalDNO.button.send.request"
+														ng-click="onclickConfirmSubReturnRequest()">
+														<i class="fa fa-save"></i>
+													</button>
+												</div>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+</body>
+</html>

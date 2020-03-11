@@ -1,0 +1,357 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Xuất hàng cho kho nhân viên</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script>
+			document.write('<base href="' + document.location + '" />');
+		</script>
+		<script src="/views/css/inventory-management/stockOutputInferior.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-stockOutputInferior as ctrl" id="stockOutputInferior" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span class="caption-subject font-orange bold uppercase" translate="vnm.stock_output_inferior.label.page.title"/>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_stockOutputInferior" id="frm_stockOutputInferior" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<ul class="nav nav-tabs ">
+									<li class="active"><a href="#tab_5_1" data-toggle="tab" aria-expanded="false" translate="vnm.stock_output_inferior.label.tab1.title"/></li>
+									<li><a href="#tab_5_2" data-toggle="tab" aria-expanded="true" translate="vnm.stock_output_inferior.label.tab2.title"/></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane  active" id="tab_5_1">
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.billid"/>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.billId" name="billId" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.stockStaff"/>
+											<div class="col-md-25">
+												<ui-select ng-model="model.stockStaff" ng-init="model.stockStaff=listStockStaff[0].shop_staff_id" class="" style="width: 100%;"> <ui-select-match
+													allow-clear="true">{{$select.selected.code + ' - ' + $select.selected.name}}</ui-select-match> <ui-select-choices
+													repeat="x.shop_staff_id as x in listStockStaff | filter:$select.search"> {{x.code + ' - ' + x.name}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.source"/>
+											<div class="col-md-25">
+												<ui-select ng-model="model.source" ng-init="model.source=listSource[0].Id" class="" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices repeat="x.Id as x in listSource | filter:$select.search"> {{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.stock"/>
+											<div class="col-md-25">
+												<ui-select ng-model="model.internalStock" ng-init="model.internalStock=listInternalStock[0].internalStockId" class="" style="width: 100%;">
+												<ui-select-match>{{$select.selected.name}}</ui-select-match> <ui-select-choices
+													repeat="x.internalStockId as x in listInternalStock | filter:$select.search"> {{x.name}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.good.name"/>
+											<div class="col-md-25">
+												<ui-select ng-model="model.goodName" class="" style="width: 100%;" on-select="updateGoodCode($select.selected.goods_code)"> <ui-select-match
+													allow-clear="true">{{$select.selected.goods_name}}</ui-select-match> <ui-select-choices
+													repeat="x.goods_name as x in listGoodName | filter:$select.search"> {{x.goods_name}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.good.code"/>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.goodCode" name="goodCode" ng-disabled="true" />
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12" style="text-align: center;">
+												<button type="button" class="btn btn-primary" align="Right" ng-click="searchGoods()">
+													<i class="fa glyphicon glyphicon-search"></i> Tìm kiếm
+												</button>
+											</div>
+										</div>
+										<h3 class="form-section" translate="vnm.stock_output_inferior.label.panel.title"/>
+										<div class="form-group">
+											<div class="col-md-12">
+												<table ng-table="tableCommodity" class="table table-striped table-bordered" show-filter="true">
+													<tr ng-repeat="item in $data" ng-click="getInfo(item)" ng-class="{true:'active', false:''}[itemSelected.goods_code==item.goods_code]">
+														<td title="'Mã hàng'" filter="{ goods_code: 'text'}" sortable="'goods_code'">{{item.goods_code}}</td>
+														<td title="'Tên hàng'" filter="{ goods_name: 'text'}" sortable="'goods_name'">{{item.goods_name}}</td>
+														<td title="'Nhóm hàng'">{{item.good_type}}</td>
+														<td title="'Đơn vị'">{{item.unit_name}}</td>
+														<td title="'Serial'">{{constantYesNo[item.check_serial]}}</td>
+														<td title="'Bảo hành'">{{constantYesNo[item.check_warranty]}}</td>
+														<td title="'Ghi chú'">{{item.notes}}</td>
+													</tr>
+													<tr ng-if="$data.length == 0">
+														<td colspan="7" translate="vnm.stock_output_inferior.mess.table.nodata"/>
+													</tr>
+													<tr>
+														<td colspan="7" align="right">
+															<h3 class="form-section">Số lượng: {{totalItemCount}}</h3>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12">
+												<table ng-table="tableGoodDetail" class="table table-striped table-bordered" show-filter="false">
+													<tr ng-repeat="item in $data">
+														<td title="'Mã hàng'">{{searchResult.goods_code}}</td>
+														<td title="'Tên hàng'">{{searchResult.goods_name}}</td>
+														<td title="'Serial'">{{item}}</td>
+														<td title="'Bảo hành'">{{constantYesNo[searchResult.check_warranty]}}</td>
+														<td title="'Ghi chú'">{{searchResult.notes}}</td>
+													</tr>
+													<tr ng-if="$data.length == 0">
+														<td colspan="5" translate="vnm.stock_output_inferior.mess.table.nodata"/>
+													</tr>
+													<tr>
+														<td colspan="5" align="right">
+															<h3 class="form-section">Số lượng: {{totalItemDetail}}</h3>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+										<h3 class="form-section" translate="vnm.stock_output_inferior.label.panel.quantity"/>
+										<div class="form-group">
+											<div class="col-md-12">
+												<table ng-table="tableQuantity" class="table table-striped table-bordered" show-filter="false">
+													<tr ng-repeat="item in $data">
+														<td title="'Trạng thái'">{{constantState[item.state_id]}}</td>
+														<td title="'Số lượng yêu cầu'">{{item.quantity_issue}}</td>
+														<td title="'Số lượng thực tế'">{{item.quantity_effect}}</td>
+														<!-- {{item.quantity_remain}} -->
+														<td title="'Số lượng đáp ứng'">{{totalItemDetail}}</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane" id="tab_5_2">
+										<div class="form-group">
+											<h3 class="form-section" translate="vnm.stock_output_inferior.label.panel.information"/>
+											<div class="form-group">
+												<div class="form-group">
+													<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.billid"/>
+													<div class="col-md-25" tabindex='1'>
+														<input type="text" class="form-control" ng-model="model.staffBillId" name="staffBillId" />
+													</div>
+													<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.stockStaff"/>
+													<div class="col-md-25" tabindex='2'>
+														<ui-select ng-model="model.tab52StockStaff" class="" style="width: 100%;" on-select="removeErrorMsg()"> <ui-select-match
+															allow-clear="true">{{$select.selected.code + ' - ' + $select.selected.name}}</ui-select-match> <ui-select-choices
+															repeat="x.stock_id as x in listTab52StockStaff | filter:$select.search"> {{x.code + ' - ' + x.name}} </ui-select-choices> </ui-select>
+														<a id="showErrorStockStaff" class="has-error">{{stockStaffMsgError}}</a>
+													</div>
+													<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.reason"/>
+													<div class="col-md-25" tabindex='3'>
+														<input type="text" class="form-control" ng-model="model.tab52Reason" name="tab52Reason" ng-disabled="true" />
+													</div>
+												</div>
+												<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.note"/>
+												<div class="col-md-65" tabindex='4'>
+													<input type="text" class="form-control" ng-model="model.gNotes" name="gNotes" />
+												</div>
+											</div>
+											<h3 class="form-section" translate="vnm.stock_output_inferior.label.panel.search"> - {{shopName}}</h3>
+											<div class="form-group">
+												<div class="form-group">
+													<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.good.name"/>
+													<div class="col-md-25">
+														<ui-select ng-model="model.tab52GoodName" on-select="updateGoodCodeTab52($select.selected.goods_code)" class="" style="width: 100%;">
+														<ui-select-match allow-clear="true">{{$select.selected.goods_name}}</ui-select-match> <ui-select-choices
+															repeat="x.goods_name as x in listTab52GoodName | filter:$select.search"> {{x.goods_name}} </ui-select-choices> </ui-select>
+													</div>
+													<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.good.code"/>
+													<div class="col-md-25">
+														<input type="text" class="form-control" ng-model="model.Tab52goodCode" name="tab52goodCode" ng-disabled="true" />
+													</div>
+													<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.status"/>
+													<div class="col-md-25">
+														<ui-select ng-model="model.tab52Status" ng-init="model.tab52Status=listTab52Status[0].Id" class="" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+														<ui-select-choices repeat="x.Id as x in listTab52Status | filter:$select.search"> {{x.Title}} </ui-select-choices> </ui-select>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.stock"/>
+													<div class="col-md-25">
+														<ui-select ng-model="model.tab52ListInternalStock" ng-init="model.tab52ListInternalStock=listTab52InternalStock[0].internalStockId" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match> <ui-select-choices
+															repeat="x.internalStockId as x in listTab52InternalStock | filter:$select.search"> {{x.name}} </ui-select-choices> </ui-select>
+													</div>
+													<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.fromSerial"/>
+													<div class="col-md-25">
+														<input type="text" class="form-control" ng-model="model.fromSerial" name="fromSerial" />
+													</div>
+													<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.toSerial"/>
+													<div class="col-md-25">
+														<input type="text" class="form-control" ng-model="model.toSerial" name="toSerial" />
+													</div>
+													<label class="control-label col-md-15" translate="vnm.stock_output_inferior.label.panel.quantity"/>
+													<div class="col-md-25">
+														<input type="text" class="form-control" ng-model="model.gQuantity" name="gQuantity" validator="number" />
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													<div class="col-md-12" style="text-align: right;">
+														<button type="button" name="Search" class="btn btn-primary" ng-click="searchInventoryTab52()" style="margin-right: 30px;">
+															<i class="fa glyphicon glyphicon-search"></i> Xem Kho
+														</button>
+													</div>
+												</div>
+											</div>
+											<h3 class="form-section" translate="vnm.stock_output_inferior.label.panel.category"/>
+											<div class="form-group">
+												<div class="col-md-12">
+													<table st-table="stStock" class="table table-striped table-bordered" st-safe-src="stStockData">
+														<thead>
+															<tr class="ng-table-sort-header">
+																<th st-sort="goods_code" translate="vnm.stock_output_inferior.label.good.code"/>
+																<th st-sort="goods_name" translate="vnm.stock_output_inferior.label.good.name"/>
+																<th st-sort="oneSerial" translate="vnm.stock_output_inferior.label.serial"/>
+																<th translate="vnm.stock_output_inferior.label.note"/>
+																<th><st-select-all all="stStock" ng-click="selectAll(stStock)"> </st-select-all></th>
+															</tr>
+															<tr>
+																<th><input st-search="goods_code" class="input-sm form-control" type="search" /></th>
+																<th><input st-search="goods_name" class="input-sm form-control" type="search" /></th>
+																<th><input st-search="oneSerial" class="input-sm form-control" type="search" /></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="row in stStock" ng-class="{selected: entity.isChecked}">
+																<td>{{row.goods_code}}</td>
+																<td>{{row.goods_name}}</td>
+																<td>{{row.oneSerial}}</td>
+																<td>{{row.notes}}</td>
+																<td cs-select="row" ng-click="select(row)"></td>
+															</tr>
+															<tr ng-if="stStockData.length == 0">
+																<td colspan="5" translate="vnm.stock_output_inferior.mess.table.nodata"/>
+															</tr>
+															<tr>
+																<td colspan="5" align="right">
+																	<h3 class="form-section">Số lượng: {{stStockSelected.length}}</h3>
+																	<h3 class="form-section">Tổng Số: {{stStockData.length}}</h3>
+																</td>
+															</tr>
+														</tbody>
+														<tfoot>
+															<tr>
+																<td class="text-center" colspan="5">
+																	<div st-template="/assets/global/plugins/Smart-Table-master/stPagination.html" st-pagination="" st-items-by-page="ctrl.itemsByPage"></div>
+																	<div class="btn-group pull-right ng-scope">
+																		<button type="button" class="btn btn-default">Số lượng hiển thị:</button>
+																		<button type="button" ng-class="{'active':ctrl.itemsByPage==10}" ng-click="ctrl.itemsByPage=10" class="btn btn-default">10</button>
+																		<button type="button" ng-class="{'active':ctrl.itemsByPage==50}" ng-click="ctrl.itemsByPage=50" class="btn btn-default">50</button>
+																		<button type="button" ng-class="{'active':ctrl.itemsByPage==100}" ng-click="ctrl.itemsByPage=100" class="btn btn-default">100</button>
+																		<button type="button" ng-class="{'active':ctrl.itemsByPage==100000}" ng-click="ctrl.itemsByPage=100000" class="btn btn-default">Tất
+																			cả</button>
+																	</div>
+																</td>
+															</tr>
+														</tfoot>
+													</table>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12" style="text-align: center;">
+													<button type="button" class="btn btn-primary" ng-click="addGoodsForTransfer()" style="margin-right: 30px;">
+														<i class="fa glyphicon glyphicon-arrow-down"></i>
+													</button>
+													<button type="button" class="btn btn-primary" ng-click="removeGoodsForTransfer()">
+														<i class="fa glyphicon glyphicon-arrow-up"></i>
+													</button>
+												</div>
+											</div>
+											<h3 class="form-section" translate="vnm.stock_output_inferior.label.panel.detailOrder"/>
+											<div class="form-group">
+												<div class="col-md-12">
+													<table st-table="stToStock" class="table table-striped table-bordered" st-safe-src="stToStockData">
+														<thead>
+															<tr class="ng-table-sort-header">
+																<th st-sort="goods_code" translate="vnm.stock_output_inferior.label.good.code"/>
+																<th st-sort="goods_name" translate="vnm.stock_output_inferior.label.good.name"/>
+																<th st-sort="oneSerial" translate="vnm.stock_output_inferior.label.serial"/>
+																<th>Ghi chú</th>
+																<th><sk-select-all kall="stToStock" ng-click="selectAllToStock(stToStock)"> </sk-select-all></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="row in stToStock">
+																<td>{{row.goods_code}}</td>
+																<td>{{row.goods_name}}</td>
+																<td>{{row.oneSerial}}</td>
+																<td>{{row.notes}}</td>
+																<td ck-select="row" ng-click="selectSingleToStock(row)"></td>
+															</tr>
+															<tr ng-if="stToStockData.length == 0">
+																<td colspan="5" translate="vnm.stock_output_inferior.mess.table.nodata"/>
+															</tr>
+															<tr>
+																<td colspan="5" align="right">
+																	<h3 class="form-section">Số lượng: {{stToStockSelected.length}}</h3>
+																	<h3 class="form-section">Tổng Số: {{stToStockData.length}}</h3>
+																</td>
+															</tr>
+														</tbody>
+														<tfoot>
+															<tr>
+																<td class="text-center" colspan="5">
+																	<div st-template="/assets/global/plugins/Smart-Table-master/stPagination.html" st-pagination="" st-items-by-page="20"></div>
+																</td>
+															</tr>
+														</tfoot>
+													</table>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													<div class="col-md-12" style="text-align: right;">
+														<button type="button" name="Save" class="btn btn-primary" ng-click="exportInventory()">
+															<i class="fa glyphicon glyphicon-add"></i> Xuất kho
+														</button>
+														<button type="button" name="View" class="btn btn-primary" ng-click="viewGoodsExported()">
+															<i class="fa glyphicon glyphicon-add"></i> Hàng đã điều chuyển
+														</button>
+													</div>
+												</div>
+											</div>
+											<h3 class="form-section" ng-show="showViewGoodsExported" translate="vnm.stock_output_inferior.label.panel.detailOrder.deliveried"/>
+											<div class="form-group" ng-show="showViewGoodsExported">
+												<div class="col-md-12">
+													<table ng-table="tableViewGoodExported" class="table table-striped table-bordered" show-filter="false">
+														<tr ng-repeat="item in $data">
+															<td title="'Mã hàng'" filter="{ goods_code: 'text'}" sortable="'goods_code'">{{item.goods_code}}</td>
+															<td title="'Tên hàng'" filter="{ goods_name: 'text'}" sortable="'goods_name'">{{item.goods_name}}</td>
+															<td title="'Serial'">{{item.oneSerial}}</td>
+															<td title="'Ghi chú'">{{item.notes}}</td>
+														</tr>
+														<tr ng-if="$data.length == 0">
+															<td colspan="5" translate="vnm.stock_output_inferior.mess.table.nodata"/>
+														</tr>
+														<tr>
+															<td colspan="5" align="right">
+																<h3 class="form-section">Số lượng: {{tableToStockTotalItems}}</h3>
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

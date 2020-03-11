@@ -1,0 +1,191 @@
+<div ng-show="isShowChangeSIMVerifyHistory">
+	<h3 class="form-section"
+		translate="vnm.form_ownership.label.verify.title"></h3>
+	<div class="form-group">
+		<table class="table" id="tableVerifySubscriber">
+			<thead>
+				<tr>
+					<th><span translate="vnm.form_ownership.panel.verify.stt"></span></th>
+					<th><span translate="vnm.form_ownership.label.msisdn.number"></span></th>
+					<th><span translate="vnm.form_ownership.label.msisdn.number"></span></th>
+					<th><span translate="vnm.form_ownership.panel.verify.stt"></span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>1</td>
+					<td>
+						<div class="form-group">
+							<div class="col-md-5">
+								<input type="text" class="form-control"
+									ng-disabled="isDisabledPanel" ng-model="model.msisdnCheck1"
+									name="msisdnCheckOne" />
+							</div>
+						</div>
+
+						<div></div>
+					</td>
+
+					<td>6</td>
+					<td>
+						<div class="form-group">
+							<div class="col-md-5">
+								<input type="text" class="form-control"
+									ng-disabled="isDisabledPanel" ng-model="model.msisdnCheck6"
+									name="msisdnCheckSix" />
+							</div>
+						</div>
+						<div></div>
+					</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>
+						<div class="form-group">
+							<div class="col-md-5">
+								<input type="text" class="form-control"
+									ng-disabled="isDisabledPanel" ng-model="model.msisdnCheck2"
+									name="msisdnCheckTwo" />
+							</div>
+						</div>
+
+						<div></div>
+					</td>
+					<td>7</td>
+					<td>
+						<div class="form-group">
+							<div class="col-md-5">
+								<input type="text" class="form-control"
+									ng-disabled="isDisabledPanel" ng-model="model.msisdnCheck7"
+									name="msisdnCheckSeven" />
+							</div>
+						</div>
+						<div></div>
+					</td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td>
+						<div class="form-group">
+							<div class="col-md-5">
+								<input type="text" class="form-control"
+									ng-disabled="isDisabledPanel" ng-model="model.msisdnCheck3"
+									name="msisdnCheckThree" />
+							</div>
+						</div>
+
+						<div></div>
+					</td>
+					<td>8</td>
+					<td>
+						<div class="form-group">
+							<div class="col-md-5">
+								<input type="text" class="form-control"
+									ng-disabled="isDisabledPanel" ng-model="model.msisdnCheck8"
+									name="msisdnCheckEight" />
+							</div>
+						</div>
+
+						<div></div>
+					</td>
+				</tr>
+				<tr>
+					<td>4</td>
+					<td>
+						<div class="form-group">
+							<div class="col-md-5">
+								<input type="text" class="form-control"
+									ng-disabled="isDisabledPanel" ng-model="model.msisdnCheck4"
+									name="msisdnCheckFour" />
+							</div>
+						</div>
+
+						<div></div>
+					</td>
+					<td>9</td>
+					<td>
+
+						<div class="form-group">
+							<div class="col-md-5">
+								<input type="text" class="form-control"
+									ng-disabled="isDisabledPanel" ng-model="model.msisdnCheck9"
+									name="msisdnCheckNine" />
+							</div>
+						</div>
+
+						<div></div>
+					</td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td>
+						<div class="form-group">
+							<div class="col-md-5">
+								<input type="text" class="form-control"
+									ng-disabled="isDisabledPanel" ng-model="model.msisdnCheck5"
+									name="msisdnCheckFive" />
+							</div>
+						</div>
+
+
+						<div></div>
+					</td>
+					<td>10</td>
+					<td>
+						<div class="form-group">
+							<div class="col-md-5">
+								<input type="text" class="form-control"
+									ng-disabled="isDisabledPanel" ng-model="model.msisdnCheck10"
+									name="msisdnCheckTen" />
+							</div>
+						</div>
+
+						<div></div>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+
+	<div>
+		<h3 class="form-section">
+			<input type="checkbox" ng-model="model.checkBoxSecondInfo"
+				ng-disabled="isDisabledPanel" /><span
+				translate="vnm.form_ownership.label.second.infor"></span>
+		</h3>
+
+		<div class="form-group">
+			<label class="control-label col-md-2"
+				translate="vnm.form_ownership.label.date.resgisted"></label>
+			<div class="col-md-3">
+				<input ng-model="model.formChangeSim_dateOfRegistration"
+					id="idDateOfRegistration" ng-disabled="isDisabledPanel"
+					name="ChangeSimDateOfRegistration" datetime-picker="" date-only=""
+					date-format="DD/MM/YYYY" class="form-control" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-md-2"
+				translate="vnm.form_ownership.label.last.card"></label>
+			<div class="col-md-3">
+				<input type="text" class="form-control"
+					ng-disabled="isDisabledPanel"
+					ng-model="model.formChangeSim_lastCardLoaded"
+					name="ChangeSimLastCardLoaded" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2"
+				translate="vnm.form_ownership.label.account.main"></label>
+			<div class="col-md-3">
+				<input type="text" class="form-control"
+					ng-disabled="isDisabledPanel"
+					ng-model="model.formChangeSim_mainAccount"
+					name="ChangeSimMainAccount" />
+			</div>
+		</div>
+	</div>
+
+</div>

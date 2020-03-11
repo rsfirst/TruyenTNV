@@ -1,0 +1,349 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Nhập hàng tồn kho trong ngày từ nhân viên</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+.selectRow {
+	background-color: gray;
+}
+</style>
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/inventory/FormImportStaffBalance.js"
+			type="text/javascript"></script>
+		<div ng-controller="FormImportStaffBalanceController" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<!-- <div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.ExportToInferior.page.title"></span>
+					</div>
+				</div> -->
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.FormImportStaffBalance.page.title"></b>
+						</legend>
+						<form name="frm_prepaid" class="form-horizontal  form-bordered"
+							method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+
+									<div class="tab-content" style="margin-right: 5px;">
+
+										<div class="tab-pane active" id="tab_5_1">
+
+
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.FormImportStaffBalance.label.ballot">Phiếu</b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormImportStaffBalance.label.receipcode">
+													</label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															ng-model="model.reCeiptCode" />
+													</div>
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-1"
+														translate="vnm.FormImportStaffBalance.label.note">Ghi
+														chú </label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															ng-model="model.note" />
+													</div>
+
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormImportStaffBalance.label.deliverstock">
+													</label>
+													<div class="col-md-4">
+														<input type="text" class="form-control"
+															ng-model="model.delivererStockId" />
+													</div>
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-1"
+														translate="vnm.FormImportStaffBalance.label.internal">
+													</label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.internalStock" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in liInternalStock | filter:$select.search">
+														{{x.internalStockId}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormImportStaffBalance.label.reason">
+														Lý do </label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.reason" class=""
+															ng-disabled="reasonDisabled" style="width: 100%;">
+														<ui-select-match>{{$select.selected.code}}-{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listReason | filter:$select.search">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+
+												</div>
+											</fieldset>
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.FormImportStaffBalance.label.inforstaff"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormImportStaffBalance.label.shop">
+													</label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.shop" class=""
+															ng-disabled="shopDisabled" style="width: 100%;">
+														<ui-select-match>{{$select.selected.shopCode}}-{{$select.selected.shopName}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listShop | filter:$select.search">
+														{{x.shopCode}} - {{x.shopName}} </ui-select-choices></ui-select>
+													</div>
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-1"
+														translate="vnm.FormImportStaffBalance.label.staff">
+													</label>
+													<!-- <div class="col-md-4">
+														<ui-select ng-model="model.staff" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.code}}-{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in liStaff | filter:$select.search| limitTo: limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div> -->
+													<div class="col-md-1">
+														<input type="text" class="form-control"
+															ng-model="model.staffCode" id="fStaffCode"
+															data-toggle="tooltip" data-placement="top" title="" />
+
+													</div>
+													<div class="col-md-3">
+														<input ng-disabled="true" type="text" class="form-control"
+															ng-model="model.staffName" id="fStaffName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormImportStaffBalance.label.fromdate">
+													</label>
+													<div class="col-md-4">
+														<input ng-model="model.dtFromDate" id="fromDate"
+															ng-blur="onBlurCheckDate()" name="searchFromDate"
+															datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+															class="form-control" />
+													</div>
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-1"
+														translate="vnm.FormImportStaffBalance.label.todate">
+													</label>
+													<div class="col-md-4">
+														<input ng-model="model.dtToDate" id="toDate"
+															ng-disabled="dtToDateDisabled" name="searchFromDate"
+															datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+															class="form-control" />
+													</div>
+												</div>
+
+
+												<div class="form-gropup">
+													<div class="col-md-5"></div>
+													<div class="col-md-6">
+														<button class="btn btn-primary" ng-show="showBtnSearch"
+															ng-click="buttonOnSearchOnClick()">
+															<span class="glyphicon glyphicon-search"></span> <label
+																translate="vnm.FormImportStaffBalance.label.btn.search"></label>
+														</button>
+														<button class="btn btn-primary"
+															ng-show="showBtnReSearchNew" ng-click="buttonReSearch()">
+															<span class="glyphicon glyphicon-search"></span> <label
+																translate="vnm.FormImportStaffBalance.label.btn.research"></label>
+														</button>
+													</div>
+												</div>
+
+											</fieldset>
+											<div class="form-group">
+												<fieldset class="fieldset-primary">
+													<legend class="lengend-primary">
+														<b translate="vnm.FormImportStaffBalance.label.btn.good"></b>
+													</legend>
+													<div class="form-group">
+														<div class="col-md-12">
+															<div class="table-scrollable">
+																<table id="tableGoodsSearch"
+																	class="table-bordered table " style="width: 100%">
+																	<thead class="ng-table-sort-header">
+
+																		<tr>
+																			<th width="14%"><label
+																				translate="vnm.FormImportStaffBalance.label.goodcode">
+																			</label></th>
+																			<th width="14%"><label
+																				translate="vnm.FormImportStaffBalance.label.goodname">
+																			</label></th>
+																			<th width="14%"><label
+																				translate="vnm.FormImportStaffBalance.label.goodstatus">
+																			</label></th>
+																			<th width="14%"><label
+																				translate="vnm.FormImportStaffBalance.label.goodserial"></label></th>
+																			<th width="14%"><label
+																				translate="vnm.FormImportStaffBalance.label.quantitystart">
+																			</label></th>
+																			<th width="13%"><label
+																				translate="vnm.FormImportStaffBalance.label.quantityend">
+																			</label></th>
+																			<th width="13%"><label
+																				translate="vnm.FormImportStaffBalance.label.quantity">
+																			</label></th>
+																			<th width="13%"><input type="checkbox"
+																				id="checkAll" ng-model="model.checkAll" value=""></input></th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																	</tbody>
+
+																</table>
+															</div>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+											<div class="form-group">
+												<fieldset class="fieldset-primary">
+													<legend class="lengend-primary">
+														<b translate="vnm.FormImportStaffBalance.label.goodimport"></b>
+													</legend>
+													<div class="form-group">
+														<div class="col-md-12">
+															<div class="table-scrollable">
+																<table id="tableGoodAffterImport"
+																	class="table-bordered table" style="width: 100%">
+																	<thead class="ng-table-sort-header">
+
+																		<tr>
+																			<th width="14%"><label
+																				translate="vnm.FormImportStaffBalance.label.goodcode">
+																			</label></th>
+																			<th width="15%"><label
+																				translate="vnm.FormImportStaffBalance.label.goodname">
+																			</label></th>
+																			<th width="14%"><label
+																				translate="vnm.FormImportStaffBalance.label.goodstatus">
+																			</label></th>
+																			<th width="15%"><label
+																				translate="vnm.FormImportStaffBalance.label.goodserial"></label></th>
+																			<th width="14%"><label
+																				translate="vnm.FormImportStaffBalance.label.quantitystart">
+																			</label></th>
+																			<th width="14%"><label
+																				translate="vnm.FormImportStaffBalance.label.quantityend">
+																			</label></th>
+																			<th width="14%"><label
+																				translate="vnm.FormImportStaffBalance.label.quantity">
+																			</label></th>
+
+
+																		</tr>
+																	</thead>
+																	<tbody>
+																	</tbody>
+
+																</table>
+															</div>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+
+											<div class="form-group"
+												style="padding-top: 20px; padding-bottom: 20px;">
+
+												<div class="col-md-12" style="text-align: center;">
+
+													<button type="button" name="btnPrint" style="width: 100px"
+														ng-disabled="disableImport" class="btn btn-primary"
+														ng-click="btnImportOnClick()">
+														<i class="glyphicon glyphicon-hand-right"></i> <label
+															translate="vnm.FormImportStaffBalance.label.btn.import"></label>
+													</button>
+
+													<button type="button" name="btnPrint" style="width: 100px"
+														ng-disabled="disabledDetail" class="btn btn-primary"
+														ng-click="btnViewDetailOnClick()">
+														<i class="	glyphicon glyphicon-option-horizontal"></i> <label
+															translate="vnm.FormImportStaffBalance.label.btn.detail"></label>
+													</button>
+													<button type="button" name="btnPrint" style="width: 100px"
+														ng-disabled="disablePrint" class="btn btn-primary"
+														ng-click="btnPrintOnClick()">
+														<i class="glyphicon glyphicon-print"></i> <label
+															translate="vnm.FormImportStaffBalance.label.btn.print"></label>
+													</button>
+												</div>
+											</div>
+
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 1190 modal xem thong tin kho -->
+							<div class="modal fade" id="modalSerialList" role="dialog"
+								data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 900px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title"
+												translate="vnm.common.label.list.serials"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/serialList'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalListStaff" role="dialog"
+								data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title"
+												translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListStaff'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 1190 modal xem thong tin kho -->
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

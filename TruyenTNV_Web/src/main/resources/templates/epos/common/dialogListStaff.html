@@ -1,0 +1,31 @@
+<div>
+	<fieldset
+		style="border: 1px groove #ddd !important; padding: 1em 0em 0.2em 0.3em !important; margin: 0 0 1.5em 0 !important; -webkit-box-shadow: 0px 0px 0px 0px #000; box-shadow: 0px 0px 0px 0px #000;">
+		<legend style="width: inherit; padding: 0 10px; border-bottom: none; color: #f56400">
+			<b translate="vnm.common.label.list.staff"></b>
+		</legend>
+		<div class="form-group">
+			<div class="col-md-12">
+				<table id="tblListStaff" class="table-bordered" style="width: 100%">
+					<thead class="ng-table-sort-header">
+						<tr>
+							<th width="40%" translate="vnm.common.label.staff.code"></th>
+							<th width="60%" translate="vnm.common.label.staff.name"></th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</fieldset>
+
+	<div>
+		<div style="text-align: center;">
+			<button type="button" class="btn btn-success btn-s" ng-click="updateFormStaff()">
+				<span class="fa fa-save"></span> <span translate="vnm.dialogButtonDetail.label.buttonOk" />
+			</button>
+			<button type="button" class="btn btn-danger btn-s" ng-click="dialogListStaffActionBack()">
+				<span class="fa fa-rotate-left"> </span> <span translate="vnm.dialogButtonDetail.label.buttonComeBack" />
+			</button>
+		</div>
+	</div>
+</div>

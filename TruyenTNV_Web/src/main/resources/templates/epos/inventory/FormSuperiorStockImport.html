@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<style>
+</style>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/inventory/formSuperiorStockImport.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctr-formSuperiorStockImport" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<form name="frm_prepaid" class="form-horizontal  form-bordered"
+						method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="form-group">
+										<div class="col-md-12">
+											<fieldset class="fieldset-primary" style="min-height: 650px">
+												<legend class="lengend-primary">
+													<b translate="vnm.formSuperiorStockImport.label.stock.info"></b>
+												</legend>
+												<div class="form-group">
+													<fieldset class="fieldset-primary">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.formSuperiorStockImport.label.filter.condition"></b>
+														</legend>
+														<div class="form-group" style="padding: 10px;">
+															<label class="control-label col-md-2"><span
+																translate="vnm.formSuperiorStockImport.label.bill.code"></span></label>
+															<div class="col-md-4">
+																<input type="text" class="form-control" id="billCodeId"
+																	ng-model="model.billCode" name="BillCode" />
+															</div>
+
+															<label class="control-label col-md-2"><span
+																translate="vnm.common.label.status"></span></label>
+															<div class="col-md-4">
+																<ui-select ng-model="model.status" class=""
+																	ng-disabled="true" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x.code as x in ListStatusSource | filter:$select.search">
+																{{x.name}} </ui-select-choices> </ui-select>
+															</div>
+															<label class="control-label col-md-2"><span
+																translate="vnm.common.label.from.date"></span></label>
+															<div class="col-md-4">
+																<input id="startDate" ng-model="model.startDate"
+																	name="StartDate" datetime-picker="" date-only=""
+																	date-format="DD/MM/YYYY" class="form-control" />
+															</div>
+
+															<label class="control-label col-md-2"><span
+																translate="vnm.common.label.end.date"></span></label>
+															<div class="col-md-4">
+																<input placeholder=" /  /  /" id="endDate"
+																	ng-model="model.endDate" name="EndDate"
+																	datetime-picker="" date-only=""
+																	date-format="DD/MM/YYYY" class="form-control" />
+															</div>
+
+															<!-- <label class="control-label col-md-2"><span
+																translate="vnm.common.label.reason"></span></label>
+															<div class="col-md-4">
+																<ui-select ng-model="model.resourceCode" class=""
+																	on-select="onChooseResourceCode()" style="width: 100%;">
+																<ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x.code as x in ListStaffResource | filter:$select.search">
+																{{x.name}} </ui-select-choices> </ui-select>
+															</div> -->
+
+															<label class="control-label col-md-2"
+																translate="vnm.common.label.reason"></label>
+															<div class="col-md-15">
+																<ui-select ng-model="model.reason" class=""
+																	ng-disabled="true"> <ui-select-match>{{$select.selected.code}}</ui-select-match>
+																<ui-select-choices style="width: auto;"
+																	repeat="x as x in ReasonSource | filter:$select.search">
+																<span ng-bind-html="x.code | highlight: $select.search"></span>
+																<span>-</span> <span
+																	ng-bind-html="x.code | highlight: $select.search"></span>
+																</ui-select-choices> </ui-select>
+															</div>
+															<div class="col-md-25">
+																<input type="text" class="form-control"
+																	ng-disabled="true" ng-model="model.reason.name"
+																	disabled="disabled" />
+															</div>
+														</div>
+
+														<div class="form-group">
+															<div class="col-md-12" align="center">
+																<button type="button" class="btn btn-primary"
+																	ng-click="searchListStockTransFn()"
+																	ng-disabled="checkStockTreeEmpty">
+																	<i class="fa fa-search"></i> <span
+																		translate="vnm.common.btn.search"></span>
+																</button>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+
+												<div class="form-group">
+													<fieldset class="fieldset-primary">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.formSuperiorStockImport.fieldset.title.ballot"></b>
+														</legend>
+														<!-- BEGIN TABLE PHIEU -->
+														<div class="col-md-12">
+															<table id="tableListItem" class="table-bordered"
+																style="width: 100%">
+																<thead class="ng-table-sort-header">
+																	<tr>
+																		<th width="20%"
+																			translate="vnm.common_table.column.code.item"></th>
+																		<th width="15%"
+																			translate="vnm.common_table.column.date"></th>
+																		<th width="15%"
+																			translate="vnm.common_table.column.state"></th>
+																		<th width="30%"
+																			translate="vnm.common_table.column.reason"></th>
+																		<th width="20%"
+																			translate="vnm.common_table.column.notes"></th>
+																	</tr>
+																</thead>
+															</table>
+														</div>
+														<!-- END TABLE PHIEU -->
+													</fieldset>
+												</div>
+
+												<div class="form-group">
+													<fieldset class="fieldset-primary">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.formSuperiorStockImport.fieldset.title.list.item"></b>
+														</legend>
+														<!-- BEGIN TABLE SO LUONG -->
+														<div class="col-md-12">
+															<table id="tableQuantityItem" class="table-bordered"
+																style="width: 100%">
+																<thead class="ng-table-sort-header">
+																	<tr>
+																		<th width="14%"
+																			translate="vnm.common_table.column.goods.code">
+																		</th>
+																		<th width="14%"
+																			translate="vnm.common_table.column.goods.name">
+																		</th>
+																		<th width="10%"
+																			translate="vnm.common_table.column.state"></th>
+																		<th width="10%"
+																			translate="vnm.common_table.column.unit"></th>
+																		<th width="10%"
+																			translate="vnm.common_table.column.quantity"></th>
+																	</tr>
+																</thead>
+															</table>
+														</div>
+														<!-- END TABLE SO LUONG -->
+													</fieldset>
+												</div>
+
+												<div class="form-group">
+													<div class="col-md-2"></div>
+													<div class="col-md-2" align="center">
+														<button type="button" class="btn btn-primary"
+															style="width: 90px" ng-click="importSuperiorConfirmFn()"
+															ng-disabled="disableBtnImportAndPrint">
+															<i class="fa fa-save"></i> <span
+																translate="vnm.common.btn.import"></span>
+														</button>
+													</div>
+													<div class="col-md-2" align="center">
+														<button type="button" class="btn btn-primary"
+															style="width: 90px" ng-click="openPopupListSerial()"
+															ng-disabled="disableBtnDetail">
+															<i class=""></i> <span translate="vnm.common.btn.serial"></span>
+														</button>
+													</div>
+													<div class="col-md-2" align="center">
+														<button type="button" name="btnDetail" style="width: 90px"
+															class="btn btn-primary" ng-disabled="disableBtnDetail"
+															ng-click="btnOnclickLoadFileSerial()">
+															<i class="fa fa-upload"></i> <label
+																translate="vnm.formSuperiorStockImport.label.btn.load.file"></label>
+														</button>
+													</div>
+
+													<div class="col-md-2" align="center">
+														<button type="button" name="btnDetail" style="width: 90px"
+															ng-disabled="disableBtnPrint" class="btn btn-primary"
+															ng-click="printFn()">
+															<i class="fa fa-print"></i> <label
+																translate="vnm.common.btn.print"></label>
+														</button>
+													</div>
+													<div class="col-md-2"></div>
+												</div>
+											</fieldset>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalSerialList" role="dialog"
+							data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog" style="min-width: 900px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title">Danh sách Serial</h4>
+									</div>
+									<div class="modal-body">
+										<div ng-include="'/popup/serialListGoods'"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="dialogButtonDetail" role="dialog"
+							data-keyboard="false" data-backdrop="static">
+							<div class="modal-dialog" style="min-width: 800px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title"
+											translate="vnm.formSuperiorStockImport.label.popup.load.serial"></h4>
+									</div>
+									<div class="modal-body">
+										<div ng-include="'/popup/dialogButtonDetail'"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- //Danh sach serial khogn co trong kho -->
+						<div class="modal fade" id="modalSerialListNotFound" role="dialog"
+							data-keyboard="false" data-backdrop="static" >
+							<div class="modal-dialog" style="min-width: 900px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" ng-click="closeModalListSerialNotFound()">&times;</button>
+										<h4 class="modal-title">Danh sách Serial</h4>
+									</div>
+									<div class="modal-body">
+										<div class="">
+											<table id="tableListSerialNotFound" class="table-bordered"
+												style="width: 100%">
+												<thead class="ng-table-sort-header">
+													<tr>
+														<th width="100%">Serial</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+
+										<div style="text-align: center;">
+											<button type="button" class="btn btn-danger btn-s"
+												ng-click="closeModalListSerialNotFound()">
+												<span class="fa fa-rotate-left"> </span> <span
+													translate="vnm.dialogButtonDetail.label.buttonComeBack" />
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

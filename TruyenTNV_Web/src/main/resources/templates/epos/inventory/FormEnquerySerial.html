@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+
+		<script src="/views/epos/inventory/FormEnquerySerial.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-FormEnquerySerial as ctrl" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.form_enquery_serial.page.title"></b>
+						</legend>
+						<form name="frm_FormEnquerySerial" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.form_enquery_serial.label.lg.condition.search"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.form_enquery_serial.label.goods"> </label>
+													<div class="col-md-1p9">
+														<input type="text" class="form-control" ng-model="model.fGoodsCode" id="fGoodsCode" data-toggle="tooltip" data-placement="top" title="" 
+															ng-blur="onblurGoodsCode()"/>
+													</div>
+													<div class="col-md-2p9">
+														<input type="text" class="form-control" ng-disabled="true" ng-model="model.fGoodsName" id="fGoodsName" data-toggle="tooltip" data-placement="top"
+															title="" />
+													</div>
+
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-1" translate="vnm.form_enquery_serial.label.shop"></label>
+													<div class="col-md-1p9">
+														<input type="text" class="form-control" ng-model="model.fShopCode" id="fShopCode" data-toggle="tooltip" data-placement="top" title="" 
+															ng-blur="onblurShopCode()"/>
+													</div>
+													<div class="col-md-2p9">
+														<input type="text" class="form-control" ng-disabled="true" ng-model="model.fShopName" id="fShopName" data-toggle="tooltip" data-placement="top"
+															title="" />
+													</div>
+
+													<div class="col-md-1">
+														<button type="button" name="fSearch" style="width: 100%" class="btn btn-primary" ng-click="onFSearch()">
+															<i class="fa fa-search"></i> <label translate="vnm.common.btn.search"></label>
+														</button>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.form_enquery_serial.label.state"> </label>
+													<div class="col-md-4">
+														<ui-select id="fState" ng-model="model.fState" class="" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices repeat="x in lstStates | filter:$select.search"> {{x.stateId}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-1" translate="vnm.form_enquery_serial.label.status"></label>
+													<div class="col-md-4">
+														<ui-select id="fStatus" ng-model="model.fStatus" class="" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices repeat="x in lstStatuss | filter:$select.search"> {{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+
+
+													<div class="col-md-1">
+														<button type="button" name="fLoadFile" style="width: 100%" class="btn btn-primary" ng-click="onClickFLoadFile()">
+															<i class="fa fa-spinner"></i> <label translate="vnm.common.btn.load.file"></label>
+														</button>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.form_enquery_serial.label.from.serial"> </label>
+													<div class="col-md-4">
+														<input type="text" class="form-control" id="fFromSerial" ng-model="model.fFromSerial" />
+													</div>
+
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-1" translate="vnm.form_enquery_serial.label.to.serial"></label>
+													<div class="col-md-4">
+														<input type="text" class="form-control" id="fToSerial" ng-model="model.fToSerial" />
+													</div>
+												</div>
+											</fieldset>
+
+											<div class="col-md-12" style="text-align: center;" id="pnlButtonOKBeforeSave">
+												<button type="button" name="btnFDetail" class="btn btn-primary btn-primary-70" ng-click="btnFDetailOnclick()" ng-disabled="disableActButton">
+													<i class="fa fa-info"></i> <label translate="vnm.common.btn.detail"></label>
+												</button>
+												<button type="button" name="btnFPrint" class="btn btn-primary btn-primary-70" ng-click="btnFPrintOnclick2()" ng-disabled="disableActButton">
+													<i class="fa fa-print"></i> <label translate="vnm.common.btn.print"></label>
+												</button>
+											</div>
+
+											<div class="form-group">
+												<div class="col-md-12 md-height-400">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b translate="vnm.form_enquery_serial.label.lg.list.serials"></b>
+														</legend>
+														<div class="form-group">
+															<div class="col-md-12">
+																<div class="table-scrollable">
+																	<table id="tableFListSerial" class="table-bordered" style="width: 100%">
+																		<thead class="ng-table-sort-header">
+																			<tr>
+																				<th width="15%" translate="vnm.form_enquery_serial.column.shop.name"></th>
+																				<th width="15%" translate="vnm.form_enquery_serial.column.stock.name"></th>
+																				<th width="14%" translate="vnm.form_enquery_serial.column.serial"></th>
+																				<th width="14%" translate="vnm.form_enquery_serial.column.goods.code"></th>
+																				<th width="14%" translate="vnm.form_enquery_serial.column.goods.name"></th>
+																				<th width="14%" translate="vnm.form_enquery_serial.column.state"></th>
+																				<th width="14%" translate="vnm.form_enquery_serial.column.status"></th>
+																			</tr>
+																		</thead>
+																	</table>
+																</div>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="viewSerialEnquery" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.form_enquery_serial.dv.title"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogViewSerialEnquery'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalAddSerial" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.input.goods"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogButtonDetail'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="viewSerialNoFound" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.form_enquery_serial.title.dialog.no.found"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogViewSerialNoFound'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalListShop" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="dialogListShopActionBack()"></button>
+											<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListShop'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="modal fade" id="modalListGoods" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="dialogListGoodsActionBack()"></button>
+											<h4 class="modal-title" translate="vnm.common.label.list.goods"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListGoods'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+ 
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header"> 
+	<title id="pageTitle">Thông báo trả thuê bao về DNO</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+</head>
+<body>
+
+	<div class="page-content" th:fragment="content" > 
+  		 <script src="/views/sub-return-dno/controller.js" type="text/javascript"></script>
+  		 <div  ng-controller="ctrl-sub-return-dno"> 
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase">Thông báo trả thuê bao về DNO</span>
+					</div>
+					<div class="actions">
+						 <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title=""> </a>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					 
+					 <form name="frm_createticket" class="form-horizontal  form-bordered"   method="post" ng-validate="validationOptions">
+			            <div class="form-body">
+			            
+			     						<h3 class="form-section">Danh sách trả số về DNO</h3>
+                                        
+                                        <div class="form-group">
+						                    <label class="control-label col-md-2">Mã YCNM</label>
+						                    <div class="col-md-4">
+						                        <input type="text"  class="form-control" ng-model="model.fullName"  name="FullName" /> 
+						                    </div> 
+						                     <label class="control-label col-md-2">Mã bản tin</label>
+						                    <div class="col-md-4">
+						                        <input type="text"  class="form-control" ng-model="model.fullName"  name="FullName" /> 
+						                    </div>
+						                </div>    		    
+						               
+						                
+						               <div class="form-group">
+						                    <label class="control-label col-md-2">Thuê bao đại diện</label>
+						                    <div class="col-md-4">
+						                        <input type="text"  class="form-control" ng-model="model.fullName"  name="FullName" /> 
+						                    </div> 
+						                     <label class="control-label col-md-2">DNO</label>
+						                    <div class="col-md-4">
+						                          <ui-select ng-model="model.dno" ng-init="model.dno=DNOSource[0].Id" class="" style="width: 100%;">
+						                                <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+						                                <ui-select-choices repeat="x.Id as x in DNOSource | filter:$select.search">
+						                                    {{x.Title}}
+						                                </ui-select-choices>
+						                            </ui-select> 
+						                    </div>
+						                </div>    
+						                
+					 					<div class="form-group">
+											<label class="control-label col-md-2">Từ ngày</label>
+						                    <div class="col-md-4">
+						                          <input ng-model="model.documentIssueDate" name="DocumentIssueDate" datetime-picker=""   date-only=""  date-format="DD/MM/YYYY" class="form-control" />
+						                   
+						                    </div>
+						                   <label class="control-label col-md-2">Đến ngày</label>
+						                    <div class="col-md-4">
+						                          <input ng-model="model.documentIssueDate" name="DocumentIssueDate" datetime-picker=""   date-only=""  date-format="DD/MM/YYYY" class="form-control" />
+						                   
+						                    </div> 
+						                </div>
+						                
+					        			        	
+						                
+                                       
+                                       
+                                    	<h3 class="form-section">Thông báo hoàn trả số về DNO</h3>
+                                       
+                                       
+                                       		 
+			            
+			          
+			                
+			                
+			            </div>
+			             <div class="form-actions">
+	                        <div class="col-md-12" style="text-align: right;">
+	                            <button type="button" class="btn btn-primary" ng-click="save()"><i class="fa fa-save"></i> Lưu </button> 
+	                            <button type="button" class="btn red" ng-click="cancel()"  ><i class="fa fa-trash"></i> Hủy</button>
+	                        </div>
+	                    </div>
+			        </form>
+					 
+					 
+					 
+				</div>
+			</div>
+		</div>
+	
+	</div>
+
+
+</body>
+</html>

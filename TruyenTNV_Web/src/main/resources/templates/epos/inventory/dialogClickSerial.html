@@ -1,0 +1,45 @@
+<div>
+	<fieldset class="fieldset-primary fieldset-auto-width"
+		style="width: 100%">
+		<legend class="lengend-primary">
+			<b>Dải Serial</b>
+		</legend>
+		<div class="col-md-12">
+			<div class="form-group" style="overflow: scroll; width: 100%">
+				<div class="form-group">
+					<div class="col-md-12">
+						<table id="example2" class="table-bordered" style="width: 100%">
+							<thead class="ng-table-sort-header">
+								<tr>
+									<th>STT</th>
+									<th>Từ Serial</th>
+									<th>Đến Serial</th>
+									<th>Số lượng</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-md-1"><span
+					translate="vnm.serial_list.label.number.of.table"></span></label>
+				<div class="col-md-11">
+					<input type="text" class="form-control" ng-model="model.ddTotal"
+						name="ddTotal" ng-disabled="true" />
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-12" style="text-align: center;">
+			<button type="button" name="btnBack" style="width: 100px"
+				data-dismiss="modal" class="btn btn-primary">
+				<i class="glyphicon glyphicon-chevron-left"></i> <label
+					translate="vnm.common.label.btn.back"></label>
+			</button>
+		</div>
+	</fieldset>
+</div>

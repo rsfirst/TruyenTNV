@@ -1,0 +1,60 @@
+<div>
+	<fieldset class="fieldset-primary">
+		<div class="form-group" style="padding-bottom: 10px;">
+			<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.dicn.card.no"> </label>
+			<div class="col-md-5">
+				<input type="text" maxlength="6" style="text-transform: uppercase;" class="form-control" ng-model="model.dicnCardNo" ng-disabled="disableAction" id="dicnCardNo" onKeyPress="return ValidateAlpha(event);"/>
+			</div>
+			<label class="control-label col-md-1" translate="vnm.form_sale_dealer.label.dicn.price"> </label>
+			<div class="col-md-5">
+				<input type="text" format="currency" class="form-control" ng-model="model.dicnPrice" ng-disabled="disableAction" id="dicnPrice" onkeypress="return isNumberKey(event)" />
+			</div>
+		</div>
+
+		<div class="col-md-12" style="text-align: center; padding-bottom: 10px;" id="pnlDICNButtonAction">
+			<button type="button" class="btn btn-primary btn-primary-70" ng-click="btnDICNAddOnclick()">
+				<i class="fa fa-plus-circle"></i> <label translate="vnm.common.btn.add"></label>
+			</button>
+			<button type="button" class="btn btn-primary btn-primary-70" ng-click="btnDICNEditOnclick()">
+				<i class="fa fa-edit"></i> <label translate="vnm.common.btn.edit"></label>
+			</button>
+
+			<button type="button" class="btn btn-primary btn-primary-70" ng-click="btnDICNDeleteOnclick()">
+				<i class="fa fa-trash"></i> <label translate="vnm.common.btn.delete"></label>
+			</button>
+			
+			<button type="button" class="btn btn-primary btn-primary-70" ng-click="exitDICNCardNo()">
+				<i class="fa fa-times"></i> <label translate="vnm.common.btn.exit"></label>
+			</button>
+		</div>
+
+		<div class="col-md-12" style="text-align: center; padding-bottom: 10px" id="pnlDICNButtonOK">
+			<button type="button" class="btn btn-primary btn-primary-100" ng-click="btnDICNOkOnclick()">
+				<i class="fa fa-thumbs-o-up"></i> <label translate="vnm.common.btn.approve"></label>
+			</button>
+			<button type="button" class="btn btn-primary btn-primary-100" ng-click="btnDICNCancelOnclick()">
+				<i class="fa fa-long-arrow-left"></i> <label translate="vnm.common.btn.cancel"></label>
+			</button>
+		</div>
+	</fieldset>
+
+	<fieldset class="fieldset-primary">
+		<legend class="lengend-primary">
+			<b translate="vnm.form_sale_dealer.label.dicn.list"></b>
+		</legend>
+
+		<div class="form-group">
+			<div class="col-md-12 md-height-350">
+				<table id="tableDICNCardNo" class="table-bordered" style="width: 100%">
+					<thead class="ng-table-sort-header">
+						<tr>
+							<th width="50%" translate="vnm.form_sale_dealer.label.dicn.card.no"></th>
+							<th width="50%" translate="vnm.form_sale_dealer.label.dicn.price"></th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</fieldset>
+
+</div>

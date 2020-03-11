@@ -1,0 +1,47 @@
+<div class="modal-header">
+	<h3 class="modal-title">Lý do</h3>
+</div>
+<div class="modal-body" id="modal-body">
+
+	<div class="portlet-body form">
+		<form name="editform" class="form-horizontal  form-bordered"
+			method="post">
+			<div class="form-body">
+				<!-- 	<label class="control-label col-md-2">Nhập lý do </label> -->
+				<h3 class="form-section">Nhập lý do</h3>
+				<div class="form-group">
+					<div class="col-md-10">
+
+						<!-- <select ng-model="model.reason" ng-options="o as o for o in options" ng-disabled="enableOtherReason" ng-change="changedReason()"></select> -->
+
+						<ui-select ng-model="model.fuckingReason" name="fuckingReason"
+							ng-init="model.documentType=options[0]"
+							ng-disabled="enableOtherReason" ng-change="changedReason($select.selected)"
+							class="" style="width: 100%;"> <ui-select-match>{{$select.selected}}</ui-select-match>
+						<ui-select-choices
+							repeat="x as x in options">
+						{{x}} </ui-select-choices> </ui-select>
+
+					</div>
+
+					<div class="col-md-10">
+						<input type="radio" ng-model="model.radioReason" value="other" ng-change="enableOther()" /> Lý do khác
+					</div>
+
+					<div class="col-md-10">
+						<input type="text" class="form-control"
+							ng-disabled="!enableOtherReason" ng-model="model.otherReason"
+							name="otherReason" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="modal-footer">
+	<a data-dismiss="modal" class="btn  btn-default" href="javascript:;"
+		ng-click="close()"> Huỷ </a> <a ng-click="submit()"
+		class="btn  btn-primary  btn-default"> <i class="fa fa-floppy-o"></i>
+		Lưu
+	</a>
+</div>

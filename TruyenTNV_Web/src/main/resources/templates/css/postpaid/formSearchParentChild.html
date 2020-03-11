@@ -1,0 +1,254 @@
+
+
+		<div id="formSearchParentChild"
+
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							>Tìm kiếm cha con</span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_prepaid" class="form-horizontal  form-bordered"
+						method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+										<h3 class="form-section">Điều kiện tìm kiếm</h3>
+										<div class="form-group">
+											<div class="row">
+									            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+									                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									                    <div class="col-xs-4 col-sm-4">
+										                    <label class="control-label col-md-4">Số thuê bao</label>
+										                    <div class="col-md-8 ">
+										                    	<input class="form-control " ng-model="model.SearchConditionPhoneNo"/>
+									                    	</div>
+									                    </div>
+									                    <div class="col-xs-4 col-sm-4">
+										                    <label class="control-label col-md-4">Tên khách hàng</label>
+										                    <div class="col-md-8 ">
+										                    	<input class="form-control " ng-model="model.SearchConditionCustomerFullname"/>
+									                    	</div>
+									                    </div>
+									                    <div class="col-xs-4 col-sm-4">
+									                    	<label class="control-label col-md-4">CMT</label>
+									                    	<div class="col-md-8 ">
+									                    		<input class="form-control " ng-model="model.SearchConditionIdCard"/>
+									                    	</div>
+									                    </div>
+									                </div>
+									                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									                    <div class="col-xs-4 col-sm-4">
+										                    <label class="control-label col-md-4">SIM</label>
+										                    <div class="col-md-8 ">
+										                    	<input class="form-control " ng-model="model.SearchConditionSim"/>
+									                    	</div>
+									                    </div>
+									                    <div class="col-xs-4 col-sm-4">
+										                    <label class="control-label col-md-4">Tài khoản</label>
+										                    <div class="col-md-8 ">
+										                    	<input class="form-control " ng-model="model.SearchConditionAccount"/>
+									                    	</div>
+									                    </div>
+									                    <div class="col-xs-4 col-sm-4">
+									                    	<label class="control-label col-md-4">Mã số thuế</label>
+									                    	<div class="col-md-8 ">
+									                    		<input class="form-control " ng-model="model.SearchConditionTaxCode"/>
+									                    	</div>
+									                    </div>
+									                </div>
+
+									            </div>
+									            <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+									                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									                    <button type="button" name="Search" class="btn btn-primary"
+															ng-click="searchParentPeople()"
+															style="margin-right: 30px;">
+															<i class="fa glyphicon glyphicon-search"></i> <label>Tìm kiếm</label>
+														</button>
+									                </div>
+									            </div>
+									        </div>
+										</div>
+										<div class="form-group">
+											<h3 class="form-section">Danh sách khách hàng</h3>
+											<div class="col-md-12">
+												<div class="table-scrollable">
+													<table ng-table="tableParamsChild"
+														class="table table-striped table-bordered"
+														show-filter="false">
+														<tr ng-repeat="item in $data"  style="cursor:pointer;" ng-click="getItemInfo(item)">
+															<td title="'Loại KH'">{{item.custType==='Corporate'?'Tổ chức':'Cá nhân'}}</td>
+															<td title="'Tên khách hàng'">{{item.givenName}}{{item.officialName}}</td>
+															<td title="'Phân khúc khách hàng'">{{item.customerSegment}}</td>
+															<td title="'Mã số thuế'">{{item.taxCode}}</td>
+															<td title="'CMT'" >{{item.socialSecurityNumber}}</td>
+															<td title="'Địa chỉ'">{{parseAddress(item.homeGeneral1,item.homeCity,item.billProvince,item.billRegion)}}</td>
+														</tr>
+													</table>
+													<label>Số lượng bản ghi {{listCustomer.length}}</label>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group" >
+											<div class="portlet-title">
+												<div class="caption">
+													<i class="icon-plus font-orange"></i> <span
+														class="caption-subject font-orange bold uppercase"
+														>Chi tiết</span>
+												</div>
+											</div>
+												<div class="portlet-body form">
+												<div class="col-md-4">
+													<div class="" style="overflow-y:auto;height:360px;" >
+														<h3 class="form-section">Cây cấp bậc khách hàng</h3>
+														<div class="tree-container" style="min-height:160px;">
+															<tree nodes="basicTree" class="ng-isolate-scope"></tree>
+														</div>
+													</div>
+													<div class="clear-fix"></div>
+													<button type="button" name="viewTreeGrid" class="btn btn-primary"
+															ng-click="processTreeView()" ng-show="showBtnTreeView"
+															style="margin-right: 30px;">
+															<i class="fa glyphicon glyphicon-search"></i> <label>Xem theo cây</label>
+													</button>
+													</div>
+												<div class="col-md-8">
+													<h3 class="form-section">Thông tin khách hàng</h3>
+
+													<div class="form-group">
+														<label class="control-label col-md-2">Loại KH</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailcusType" name="cusType" disabled="disabled"/>
+														</div>
+
+														<label class="control-label col-md-2">Phân khúc KH</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailsegment" name="segment" disabled="disabled"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+
+														<label class="control-label col-md-2">Tên KH</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailfullName" name="fullName" disabled="disabled"/>
+														</div>
+
+														<label class="control-label col-md-2">KH cha</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailparentfullName" name="parentFullName" disabled="disabled"/>
+														</div>
+
+													</div>
+													<!-- MSISDN-->
+													<div class="form-group">
+														<label class="control-label col-md-2">Địa chỉ</label>
+
+														<div class="col-md-10">
+															<input type="text" class="form-control"
+																ng-model="customerDetailaddress" name="address" disabled="disabled"/>
+														</div>
+													</div>
+
+													<!-- Ä�á»‹a chá»‰-->
+													<div class="form-group">
+														<label class="control-label col-md-2">Địa chỉ TBC</label>
+
+														<div class="col-md-10">
+															<input type="text" class="form-control"
+																ng-model="customerDetailparentaddress" name="ParentAddress" disabled="disabled" />
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-2">Ngày sinh</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetaildob" name="vat" date="dd/MM-yyyy" disabled="disabled"/>
+														</div>
+
+														<label class="control-label col-md-2">Giới tính</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailgender" name="gender" disabled="disabled"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+
+														<label class="control-label col-md-2">CMT</label>
+
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailidCard" name="idCard" disabled="disabled"/>
+														</div>
+
+														<label class="control-label col-md-2">Mã số thuế</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailtaxCode" name="taxCode" disabled="disabled" />
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-2">HTTT</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailpaymentMethod" name="paymentType" disabled="disabled"/>
+														</div>
+														<label class="control-label col-md-2">Loại TBC</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailLoaiTBC" name="customerDetailLoaiTBC" disabled="disabled"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-2">Hạn mức</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailcreditLimit" name="creditLimit" disabled="disabled"/>
+														</div>
+
+														<label class="control-label col-md-2">Nợ cước</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailbillDebt" name="billDebt" disabled="disabled"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-2">Trạng thái KH</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetailcusStatus" name="cusStatus" disabled="disabled" />
+														</div>
+														<label class="control-label col-md-2">DS số TB</label>
+														<div class="col-md-4">
+															<input type="text" class="form-control"
+																ng-model="customerDetaillstSTB" name="lstSTB" disabled="disabled"/>
+														</div>
+													</div>
+                                                    <div class="col-md-12" style="text-align: center; margin-top: 4em;">
+                                                        <button type="button" class="btn btn-primary" style="width: 10em;" ng-click="onSelectCustomerSearch()">Chọn</button>
+                                                    </div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>

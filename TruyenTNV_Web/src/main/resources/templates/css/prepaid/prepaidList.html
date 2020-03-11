@@ -1,0 +1,483 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Đăng ký thông tin theo lô</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+.textExcel {
+	mso-number-format: General;
+}
+</style>
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/prepaid/prepaidList.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-prepaidList" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.prepaid_list.page.title"> </span>
+					</div>
+				</div>
+				<div class="portlet-body form" ng-app="app_vnm">
+					<form name="frm_prepaidList" class="form-horizontal  form-bordered"
+						method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="tab-pane active">
+										<h3 class="form-section"
+											translate="vnm.prepaid_list.page.tab.title"></h3>
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.fullname"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.fullName" name="fullName"
+													ng-disabled="fullNameDisabledForm" />
+											</div>
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.birthday"></label>
+											<div class="col-md-25">
+												<input ng-model="model.dob" name="dob" id="dob"
+													datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" ng-disabled="dobDisabledForm" />
+											</div>
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.gender"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.sex"
+													ng-init="model.sex=listSex[-1].Id" class=""
+													style="width: 100%;" ng-disabled="sexDisabledForm">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in listSex | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-group">
+										<!-- DatBD2 -->
+											<label class="control-label col-md-15"
+												translate="Loại giấy tờ cá nhân"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.typeCard"
+													ng-init="model.typeCard=lstTypeCard[-1].Id" class=""
+													style="width: 100%;" ng-disabled="sexDisabledForm">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in lstTypeCard | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+										<!-- end -->
+											<label class="control-label col-md-15"
+												translate="Số giấy tờ cá nhân"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.idCard" name="idCard"
+													ng-disabled="idCardDisabledForm" />
+											</div>
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.place.issue"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.planceOfIssue" name="planceOfIssue"
+													ng-disabled="planceDisabledForm" />
+											</div>
+											
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.date.issue"></label>
+											<div class="col-md-25">
+												<input ng-model="model.dateOfIssue" id="dateOfIssue"
+													name="dateOfIssue" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control"
+													ng-disabled="dateOfIssDisabledForm" />
+											</div>
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.customer.type"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.customerType"
+													ng-init="model.customerType=listCustomerType[0].customerId"
+													class=""
+													on-select="updateCustomerType($select.selected.customerId)"
+													ng-disabled="customerTypeDisabledForm" style="width: 100%;">
+												<ui-select-match>{{$select.selected.customer}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.customerId as x in listCustomerType | filter:$select.search">
+												{{x.customer}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15"
+												translate="Đối tượng sử dụng"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.subUseType"
+													ng-init="model.subUseType=lstSubUseType[-1].Id" class=""
+													style="width: 100%;" ng-disabled="sexDisabledForm">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in lstSubUseType | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-group">
+											
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.company.name"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.companyName" name="companyName"
+													ng-disabled="companyNameDisabledForm" />
+											</div>
+											
+											<!--  DatBD2 -->
+											<label class="control-label col-md-15"
+												translate="Loại giấy tờ tổ chức"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.typeCardCompany"
+													ng-init="model.typeCardCompany=lstTypeCardCompany[-1].Id" class=""
+													style="width: 100%;" ng-disabled="sexDisabledForm">
+												<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in lstTypeCardCompany | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+											<!-- end DatBD2 -->
+											<label class="control-label col-md-15"
+												translate="Số giấy tờ tổ chức"></label>
+											<div class="col-md-25">
+												<input ng-model="model.taxCode" id="taxCode" name="taxCode"
+													datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" ng-disabled="taxCodeDisabledForm" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.address"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.address" name="address"
+													ng-disabled="addressDisabledForm" />
+											</div>
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.province"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.province" id="province"
+													ng-init="model.province=listProvince[0].proId" class=""
+													on-select="updateDistrict($select.selected.proId)"
+													ng-disabled="provinceDisabledForm" style="width: 100%;">
+												<ui-select-match>{{$select.selected.province}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.proId as x in listProvince | filter:$select.search">
+												{{x.province}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.district"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.district" id="district"
+													ng-init="model.district=listDistrict[0].disId" class=""
+													ng-disabled="dictrictDisabledForm" style="width: 100%;">
+												<ui-select-match>{{$select.selected.district}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.disId as x in listDistrict | filter:$select.search">
+												{{x.district}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.msisdn"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.mdn"
+													name="mdn" ng-disabled="mdmDisabledForm" />
+											</div>
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.iccid"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.serial" name="serial"
+													ng-disabled="serialDisabledForm" />
+											</div>
+											<label class="control-label col-md-15"
+												translate="ĐC của công ty"></label>
+											<div class="col-md-25">
+											
+											<input type="text" class="form-control"
+													ng-model="model.addressCompany" name="addressCompany"
+													ng-disabled="serialDisabledForm" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.status"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.status" name="status"
+													ng-disabled="statusDisabledForm" />
+											</div>
+											<label class="control-label col-md-15"
+												translate="vnm.prepaid_list.label.error.detail"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.depError" name="depError"
+													ng-disabled="depErrorDisabledForm" />
+											</div>
+										</div>
+										<div class="form-actions">
+											<div style="text-align: center;">
+												<button type="button" class="btn btn-primary"
+													ng-click="edit()" ng-disabled="btnModIsDis || ind != ''">
+													<i class="fa fa-pencil-square-o"></i> <label
+														translate="vnm.prepaid_list.label.btn.edit"></label>
+												</button>
+												<button type="button" class="btn btn-primary"
+													ng-click="remove()" ng-disabled="btnDeleIsDis || ind != ''">
+													<i class="fa fa-trash"></i> <label
+														translate="vnm.prepaid_list.label.btn.delete"></label>
+												</button>
+												<button type="button" class="btn btn-primary"
+													ng-click="add()"
+													ng-disabled="!dataSubscriberPreTemplate.length>0">
+													<i class="fa fa-save"></i> <label
+														translate="vnm.prepaid_list.label.btn.execute"></label>
+												</button>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md">
+												<legend class="legendcustom"
+													translate="vnm.prepaid_list.label.title.upload.subscriber">
+
+												</legend>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12">
+												<span class="btn blue-hoki  btn-file"> <i
+													class="fa fa-cloud-upload"></i> <label
+													translate="vnm.prepaid_list.label.btn.choose.file"></label><input
+													type="file" id="btnListSubscriberUploaderPrePaid"
+													ng-click="uploadFileTemplateSubscriber(uploaderListPrepaid, $event)"
+													nv-file-select="" uploader="uploaderListPrepaid"
+													multiple="" />
+												</span>
+
+												<button type="button" class="btn btn-danger"
+													ng-click="downloadFileTemplateServer()">
+													<span class="fa fa-download"></span><label
+														translate="vnm.prepaid_list.label.btn.download.file.template"></label>
+												</button>
+
+												<div class="table-scrollable">
+													<table class="table table-striped table-bordered">
+														<thead class="ng-table-sort-header">
+															<tr>
+																<th width="50px" style="text-align: center;">STT</th>
+																<th width="250px" style="text-align: center;">Tên</th>
+																<th width="200px" style="text-align: center;">Kích
+																	thước File</th>
+																<th width="100px" style="text-align: center;">Trạng
+																	thái</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="item in uploaderListPrepaid.queue">
+																<td><strong>{{
+																		uploaderListPrepaid.getIndexOfItem(item)+1 }}</strong></td>
+																<td><strong>{{ item.file.name }}</strong></td>
+																<td ng-show="uploaderListPrepaid.isHTML5" nowrap="">{{
+																	item.file.size/1024/1024|number:2 }} MB</td>
+																<td class="text-center"><span
+																	ng-show="item.isSuccess"><i
+																		class="glyphicon glyphicon-ok"></i></span> <span
+																	ng-show="item.isCancel"><i
+																		class="glyphicon glyphicon-ban-circle"></i></span> <span
+																	ng-show="item.isError"><i
+																		class="glyphicon glyphicon-remove"></i></span></td>
+															</tr>
+														</tbody>
+													</table>
+													<div>
+														<button type="button" class="btn btn-danger btn-s"
+															ng-click="removeAllItemListPrePaid()"
+															ng-disabled="!uploaderListPrepaid.queue.length">
+															<span class="glyphicon glyphicon-trash"></span> <label
+																translate="vnm.prepaid_list.label.btn.detete.list"></label>
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12">
+												<span class="btn blue-hoki  btn-file"
+													id="spanUploaderListImagePrePaid"
+													ng-disabled="{{isDisabledListImagePrePaidSpan}}"> <span
+													class="fileinput-new"> <label
+														translate="vnm.prepaid_list.label.btn.choose.image"></label>
+												</span> <input type="file" id="btnUploaderListImagePrePaid"
+													uploader="uploaderListImagePrePaid" multiple=""
+													nv-file-select=""
+													ng-disabled="{{isDisabledListImagePrePaidSpan}}" />
+												</span>
+												<div class="table-scrollable">
+													<table class="table table-striped table-bordered">
+														<thead class="ng-table-sort-header">
+															<tr>
+																<th width="50px" style="text-align: center;">STT</th>
+																<th width="250px" style="text-align: center;">Tên</th>
+																<th width="200px" style="text-align: center;">Kích
+																	thước File</th>
+																<th width="100px" style="text-align: center;">Trạng
+																	thái</th>
+																<th width="80px"></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="item in uploaderListImagePrePaid.queue">
+																<td><strong>{{
+																		uploaderListImagePrePaid.getIndexOfItem(item) + 1}}</strong></td>
+																<td><strong>{{ item.file.name }}</strong></td>
+																<td ng-show="uploaderListImagePrePaid.isHTML5" nowrap="">{{
+																	item.file.size/1024/1024|number:2 }} MB</td>
+
+																<td class="text-center"><span
+																	ng-show="item.isSuccess"><i
+																		class="glyphicon glyphicon-ok"></i></span> <span
+																	ng-show="item.isCancel"><i
+																		class="glyphicon glyphicon-ban-circle"></i></span> <span
+																	ng-show="item.isError"><i
+																		class="glyphicon glyphicon-remove"></i></span></td>
+																<td nowrap="">
+																	<button type="button" class="btn btn-danger btn-xs"
+																		ng-click="removeElementAttachmenByItem(item)">
+																		<span class="glyphicon glyphicon-trash"></span> Xóa
+																	</button>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+													<div>
+														<div>
+															<p></p>
+															<div class="form-group">
+																<p></p>
+																<label class="text-custom"><label
+																	class="text-custom"
+																	translate="vnm.prepaid_list.label.number.file.image"></label>:
+																	{{uploaderListImagePrePaid.queue.length}}</label>
+															</div>
+															<p></p>
+															<div class="progress" style="">
+																<div class="progress-bar" role="progressbar"
+																	ng-style="{ 'width': uploaderListImagePrePaid.progress + '%' }">{{uploaderListImagePrePaid.progress}}%</div>
+															</div>
+														</div>
+														<button type="button" class="btn btn-success btn-s"
+															id="btnUploadImagePrePaid"
+															ng-click="uploadAllFileListImage(uploaderListImagePrePaid, $event)"
+															ng-disabled="!uploaderListImagePrePaid.getNotUploadedItems().length">
+															<span class="glyphicon glyphicon-upload"></span> <label
+																translate="vnm.prepaid_list.label.btn.upload.image"></label>
+														</button>
+														<button type="button" class="btn btn-danger btn-s"
+															ng-click="removeAllItemListImagePrePaid()"
+															ng-disabled="!uploaderListImagePrePaid.queue.length">
+															<span class="glyphicon glyphicon-trash"></span> <label
+																translate="vnm.prepaid_list.label.btn.delete.image"></label>
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div ng-show="dataSubscriberPreTemplate.length>0">
+												<h3 class="form-section"
+													translate="vnm.prepaid_list.label.list.subscriber.title"></h3>
+												<div class="form-group">
+													<div class="col-md-12">
+														<div class="table-scrollable">
+															<table ng-table="tableParams" id="tblCustomers"
+																class="table table-striped table-bordered"
+																show-filter="true">
+																<tr ng-repeat="item in $data"
+																	ng-click="getInfoBatch($index,item)"
+																	ng-class="{true:'active', false:''}[selMdn==item.mdn]">
+																	<td title="'Tên KH'" style="min-width: 200px"
+																		sortable="'fullName'">{{item.fullName}}</td>
+																	<td title="'Ngày Sinh'">{{item.dob}}</td>
+																	<td title="'Loại giấy tờ cá nhân'">{{loadTypeCardName(item.type_card)}}</td>
+																	<td title="'Số giấy tờ cá nhân'" sortable="'idCard'">{{item.idCard}}</td>
+																	<td title="'Giới tính'">{{item.genderStr}}</td>
+																	<td title="'Loại khách hàng'">{{item.customerTypeStr}}</td>
+																	<td title="'Đối tượng sử dụng'">{{loadNameSubUseType(item.sub_use_type)}}</td>
+																	<td title="'Tên công ty'">{{item.companyName}}</td>
+																	<td title="'Loại giấy tờ tổ chức'">{{loadTypeCardCompanyName(item.type_Card_Company)}}</td>
+																	<td title="'Số giấy tờ tổ chức'">{{item.taxCode}}</td>
+																	<td title="'Địa chỉ'">{{item.address}}</td>
+																	<td title="'Địa chỉ công ty'">{{item.addressCompany}}</td>
+																	<td title="'Tỉnh thành'">{{item.province}}</td>
+																	<td title="'Quận huyện'">{{item.district}}</td>
+																	<td title="'Số TB'" sortable="'mdn'">{{item.mdn}}</td>
+																	<td id='iccidId' title="'ICCID'" class="textExcel"
+																		sortable="'serial'">{{item.serial}}</td>
+																	<td title="'Nơi cấp CMT'">{{item.placeOfIssue}}</td>
+																	<td title="'Ngày cấp'">{{item.dateOfIssue}}</td>
+																	<td title="'Quốc tịch'">{{item.country}}</td>
+																	<td title="'Ảnh CMT 1'">{{item.img_id}}</td>
+																	<td title="'Ảnh CMT 2'">{{item.img_id_2}}</td>
+																	<td title="'Ảnh GPKD1'">{{item.bus_permit_no_img1}}</td>
+																	<td title="'Ảnh GPKD2'">{{item.bus_permit_no_img2}}</td>
+																	<td title="'Ảnh DSCN của TC'">{{item.parent_img}}</td>
+																	<td title="'Ảnh giấy ủy quyền'">{{item.authorized_img}}</td>
+																	<td title="'Ảnh HS 1'">{{item.file_id}}</td>
+																	<td title="'Ảnh HS 2'">{{item.file_id_2}}</td>
+																	<td title="'Ảnh HĐ 1'">{{item.contract_img1}}</td>
+																	<td title="'Ảnh HĐ 2'">{{item.contract_img2}}</td>
+																	<td title="'Ảnh chân dung'">{{item.cust_img}}</td>
+																	<td title="'Trạng thái'">{{item.status === "" ?
+																		"Chưa thực hiện" : item.status === null ? "Chưa thực
+																		hiện" : item.status === '0' ? "Thực hiện lỗi" :
+																		item.status === '1' ? "Thực hiện thành công" : ""}}</td>
+																	<td title="'Chi tiết lỗi'">{{item.depError}}</td>
+																</tr>
+															</table>
+														</div>
+													</div>
+												</div>
+												
+												<div class="col-md-12" align="right">
+													<button type="button" class="btn btn-danger"
+														ng-click="ExportDataTable()">
+														<span class="fa fa-download"></span><label
+															translate="vnm.prepaid_list.label.download.template.result"></label>
+													</button>
+												</div>
+
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="imagemodal" tabindex="-1"
+							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-body">
+										<img src="" class="imagepreview" style="width: 100%;" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

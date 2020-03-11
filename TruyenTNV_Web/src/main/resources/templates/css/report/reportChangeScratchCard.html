@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Báo cáo đổi thẻ cào airtime</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/report/reportChangeScratchCard.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-reportChangeScratchCard" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span class="caption-subject font-orange bold uppercase">Báo cáo đổi thẻ cào airtime</span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_reportChangeScratchCard" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+										<div class="form-group">
+											<label class="control-label col-md-15">Từ ngày</label>
+											<div class="col-md-40">
+												<input ng-model="model.fromDate" id="fromDate" name="fromDate" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+											<label class="control-label col-md-15">Đến ngày</label>
+											<div class="col-md-40">
+												<input ng-model="model.toDate" id="toDate" name="toDate" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+										</div>
+										<div class="form-group">
+												<label class="control-label col-md-15">Người tạo</label>
+												<div class="col-md-40">
+													<ui-select ng-model="model.listSta" ng-init="model.listSta=listStaff[0].code" style="width: 100%;"> <ui-select-match>{{$select.selected.code
+													+ ' - ' + $select.selected.name}}</ui-select-match> <ui-select-choices repeat="x.code as x in listStaff | filter:$select.search"> {{x.code + ' -
+													' + x.name}} </ui-select-choices> </ui-select>
+												</div>
+												<label class="control-label col-md-15">Trạng thái yêu cầu</label>
+												<div class="col-md-40">
+													<ui-select ng-model="model.requestStatus.selected" ng-init="model.requestStatus.selected=listRequestStatus[0]" on-select="" class="" style="width: 100%;">
+														<ui-select-match>{{$select.selected.name}}</ui-select-match>
+	                                                	<ui-select-choices repeat="x in listRequestStatus | filter:$select.search">
+	                                                	<span ng-bind-html="x.code | highlight: $select.search"></span>
+														<span>-</span>
+														<span ng-bind-html="x.name | highlight: $select.search"></span>
+	                                                	</ui-select-choices>
+	                                                </ui-select>
+												</div>
+										</div>
+										<div class="form-group">
+												<label class="control-label col-md-15">Ngày đổi thẻ</label>
+											<div class="col-md-40">
+												<input ng-model="model.dateChange" id="dateChange" name="dateChange" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+												<label class="control-label col-md-15">Ngày cộng HH</label>
+											<div class="col-md-40">
+												<input ng-model="model.dateCreate" id="dateCreate" name="dateCreate" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15">Số STK</label>
+												<div class="col-md-40">
+													<input type="text" class="form-control" ng-model="model.stk" name="stk" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"/>
+												</div>
+											<div class="col-md-40" style="text-align: right;">
+												<button type="button" class="btn btn-primary" ng-click="exportfile()">
+													<i class="fa fa-download"></i> Xuất báo cáo
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Nhập hàng từ kho cấp trên</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/inventory-management/stockInputFromSuperior.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-stockInputFromSuperior"  class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span class="caption-subject font-orange bold uppercase">Nhập hàng từ
+							kho cấp trên </span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_stockInputFromSuperior" class="form-horizontal form-bordered" method="post"
+						ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="tab-pane  active" id="tab_5_1">
+										<h3 class="form-section">Tìm yêu cầu</h3>
+										<div class="form-group">
+											<label class="control-label col-md-15">Mã xuất phiếu</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.IdOuput" name="IdOuput" />
+											</div>
+											<label class="control-label col-md-15">Trạng thái</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.status" ng-init="model.documentType=listStatus[0].Id" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match> <ui-select-choices
+													repeat="x.Id as x in listStatus | filter:$select.search"> {{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15">Lý do</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.reason" ng-init="model.documentType=listReason[0].Id" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match> <ui-select-choices
+													repeat="x.Id as x in listReason | filter:$select.search"> {{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15">Từ ngày</label>
+											<div class="col-md-25">
+												<input ng-model="model.fromDate" name="fromDate" datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" />
+											</div>
+											<label class="control-label col-md-15">Đến ngày</label>
+											<div class="col-md-25">
+												<input ng-model="model.toDate" name="toDate" datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" />
+											</div>
+											<label class="control-label col-md-15"></label>
+											<div class="col-md-25">
+												<button type="button" class="btn btn-primary" ng-click="search()">
+													<i class="fa glyphicon glyphicon-search"></i> Tìm kiếm
+												</button>
+											</div>
+										</div>
+										<h3 class="form-section">Phiếu</h3>
+										<div class="form-group">
+											<div class="col-md-12">
+												<div class="table-responsive">
+													<table class="table table-bordered table-striped table-condensed flip-content">
+														<thead class="flip-content">
+															<tr>
+																<th style="witdh: 40px">STT</th>
+																<th style="witdh: 120px">Mã phiếu</th>
+																<th style="witdh: 120px">Ngày</th>
+																<th style="witdh: 100px">Trạng thái</th>
+																<th style="witdh: 200px">lý do</th>
+																<th style="witdh: 150px">Ghi chú</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																<td>01</td>
+																<td>000111111</td>
+																<td>01:01:01 09/09/17</td>
+																<td>N/A</td>
+																<td>Xuất hàng cho đơn vị cấp dưới</td>
+																<td>Xuất hàng mới</td>
+															</tr>
+															<tr>
+																<td>02</td>
+																<td>000111222</td>
+																<td>01:01:01 27/10/17</td>
+																<td>N/A</td>
+																<td>Xuất hàng cho đơn vị cấp trên</td>
+																<td>Xuất hàng mới</td>
+															</tr>
+															<tr>
+																<td>03</td>
+																<td>000111333</td>
+																<td>01:01:01 10/05/17</td>
+																<td>N/A</td>
+																<td>Xuất hàng cho đơn vị cấp trung tâm</td>
+																<td>Xuất lại</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<h3 class="form-section">Danh mục hàng hóa</h3>
+										<div class="form-group">
+											<div class="col-md-12">
+												<div class="table-scrollable">
+													<table class="table table-bordered table-striped table-condensed flip-content">
+														<thead class="flip-content">
+															<tr>
+																<th style="witdh: 40px">STT</th>
+																<th style="witdh: 120px">Mã hàng</th>
+																<th style="witdh: 200px">Tên hàng</th>
+																<th style="witdh: 100px">Trạng thái</th>
+																<th style="witdh: 120px">Đơn vị</th>
+																<th style="witdh: 150px">Số lượng</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																<td>01</td>
+																<td>000111111</td>
+																<td>SAMSUNG GALAXY NOTE 8</td>
+																<td>Còn hàng</td>
+																<td>FPT_SHOP</td>
+																<td>100000</td>
+															</tr>
+															<tr>
+																<td>02</td>
+																<td>000111112</td>
+																<td>Iphone X</td>
+																<td>Còn hàng</td>
+																<td>FPT_SHOP</td>
+																<td>300000</td>
+															</tr>
+															<tr>
+																<td>03</td>
+																<td>000111113</td>
+																<td>SAMSUNG GALAXY S8</td>
+																<td>Còn hàng</td>
+																<td>FPT_SHOP</td>
+																<td>500000</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-actions">
+							<div class="col-md-12" style="text-align: center;">
+								<button type="button" class="btn btn-primary" ng-click="save()" style="margin-right: 50px;">
+									<i class="fa fa-save"></i> Nhập
+								</button>
+								<button type="button" class="btn btn-primary" ng-click="serial()" style="margin-right: 50px;">
+									<i class="fa"></i> Serial
+								</button>
+								<button type="button" class="btn btn-primary" ng-click="loadFile()" style="margin-right: 50px;">
+									<i class="fa"></i> Load File
+								</button>
+								<button type="button" class="btn btn-primary" ng-click="print()" style="margin-right: 50px;">
+									<i class="fa fa-print"></i> In
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

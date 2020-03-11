@@ -1,0 +1,220 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Xử lý thông báo trả số về NM Gốc</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<div class="page-content" th:fragment="content">
+		<script
+			src="/views/css/ManagementReturnOriginalNetwork/ActionReturnToOriginalController.js"
+			type="text/javascript"></script>
+		<!-- controller begin -->
+		<div ng-controller="ctrl-action-return-original-network" class="ng-cloak">
+
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span translate="vnm.mnp_message.actionReturnToOriginalNetwork.label.handle.return.DNO"
+							class="caption-subject font-orange bold uppercase"></span>
+					</div>
+					<div class="actions">
+						<a class="btn btn-circle btn-icon-only btn-default fullscreen"
+							href="#" data-original-title="" title=""> </a>
+					</div>
+				</div>
+
+				<div class="portlet-body form">
+					<form name="frm_xuly_thongbao_traso_ve_nm_goc"
+						class="form-horizontal  form-bordered" method="post"
+						ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="tab-pane  active" id="danh-sach-yccm">
+										<fieldset class="fieldsetcustom">
+											<legend class="legendcustom" translate="vnm.mnp_message.actionReturnToOriginalNetwork.label.infor"></legend>
+											<div class="form-group">
+												<label class="control-label col-md-2" translate="vnm.mnp_message.actionReturnToOriginalNetwork.label.isdn"></label>
+												<div class="col-md-3">
+													<input type="text" class="form-control"
+														ng-model="model.msisdn" name="msisdn" id="idMsisdn"
+														ng-keyup="removeZezoFirstPosition($event);"
+														ng-keydown="removeZezoFirstPosition($event);" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="control-label col-md-2" translate="vnm.mnp_message.actionReturnToOriginalNetwork.label.from.date"></label>
+												<div class="col-md-3">
+													<input ng-model="model.startDate" id="startDateID"
+														name="StartDate" datetime-picker="" date-only=""
+														date-format="DD/MM/YYYY" class="form-control"
+														placeholder=" / /" />
+												</div>
+												<label class="control-label col-md-2" translate="vnm.mnp_message.actionReturnToOriginalNetwork.label.to.date"></label>
+												<div class="col-md-3">
+													<input ng-model="model.endDate" id="endDateID"
+														name="EndDate" datetime-picker="" date-only=""
+														date-format="DD/MM/YYYY" class="form-control"
+														placeholder=" / /" />
+												</div>
+											</div>
+
+											<div class="row"
+												style="padding-top: 20px; padding-bottom: 20px;">
+												<div class="form-group" style="padding-top: 20px;"
+													align="center">
+													<button type="button" class="btn btn-primary" translate="vnm.mnp_message.actionReturnToOriginalNetwork.button.search"
+														style="height: 30px;"
+														ng-click="searchListReversalNotification()">
+														<i class="fa fa-search"></i>
+													</button>
+												</div>
+											</div>
+
+
+
+											<div ng-show="listNPRNotificationReversal.length>0">
+												<!-- table begin-->
+												<div class="form-group">
+													<fieldset class="fieldsetcustom">
+														<legend class="legendcustom" translate="vnm.mnp_message.actionReturnToOriginalNetwork.label.noti.return.DNO"></legend>
+														<div class="col-md-12">
+															<div class="table-scrollable">
+																<table ng-table="tableParams" class="table">
+																	<tr ng-repeat="item in $data"
+																		ng-class="{true:'active', false:''}[item.nprId == rowHighlightNPR.nprId]">
+																		<td title="'STT'" sortable="''"><strong>{{$index+1}}</strong></td>
+																		<td title="'TransID'"
+																			ng-click="getListSubscriberInfo(item)"
+																			sortable="'cchTransId'">{{item.cchTransId}}</td>
+																		<td title="'Thời gian chuyển mạng'" align="center"
+																			ng-click="getListSubscriberInfo(item)"
+																			sortable="'createdDateStr'">{{item.createdDateStr}}</td>
+																		<td title="'File đính kèm'" align="center"
+																			sortable="'attachmentData'">
+																			<div style="width: 250px">
+																				<div class="thumbnailFile"
+																					ng-repeat="attachFile in item.attachmentData">
+																					<img src="/images/mnp_image_preview_icon.png"
+																						title="{{attachFile.fileName}}" width="20px"
+																						height="25px"
+																						ng-click="downloadFileAttachMent(attachFile)" />
+																				</div>
+																			</div>
+																		</td>
+																		<td title="'Ghi chú'" align="center"
+																			ng-click="getListSubscriberInfo(item)"
+																			sortable="'comments'">{{item.comments}}</td>
+																	</tr>
+																</table>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+
+												<!-- table begin-->
+												<div style="padding-top: 20px; padding-bottom: 30px">
+													<!-- table begin-->
+													<div class="form-group">
+														<fieldset class="fieldsetcustom">
+															<legend class="legendcustom" translate="vnm.mnp_message.actionReturnToOriginalNetwork.label.list.isdns"></legend>
+															<div class="col-md-12">
+																<div class="table-scrollable">
+																	<table ng-table="tableParamsSubscriberInfo"
+																		class="table">
+																		<tr ng-repeat="item in $data" ng-click="">
+																			<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																			<td title="'Số thuê bao'" align="center"
+																				sortable="'msisdn'">{{item.msisdn}}</td>
+																			<td title="'Mã bản tin chuyển mạng'" align="center"
+																				sortable="'cchTransId'">{{item.cchTransId}}</td>
+																			<td title="'Thời gian CM sang VNM'" align="center"
+																				sortable="'createdDateNprStr'">{{item.createdDateNprStr}}</td>
+																			<td title="'Trạng thái hoàn trả'" align="center"
+																				sortable="'statusReversalStr'">{{item.statusReversalStr}}</td>
+																			<td title="'Xử lý'" align="center" sortable="''">
+																				<div ng-if="item.statusReversal">
+																					<img src="/images/mnp_plus_icon_disabled.png"
+																						width="20px" height="20px" />
+																				</div>
+
+																				<div ng-if="!item.statusReversal">
+																					<img src="/images/mnp_plus_icon.png" width="20px"
+																						height="20px"
+																						ng-click="addNumberToListReversalOriginal(item)" />
+																				</div>
+
+																			</td>
+																		</tr>
+																	</table>
+																</div>
+															</div>
+														</fieldset>
+													</div>
+
+													<div class="form-group" style="padding-top: 40px;">
+														<fieldset class="fieldsetcustom">
+															<legend class="legendcustom" translate="vnm.mnp_message.actionReturnToOriginalNetwork.label.list.isdns.return"></legend>
+															<div class="col-md-12">
+																<div class="table-scrollable">
+																	<table ng-table="tableParamsSubscriberReversalOriginal"
+																		class="table">
+																		<tr ng-repeat="item in $data" ng-click="">
+																			<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																			<td title="'Số thuê bao'" align="center"
+																				sortable="'msisdn'">{{item.msisdn}}</td>
+																			<td title="'Thao tác'" align="center" sortable="''">
+																				<img src="/images/mnp_minus_icon.png" width="20px"
+																				height="20px"
+																				ng-click="deleteNumberToListReversalOriginal(item)" />
+																			</td>
+																		</tr>
+																	</table>
+																</div>
+															</div>
+														</fieldset>
+													</div>
+
+													<div class="form-group" style="padding-top: 20px;">
+														<label class="control-label col-md-2" translate="vnm.mnp_message.actionReturnToOriginalNetwork.label.note"></label>
+														<div class="col-md-3">
+															<input type="text" class="form-control"
+																ng-model="model.comments" name="Comments" />
+														</div>
+													</div>
+
+													<div class="row"
+														style="padding-top: 20px; padding-bottom: 20px;">
+														<div class="form-group">
+															<div class="col-md" align="center">
+																<button type="button" class="btn btn-primary" translate="vnm.mnp_message.actionReturnToOriginalNetwork.button.return.DNO"
+																	style="height: 30px;"
+																	ng-click="onclickConfirmReturnRequest()"></button>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- table end -->
+
+											</div>
+											<!-- table end -->
+										</fieldset>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- controller end -->
+	</div>
+
+
+</body>
+</html>

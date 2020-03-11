@@ -1,0 +1,76 @@
+<div ng-show="isShowChangeSIM">
+
+	<h3 class="form-section" style="margin-top: 40px;"
+		translate="vnm.form_changesim_panel.label.page.title"></h3>
+
+	<div class="form-group">
+		<label class="control-label col-md-2"> <label
+			translate="vnm.form_changesim_panel.label.customer.name"></label> <span
+			class="red">(*)</span></label>
+		<div class="col-md-3">
+			<input type="text" class="form-control"
+				ng-model="model.formChangeSim.fullName" name="ChangeSimFullName" />
+		</div>
+
+		<label class="control-label col-md-2"> <label
+			translate="vnm.form_changesim_panel.label.birth.date"></label> <span
+			class="red">(*)</span>
+		</label>
+		<div class="col-md-3">
+			<input ng-model="model.formChangeSim.birthday" id="changeSimBirthDay"
+				name="ChangeSimBirthDay" datetime-picker="" date-only=""
+				date-format="DD/MM/YYYY" class="form-control" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2"> <label
+			translate="vnm.form_changesim_panel.label.address"></label> <span
+			class="red">(*)</span></label>
+		<div class="col-md-8">
+			<input type="text" class="form-control"
+				ng-model="model.formChangeSim.address" name="ChangeSimAddress" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2"> <label
+			translate="vnm.form_changesim_panel.label.number.phone"></label> <span
+			class="red">(*)</span></label>
+		<div class="col-md-3">
+			<input type="text" class="form-control"
+				ng-model="model.formChangeSim.phoneNumber"
+				name="ChangeSimPhoneNumber" />
+		</div>
+
+		<label class="control-label col-md-2"> <label
+			translate="vnm.form_changesim_panel.label.number.doc.issue"></label>
+			<span class="red">(*)</span></label>
+		<div class="col-md-3">
+			<input type="text" class="form-control"
+				ng-model="model.formChangeSim.cardId" name="ChangeSimCardId" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-2"> <label
+			translate="vnm.form_changesim_panel.label.issue.place"></label><span
+			class="red">(*)</span></label>
+		<div class="col-md-3">
+			<input type="text" class="form-control"
+				ng-model="model.formChangeSim.placeOfIssue"
+				name="ChangeSimPlaceOfIssue" />
+		</div>
+
+		<label class="control-label col-md-2"><label
+			translate="vnm.form_changesim_panel.label.issue.date"></label> <span
+			class="red">(*)</span></label>
+		<div class="col-md-3">
+			<input ng-model="model.formChangeSim.dateOfIssue"
+				id="changeSimDateOfIssue" name="ChangeSimDateOfIssue"
+				datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+				class="form-control" />
+		</div>
+	</div>
+
+</div>

@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Tạo đơn đặt hàng cho BS</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/inventory-management/createPurchaseOrderForBS.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-createPurchaseOrderForBS" id="createPurchaseOrderForBSContent" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span class="caption-subject font-orange bold uppercase" translate="vnm.create_purchase_order.label.page.title" />
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_createPurchaseOrderForBS" class="form-horizontal form-bordered" method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="tab-pane  active" id="tab_5_1">
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.shop.code" />
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.brandedShop" name="brandedShop" disabled="disabled" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.shop.export" />
+											<div class="col-md-25">
+												<ui-select ng-model="model.stock" name="stock" ng-init="model.stock=listStock[0].name" class="" style="width: 100%;"> <ui-select-match>{{$select.selected.code}}</ui-select-match>
+												<ui-select-choices repeat="x in listStock | filter:$select.search"> <span ng-bind-html="x.code | highlight: $select.search"></span>
+												<span>-</span> <span ng-bind-html="x.name | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.poid" />
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.poid" name="poid" disabled="disabled" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.po.type" />
+											<div class="col-md-25">
+												<ui-select ng-model="model.poType" class="" style="width: 100%;" disabled="disabled"> <ui-select-match>{{$select.selected.orderTypeName}}</ui-select-match>
+												<ui-select-choices repeat="x.orderTypeCode as x in listOrderType | filter:$select.search"> {{x.orderTypeName}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.date" />
+											<div class="col-md-25">
+												<input ng-model="model.date" name="date" datetime-picker="datepick" date-only="" date-format="DD/MM/YYYY" class="form-control" ng-disabled="true" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.radio.selection" />
+											<div class="col-md-8">
+												<div class="col-md-15">
+													<input type="radio" ng-model="model.matHangType" value="All" ng-change="loadGoods('ALL')" /> <label
+														translate="vnm.create_purchase_order.label.radio.all" />
+												</div>
+												<div class="col-md-15">
+													<input type="radio" ng-model="model.matHangType" value="SIM" ng-change="loadGoods('SIM')" /> <label
+														translate="vnm.create_purchase_order.label.radio.sim" />
+												</div>
+												<div class="col-md-15">
+													<input type="radio" ng-model="model.matHangType" value="Airtime" ng-change="loadGoods('AIRTIME')" /> <label
+														translate="vnm.create_purchase_order.label.radio.airtime" />
+												</div>
+												<div class="col-md-15">
+													<input type="radio" ng-model="model.matHangType" value="Card" ng-change="loadGoods('CARD')" /> <label
+														translate="vnm.create_purchase_order.label.radio.card" />
+												</div>
+												<div class="col-md-25">
+													<input type="radio" ng-model="model.matHangType" value="Evoucher" ng-change="loadGoods('EVOUCHER')" /> <label
+														translate="vnm.create_purchase_order.label.radio.evoucher" />
+												</div>
+
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.good" />
+											<div class="col-md-65">
+												<ui-select ng-model="model.matHang" name="matHang" ng-init="model.documentType=listMatHang[0].goodCode" ng-change="selectGood($select.selected)"
+													class="" style="width: 100%;"> <ui-select-match>{{$select.selected.goodName}}</ui-select-match> <ui-select-choices
+													repeat="x.goodCode as x in listMatHang | filter:$select.search"> {{x.goodName}} </ui-select-choices> </ui-select>
+
+												<input type="hidden" class="form-control" ng-model="model.goodName" name="goodName" /> <input type="hidden" class="form-control"
+													ng-model="model.unitPrice" name="unitPrice" /> <input type="hidden" class="form-control" ng-model="model.discountSearch" name="discountSearch" />
+											</div>
+
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.good.code" />
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.goodCode" name="goodCode" disabled="disabled" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.good.quantity" />
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-change="changeQuantity()" ng-model="model.total" name="total" only-digits="true" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.discount" />
+											<div class="col-md-25">
+												<!--ui-select ng-model="model.discount"
+													ng-init="model.documentType=listdiscount[0].discountPercent"
+													ng-click="getDiscount()" class="" style="width: 100%;">
+												<ui-select-match>{{$select.selected.discountPercent}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.discountPercent as x in listdiscount | filter:$select.search">
+												{{x.discountPercent}} </ui-select-choices> </ui-select >
+												<input type="number" ng-model="model.discount" min="0" value="0" step=".01"-->
+												<input type="number" class="form-control" ng-model="model.discount" min="0.00" step=".01" name="ckPercent" only-digits="true" placeholder="0.00" />
+											</div>
+										</div>
+										<div class="form-group" style="text-align: right; border-bottom: 0px; margin-top: 10px;">
+											<button type="button" class="btn btn-primary" ng-click="add()">
+												<i class="fa glyphicon glyphicon-plus"></i> Thêm
+											</button>
+										</div>
+										<h3 class="form-section" translate="vnm.create_purchase_order.label.panel.order.detail" />
+										<div class="form-group">
+											<div class="col-md-12">
+												<table ng-table="tableParams" class="table table-striped table-bordered" show-filter="true">
+													<tr ng-repeat="item in $data">
+														<td title="'Mã hàng'" filter="{ productId: 'text'}" sortable="'productId'">{{item.productId}}</td>
+														<td title="'Tên hàng'" filter="{ productName: 'text'}" sortable="'productName'">{{item.productName}}</td>
+														<td title="'Số lượng'">
+															<div ng-hide="editingData[item.productId]">{{item.quantity | number}}</div>
+															<div ng-show="editingData[item.productId]">
+																<input type="text" ng-model="item.quantity" ng-change="changeQuantityitem(item)" />
+															</div>
+														</td>
+														<td title="'Đơn giá'">{{item.unitPrice | number}}</td>
+														<td title="'Tổng giá'">{{item.grossValue | number}}</td>
+														<td title="'% Chiết khấu'">
+															<!--  div ng-hide="editingData[item.productId]">{{item.discountPercent
+																| number}}</div>
+															<div ng-show="editingData[item.productId]">
+																<ui-select ng-model="item.discountPercent"
+																	ng-init="model.documentType=listdiscountSub[0].discountPercent"
+																	ng-click="getDiscountSub(item,$index)" class=""
+																	style="width: 100%;"> <ui-select-match>{{$select.selected.discountPercent}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x.discountPercent as x in listdiscountSub | filter:$select.search">
+																{{x.discountPercent}} </ui-select-choices> </ui-select>
+															</div -->
+															<div ng-hide="editingData[item.productId]">{{item.discountPercent | number}}</div>
+															<div ng-show="editingData[item.productId]">
+																<input type="number" ng-model="item.discountPercent" min="0.00" step=".01" name="ckPercentSub" only-digits="true" placeholder="0.00" />
+															</div>
+														</td>
+														<td title="'Tổng giá trị'">{{item.netValue | number}}</td>
+														<td title="'Thực hiện'" width="110">
+															<div class="btn-group" title="'Sửa'">
+																<button name="btnEdit{{item.productId}}" ng-show="!editingData[item.productId]" class="btn btn-warning" ng-click="edit(item,$index)">
+																	<i class="fa fa-edit"></i>
+																</button>
+																&nbsp;
+																<button title="'Lưu'" name="btnFnEdit{{item.productId}}" class="btn btn-success" ng-show="editingData[item.productId]"
+																	ng-click="fnEdit(item,$index)">
+																	<i class="glyphicon glyphicon-ok"></i>
+																</button>
+																&nbsp;
+																<button title="'Xoá'" name="btnDelete{{item.productId}}" class="btn btn-danger" ng-click="del(item,$index)">
+																	<i class="fa fa-trash-o"></i>
+																</button>
+															</div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"></label>
+											<div class="col-md-25"></div>
+											<label class="control-label col-md-15"></label>
+											<div class="col-md-25"></div>
+											<label class="control-label col-md-15" translate="vnm.create_purchase_order.label.total.value" />
+											<div class="col-md-25">
+												<input type="text" class="form-control" readonly="true" value="{{model.totalNet | number}}" />
+											</div>
+										</div>
+
+										<!-- sdfdsfdsfsd -->
+										<h3 class="form-section" translate="vnm.create_purchase_order.label.panel.list.documents" />
+										<div class="form-group">
+											<!-- <label class="control-label col-md-2">Tài liệu đính kèm</label> -->
+											<div class="col-md-12">
+												<span class="btn blue-hoki  btn-file"> <span class="fileinput-new" translate="vnm.create_purchase_order.label.btn.chooseFile" /><input
+													type="file" nv-file-select="" uploader="uploader" multiple="" />
+												</span>
+												<div class="table-scrollable">
+													<table class="table table-hover">
+														<thead>
+															<tr>
+																<th width="" translate="vnm.create_purchase_order.label.table.column.stt" />
+																<th width="" translate="vnm.create_purchase_order.label.table.column.name" />
+																<th ng-show="uploader.isHTML5" translate="vnm.create_purchase_order.label.table.column.file.size" />
+																<th width="50px" translate="vnm.create_purchase_order.label.table.column.status" />
+																<th width="120px"></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="item in uploader.queue">
+																<td><strong>{{ uploader.getIndexOfItem(item) }}</strong></td>
+																<td><strong>{{ item.file.name }}</strong></td>
+																<td ng-show="uploader.isHTML5" nowrap="">{{ item.file.size/1024/1024|number:2 }} MB</td>
+																<td><input type="text" style="display: none;" ng-model="item.attachMentId" class="form-control" /></td>
+																<td class="text-center"><span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span> <span ng-show="item.isCancel"><i
+																		class="glyphicon glyphicon-ban-circle"></i></span> <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span></td>
+																<td nowrap="">
+																	<button type="button" class="btn btn-danger btn-xs" ng-click="removeElementAttachmenByItem(item)">
+																		<span class="glyphicon glyphicon-trash"></span> Xóa
+																	</button>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+													<div>
+														<div>
+															<p></p>
+															<div class="progress" style="">
+																<div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }">{{uploader.progress}}%</div>
+															</div>
+														</div>
+														<button type="button" class="btn btn-success btn-s" ng-click="uploadAllFile(uploader)" ng-disabled="!uploader.getNotUploadedItems().length">
+															<span class="glyphicon glyphicon-upload"></span> Upload all
+														</button>
+														<button type="button" class="btn btn-danger btn-s" ng-click="removeAllItem()" ng-disabled="!uploader.queue.length">
+															<span class="glyphicon glyphicon-trash"></span> Xóa tất cả
+														</button>
+													</div>
+												</div>
+												<div class="note note-info">
+													<p translate="vnm.create_purchase_order.label.panel.notes"></p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-actions">
+							<div class="col-md-12" style="text-align: center;">
+								<button type="button" class="btn btn-primary" ng-disabled="isSubmit" ng-click="submit()" style="margin-right: 50px;">
+									<i class="fa glyphicon glyphicon-saved"></i> Thực hiện
+								</button>
+								<button type="button" class="btn btn-primary" ng-click="refresh()" style="margin-right: 50px;">
+									<i class="fa fa-refresh"></i> Tạo lại
+								</button>
+							</div>
+						</div>
+						<div class="modal fade" id="createPO" role="dialog">
+							<div class="modal-dialog modal-sm">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title" translate="vnm.create_purchase_order.mess.dialog.panel.header" />
+									</div>
+									<div class="modal-body">
+										<label> {{model.errorsms}} </label>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn red" data-dismiss="modal" ng-click="closeDialog(tmp)">
+											<i class="glyphicon"></i> Close
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="createPOError" role="dialog">
+							<div class="modal-dialog modal-sm">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title" translate="vnm.create_purchase_order.mess.dialog.panel.header" />
+									</div>
+									<div class="modal-body">
+										<label translate="vnm.create_purchase_order.mess.dialog.dialog.mess.connection.error"></label>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn red" data-dismiss="modal" ng-click="closeViewDialog(tmp)">
+											<i class="glyphicon"></i> Close
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<div class="page-content" th:fragment="content">
+
+		<script src="/views/epos/sales/FormSaleTransaction.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-formSaleTransaction" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.formSaleTransaction.label.input.trans.for.customer"></b>
+						</legend>
+						<form name="frm_formSaleTransaction" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom " style="padding-right: 4px;">
+									<fieldset class="fieldset-primary-1">
+										<legend class="lengend-primary">
+											<b translate="vnm.formSaleTransaction.label.customer.info"></b>
+										</legend>
+										<div class="form-group" style="padding-right: 2px;">
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.transaction.type"></label>
+											<div class="col-md-5">
+												<ui-select ng-model="model.fTransType" class="" id="fTransType" ng-disabled="disableAddChooseGoods" on-select="onChangeTransType()"
+													style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match> <ui-select-choices
+													repeat="x in lstTransType | filter:$select.search | limitTo: limitCbb"> {{x.code}} - {{x.name}}</ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.customer"></label>
+											<div class="col-md-5">
+												<input type="text" class="form-control" id="fCustomer" ng-model="model.fCustomer" />
+											</div>
+										</div>
+										<div class="form-group" style="padding-right: 2px;">
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.company"></label>
+											<div class="col-md-5">
+												<input type="text" class="form-control" id="fCompany" ng-model="model.fCompay" maxlength="300" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.tax.code"></label>
+											<div class="col-md-5">
+												<input type="text" class="form-control" id="fTaxCode" ng-model="model.fTaxCode" maxlength="13" />
+											</div>
+										</div>
+										<div class="form-group" style="padding-right: 2px;">
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.account"></label>
+											<div class="col-md-5">
+												<input type="text" maxlength="15" class="form-control" id="fAccount" ng-model="model.fAccount" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.address"></label>
+											<div class="col-md-5">
+												<input type="text" class="form-control" id="fAddress" ng-model="model.fAddress" maxlength="300" />
+											</div>
+										</div>
+									</fieldset>
+									<fieldset class="fieldset-primary-1">
+										<legend class="lengend-primary">
+											<b translate="vnm.formSaleTransaction.label.transaction.info"></b>
+										</legend>
+										<div class="form-group" style="padding-right: 2px;">
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.payment.method"></label>
+											<div class="col-md-5">
+												<ui-select ng-model="model.fPaymentMethod" class="" id="fPaymentMethod" ng-disabled="disableAddChooseGoods" on-select="onChangePaymentMethod()"
+													style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match> <ui-select-choices
+													repeat="x in PaymentMethodSource | filter:$select.search | limitTo: limitCbb"> {{x.code}} - {{x.name}}</ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.rate"></label>
+											<div class="col-md-2">
+												<input type="text" class="form-control" ng-disabled="true" id="fRate" ng-model="model.fRate" style="text-align: right;" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.trans.staff"></label>
+											<div class="col-md-2">
+												<ui-select ng-model="model.fTransStaff" class="" id="fTransStaff" ng-disabled="true" on-select="onChooseShopForm()" style="width: 100%;">
+												<ui-select-match>{{$select.selected.code}} - {{$select.selected.name}}</ui-select-match> <ui-select-choices
+													repeat="x in lstTransStaff | filter:$select.search | limitTo: limitCbb"> {{x.code}} - {{x.name}}</ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-group" style="padding-right: 2px;">
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.trans.date"></label>
+											<div class="col-md-5">
+												<input ng-model="model.fTransDate" id="fTransDate" ng-disabled="isDisableSearchValue" name="transDate" datetime-picker="" date-only=""
+													date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.ticket.number"></label>
+											<div class="col-md-3p6">
+												<input type="text" class="form-control" id="fCardNo" ng-model="model.fCardNo" />
+											</div>
+											<div class="col-md-5p3-7">
+												<button type="button" name="fInputCardNo" class="btn btn-primary" style="width: 100%" ng-click="fViewCardNo()">
+													<i class=""></i><label translate="....."></label>
+												</button>
+											</div>
+										</div>
+									</fieldset>
+
+									<fieldset class="fieldset-primary-1">
+										<legend class="lengend-primary">
+											<b translate="vnm.formSaleTransaction.label.input.goods.service"></b>
+										</legend>
+										<div class="form-group" style="padding-right: 2px;">
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.goods"> </label>
+											<div class="col-md-1p9">
+												<input type="text" class="form-control" ng-model="model.fGoodsCode" id="fGoodsCode" data-toggle="tooltip" data-placement="top" title=""
+													ng-blur="checkF9Goods()" />
+											</div>
+											<div class="col-md-2p9">
+												<input type="text" class="form-control" ng-disabled="true" ng-model="model.fGoodsName" id="fGoodsName" data-toggle="tooltip" data-placement="top"
+													title="" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.quantity"> </label>
+											<div class="col-md-1">
+												<input type="text" id="fQuantity" class="form-control" ng-model="model.fQuantity" style="text-align: right;" onkeypress="return isNumberKey(event)"
+													format="currency" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.price"></label>
+											<div class="col-md-1p9">
+												<ui-select ng-model="model.fPrice" class="" id="fPrice" style="width: 100%;" ng-click="getFPriceName()"> <ui-select-match>{{$select.selected.price}}</ui-select-match>
+												<ui-select-choices repeat="x in PriceSource | filter:$select.search | limitTo: limitCbb"> {{x.price}} - {{x.name}} </ui-select-choices> </ui-select>
+											</div>
+											<div class="col-md-2p9">
+												<input type="text" class="form-control" id="fPriceName" ng-model="model.fPriceName" ng-disabled="true" data-toggle="tooltip" data-placement="top"
+													title="" />
+											</div>
+										</div>
+										<div class="form-group" style="padding-right: 2px;">
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.promotion"> </label>
+											<div class="col-md-1p9">
+												<ui-select ng-model="model.fPromotion" class="" id="fPromotion" style="width: 100%;" ng-click="getFPromotionName()" data-toggle="tooltip"
+													data-placement="top" title=""> <ui-select-match>{{$select.selected.promProgramCode}} </ui-select-match> <ui-select-choices
+													repeat="x in PromotionSource | filter:$select.search | limitTo: limitCbb"> {{x.promProgramCode}} - {{x.name}} </ui-select-choices> </ui-select>
+											</div>
+											<div class="col-md-2p9">
+												<input type="text" class="form-control" id="fPromotionName" ng-model="model.fPromotionName" ng-disabled="true" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.discount"> </label>
+											<div class="col-md-1">
+												<input type="text" class="form-control" ng-model="model.fDiscount" ng-disabled="true" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.vat"></label>
+											<div class="col-md-1p9">
+												<input type="text" class="form-control" ng-model="model.fVat" ng-disabled="true" />
+											</div>
+											<div class="col-md-2p9">
+												<button type="button" name="fInputList" style="width: 100%;" class="btn btn-primary" ng-click="btnFAddGoods()">
+													<i class=""></i><label translate="vnm.formSaleTransaction.button.input.list"></label>
+												</button>
+											</div>
+										</div>
+									</fieldset>
+
+									<div class="form-group">
+										<div class="col-md-8">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.formSaleTransaction.label.list.goods.service"></b>
+												</legend>
+
+												<div class="form-group">
+													<div class="col-md-12 md-height-350">
+														<table id="tableFGoodsService" class="table-bordered table" style="min-width: 1200px">
+															<thead class="ng-table-sort-header">
+																<tr>
+																	<th width="17%" translate="vnm.common_table.column.goods"></th>
+																	<th width="13%" translate="vnm.common_table.column.quantity"></th>
+																	<th width="13%" translate="vnm.common_table.column.price"></th>
+																	<th width="13%" translate="vnm.common_table.column.discount"></th>
+																	<th width="13%" translate="vnm.common_table.column.promotion"></th>
+																	<th width="14%" translate="vnm.common_table.column.units"></th>
+																	<th width="17%" translate="vnm.common_table.column.total"></th>
+																</tr>
+															</thead>
+														</table>
+														<div class="col-md-12" style="text-align: center; margin-top: 12px">
+															<button type="button" name="btnFDelete" class="btn btn-primary btn-primary-70" ng-click="btnFDeleteOnclick()">
+																<i class="fa fa-trash"></i> <label translate="vnm.common.btn.delete"></label>
+															</button>
+														</div>
+													</div>
+
+
+												</div>
+											</fieldset>
+										</div>
+										<div class="col-md-4">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.formSaleTransaction.label.goods.info"></b>
+												</legend>
+
+												<div class="form-group">
+													<div class="col-md-12 md-height-350">
+														<table id="tableFGoodsSerial" class="table-bordered" style="width: 100%">
+															<thead class="ng-table-sort-header">
+																<tr>
+																	<th width="50%" translate="vnm.common_table.column.serial"></th>
+																	<th width="50%" translate="vnm.common_table.column.input.date"></th>
+																</tr>
+															</thead>
+														</table>
+														<div class="col-md-12" style="text-align: center; margin-top: 12px">
+															<button type="button" name="btnFEdit" class="btn btn-primary btn-primary-70" ng-click="btnFEditOnclick()">
+																<i class="fa fa-edit"></i> <label translate="vnm.common.btn.edit"></label>
+															</button>
+														</div>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+									</div>
+									<fieldset class="fieldset-primary">
+										<legend class="lengend-primary">
+											<b translate="vnm.formSaleTransaction.label.general.trans.info"></b>
+										</legend>
+
+										<div class="form-group" style="padding-right: 2px;">
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.money.no.tax"> </label>
+											<div class="col-md-2">
+												<input type="text" class="form-control" ng-model="model.fMoneyNoTax" ng-disabled="true" format="currency" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.promotion"> </label>
+											<div class="col-md-2">
+												<input type="text" class="form-control" ng-model="model.fMoneyProm" ng-disabled="true" format="currency" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.discount"> </label>
+											<div class="col-md-2">
+												<input type="text" class="form-control" ng-model="model.fMoneyDiscount" ng-disabled="true" format="currency" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.money.customer.return"> </label>
+											<div class="col-md-2">
+												<input type="text" id="fMoneyCustomerReturn" class="form-control" ng-model="model.fMoneyCustomerReturn" onkeypress="return isNumberKey(event)"
+													format="currency" ng-blur="checkPayment()" ng-keydown="eventEnter($event)" maxlength="26" />
+											</div>
+										</div>
+										<div class="form-group" style="padding-right: 2px;">
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.money.tax"> </label>
+											<div class="col-md-2">
+												<input type="text" class="form-control" ng-model="model.fMoneyTax" ng-disabled="true" format="currency" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.money.with.tax"> </label>
+											<div class="col-md-2">
+												<input type="text" class="form-control" ng-model="model.fMoneyWithTax" ng-disabled="true" format="currency" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.money.must.paid"> </label>
+											<div class="col-md-2">
+												<input type="text" class="form-control" ng-model="model.fMoneySum" ng-disabled="true" format="currency" />
+											</div>
+											<label class="control-label col-md-1" translate="vnm.formSaleTransaction.label.money.residual"> </label>
+											<div class="col-md-2">
+												<input type="text" class="form-control" ng-model="model.fMoneyChange" ng-disabled="true" format="currency" />
+											</div>
+										</div>
+									</fieldset>
+									<div class="col-md-12" style="text-align: center;">
+										<button type="button" id="fWriteInfor" name="btnFSave" class="btn btn-primary btn-primary-150" ng-click="writeInfor()">
+											<i class="fa fa-save"></i> <label translate="vnm.formSaleTransaction.button.save"></label>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalInputCardNo" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 800px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="exitDICNCardNo()"></button>
+											<h4 class="modal-title" translate="vnm.form_sale_dealer.title.input.card.no"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogInputCardNo'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalInputAttachGoods" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1000px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="btnBackAttachGoods()"></button>
+											<h4 class="modal-title" translate="vnm.dialogInputAttachGoods.label.title"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogInputAttachGoods'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalListGoods" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="dialogListGoodsActionBack()">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.goods"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListGoods'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalAddSerialSaleTrans" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 800px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="btnASCancelOnclick()"></button>
+											<h4 class="modal-title" translate="vnm.form_sale_dealer.title.input.serial"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogAddSerialSaleTrans'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalAddSerialListSaleTrans" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 800px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="btnASLCancelOnclick()"></button>
+											<h4 class="modal-title" translate="vnm.form_sale_dealer.title.input.serial.list"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogAddSerialListSaleTrans'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalListASFromSerial" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.serial"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogASFromListSerial'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalListASToSerial" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.serial"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogASToListSerial'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="modal fade" id="modalStaffInfoMGM" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.dialogStaffInfoMGM.label.title"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogStaffInfoMGM'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalInputSerialPromotion" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="btnWriteInfoPromotion()">&times;</button>
+											<h4 class="modal-title" translate="vnm.dialogInputSerialPromotion.label.title"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogInputSerialPromotion'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

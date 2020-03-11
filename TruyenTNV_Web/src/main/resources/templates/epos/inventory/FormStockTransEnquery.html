@@ -1,0 +1,308 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+
+		<script src="/views/epos/inventory/FormStockTransEnquery.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-FormStockTransEnquery" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.form_stock_trans_enquery.page.title"></b>
+						</legend>
+						<form name="frm_FormStockTransEnquery"
+							class="form-horizontal  form-bordered" method="post"
+							ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b
+														translate="vnm.form_stock_trans_enquery.label.lg.condition.search"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.form_stock_trans_enquery.label.receiver.stocks">
+													</label>
+													<div class="col-md-1">
+														<input  type="text" class="form-control" ng-model="model.rStockCode" id="rStockCode" data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+
+													<div class="col-md-2">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.rStockName" id="rStockName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-2"
+														translate="vnm.form_stock_trans_enquery.label.deliverer.stocks">
+													</label>
+													<div class="col-md-1">
+														<input  type="text" class="form-control" ng-model="model.dStockCode" id="dStockCode" data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+													<div class="col-md-2">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.dStockName" id="dStockName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+
+													<div class="col-md-1">
+														<button type="button" name="fSearch" style="width: 100%"
+															class="btn btn-primary" ng-click="onSearch()">
+															<i class="fa glyphicon glyphicon-search"></i> <label
+																translate="vnm.common.btn.search"></label>
+														</button>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.form_stock_trans_enquery.label.trans.id">
+													</label>
+													<div class="col-md-3">
+														<input type="text" class="form-control" id="transId"
+															ng-model="model.transId" />
+													</div>
+
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-2"
+														translate="vnm.form_stock_trans_enquery.label.reason">
+													</label>
+													<div class="col-md-1">
+														<ui-select id="reason" ng-model="model.reason" class=""
+															style="width: 100%;" ng-click="onChooseReason()"
+															remove-selected="false" theme="bootstrap"> <ui-select-match>{{$select.selected.code}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in lstReasons | filter:$select.search | limitTo: limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices> </ui-select>
+													</div>
+													<div class="col-md-2">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.reasonName" id="reasonName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+												</div>
+												<div class="form-group">
+
+													<label class="control-label col-md-2"
+														translate="vnm.form_stock_trans_enquery.label.type"></label>
+													<div class="col-md-3">
+														<ui-select id="fType" ng-model="model.fType" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in lstTypes | filter:$select.search">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-2"
+														translate="vnm.form_stock_trans_enquery.label.status"></label>
+													<div class="col-md-3">
+														<ui-select id="fStatus" ng-model="model.fStatus" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in lstStatuss | filter:$select.search">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-2"><span
+														translate="vnm.common.label.from.date"></span></label>
+													<div class="col-md-3">
+														<input placeholder=" /  /  /" id="startDate"
+															ng-model="model.startDate" name="StartDate"
+															ng-blur="checkfromdate()" datetime-picker="" date-only=""
+															date-format="DD/MM/YYYY" class="form-control" />
+													</div>
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-2"><span
+														translate="vnm.common.label.end.date"></span></label>
+
+													<div class="col-md-3">
+														<input placeholder=" /  /  /" id="endDate"
+															ng-model="model.endDate" ng-blur="checktodate()"
+															name="EndDate" datetime-picker="" date-only=""
+															date-format="DD/MM/YYYY" class="form-control" />
+													</div>
+												</div>
+											</fieldset>
+
+											<div class="form-group">
+												<div class="col-md-12 md-height-420">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.form_stock_trans_enquery.label.lg.list.trans"></b>
+														</legend>
+														<div class="form-group">
+															<div class="col-md-12">
+																<div class="table-scrollable">
+																	<table id="tableFListTrans" class="table-bordered"
+																		style="width: 100%">
+																		<thead class="ng-table-sort-header">
+																			<tr>
+																				<th width="10%"
+																					translate="vnm.form_stock_trans_enquery.column.stock.name"></th>
+																				<th width="5%"
+																					translate="vnm.form_stock_trans_enquery.column.type"></th>
+																				<th width="10%"
+																					translate="vnm.form_stock_trans_enquery.column.reason"></th>
+																				<th width="10%"
+																					translate="vnm.form_stock_trans_enquery.column.deliver.stock"></th>
+																				<th width="10%"
+																					translate="vnm.form_stock_trans_enquery.column.id"></th>
+																				<th width="10%"
+																					translate="vnm.form_stock_trans_enquery.column.cmdDate"></th>
+																				<th width="10%"
+																					translate="vnm.form_stock_trans_enquery.column.exeStaffName"></th>
+																				<th width="5%"
+																					translate="vnm.form_stock_trans_enquery.column.status"></th>
+																				<th width="10%"
+																					translate="vnm.form_stock_trans_enquery.column.desDate"></th>
+																				<th width="10%"
+																					translate="vnm.form_stock_trans_enquery.column.desStaffName"></th>
+																				<th width="10%"
+																					translate="vnm.form_stock_trans_enquery.column.note"></th>
+																			</tr>
+																		</thead>
+																	</table>
+																</div>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<div class="col-md-12 md-height-400">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.form_stock_trans_enquery.label.lg.list.good"></b>
+														</legend>
+														<div class="form-group">
+															<div class="col-md-12">
+																<div class="table-scrollable">
+																	<table id="tableFListGood" class="table-bordered"
+																		style="width: 100%">
+																		<thead class="ng-table-sort-header">
+																			<tr>
+																				<th width="15%"
+																					translate="vnm.form_stock_trans_enquery.column.good.code"></th>
+																				<th width="15%"
+																					translate="vnm.form_stock_trans_enquery.column.good.name"></th>
+																				<th width="14%"
+																					translate="vnm.form_stock_trans_enquery.column.status"></th>
+																				<th width="14%"
+																					translate="vnm.form_stock_trans_enquery.column.unit"></th>
+																				<th width="14%"
+																					translate="vnm.form_stock_trans_enquery.column.quantity"></th>
+																				<th width="14%"
+																					translate="vnm.form_stock_trans_enquery.column.note"></th>
+																				<th width="14%"
+																					translate="vnm.form_stock_trans_enquery.column.serialIsDenied"></th>
+																			</tr>
+																		</thead>
+																	</table>
+																</div>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+
+
+										</div>
+
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalSerialList" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 900px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.FormSuperiorGoodImport.label.btn.serial2"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/serialListGoods'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+						<div class="form-group"
+							style="padding-top: 0px; padding-bottom: 20px;">
+							<div class="col-md-12" style="text-align: center;">
+								<button type="button" name="btnViewSerial" style="width: 100px"
+									class="btn btn-primary " ng-click="btnViewSerialOnclick()"
+									ng-disabled="disableBtnViewSerial">
+									<i class="fa fa-info-circle"></i> <label
+										translate="vnm.form_stock_trans_enquery.btn.view.serial"></label>
+								</button>
+								<button type="button" name="btnDestroyTrans"
+									style="width: 100px" class="btn btn-primary"
+									ng-click="btnDestroyTransOnclick()"
+									ng-disabled="disableBtnDestroyTrans">
+									<i></i> <label
+										translate="vnm.form_stock_trans_enquery.btn.destroy.trans"></label>
+								</button>
+								<button type="button" name="btnPrint" style="width: 100px;"
+									class="btn btn-primary" ng-click="btnPrint()"
+									ng-disabled="disableBtnPrint">
+									<i class="fa fa-print"></i> <label>In phiếu</label>
+								</button>
+								<button type="button" name="btnPrint" style="width: 100px;"
+									class="btn btn-primary" ng-click="btnPrintEducation()"
+									ng-disabled="disableBtnPrintEducation">
+									<i class="fa fa-print"></i> <label>In biên bản</label>
+								</button>
+							</div>
+						</div>
+							<div class="modal fade" id="modalListShop" role="dialog"
+						data-keyboard="false" data-backdrop="static">
+						<div class="modal-dialog" style="min-width: 1100px">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+								</div>
+								<div class="modal-body">
+									<div ng-include="'/popup/dialogListShop'"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+						<div class="modal fade" id="modalListStock" role="dialog"
+						data-keyboard="false" data-backdrop="static">
+						<div class="modal-dialog" style="min-width: 1100px">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+								</div>
+								<div class="modal-body">
+									<div ng-include="'/popup/dialogListStock'"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					</fieldset>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

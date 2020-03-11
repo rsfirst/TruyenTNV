@@ -1,0 +1,416 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Duyệt hóa đơn bán hàng</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+.selectRow {
+	background-color: gray;
+}
+</style>
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/sales/invoiceApprove.js" type="text/javascript"></script>
+		<div ng-controller="InvoiceApproveController" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<!-- <div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.ExportToInferior.page.title"></span>
+					</div>
+				</div> -->
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.invoiceApprove.label.title"></b>
+						</legend>
+						<form name="frm_prepaid" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+
+									<div class="tab-content" style="margin-right: 6px;">
+
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.invoiceApprove.label.informationsearch"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.invoiceApprove.label.shop"> </label>
+													<!-- 	<div class="col-md-3">
+														<ui-select ng-model="model.shop" class=""
+															ng-change="getStaff(model.shop.shopId)"
+															data-toggle="tooltip" data-placement="top"
+															style="width: 100%;"> <ui-select-match>{{$select.selected.shopCode}}-{{$select.selected.shopName}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listShop | filter:$select.search| limitTo: limitCbb">
+														{{x.shopCode}} - {{x.shopName}} </ui-select-choices></ui-select>
+													</div> -->
+													<div class="col-md-1p9">
+														<input type="text" class="form-control" ng-model="model.shopCode" id="fShopCode" data-toggle="tooltip" data-placement="top" title="" />
+
+													</div>
+													<div class="col-md-2p9">
+														<input type="text" class="form-control" ng-disabled="true" ng-model="model.shopName" id="fShopName" data-toggle="tooltip"
+															data-placement="top" title="" />
+													</div>
+
+													<div class="col-md-1"></div>
+
+													<label class="control-label col-md-1" translate="vnm.invoiceApprove.label.staffinvoice"> </label>
+													<!-- <div class="col-md-3">
+														<ui-select ng-model="model.staff" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.code}}-{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listStaff | filter:$select.search| limitTo: limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div> -->
+													<div class="col-md-1p9">
+														<input ng-disabled="disabledStaff" type="text" class="form-control" ng-model="model.staffCode" id="fStaffCode" data-toggle="tooltip"
+															data-placement="top" title="" />
+
+													</div>
+													<div class="col-md-2p9">
+														<input type="text" class="form-control" ng-disabled="true" ng-model="model.staffName" id="fStaffName" data-toggle="tooltip"
+															data-placement="top" title="" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.invoiceApprove.label.fromdate"> </label>
+													<div class="col-md-4">
+														<input ng-model="model.fromDate" id="fromDate" ng-blur="onBlurCheckDate()" name="searchFromDate" datetime-picker="" date-only=""
+															date-format="DD/MM/YYYY" class="form-control" />
+													</div>
+
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-1" translate="vnm.invoiceApprove.label.todate"> </label>
+													<div class="col-md-4">
+														<input ng-model="model.toDate" id="toDate" ng-blur="onBlurCheckToDate()" name="searchFromDate" datetime-picker="" date-only=""
+															date-format="DD/MM/YYYY" class="form-control" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.invoiceApprove.label.invoicestatus"> </label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.invoiceStatus" class="" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices repeat="x in listInvoiceStatus | filter:$select.search| limitTo: limitCbb"> {{x.code}} -
+														{{x.name}} </ui-select-choices></ui-select>
+													</div>
+
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-1" translate="vnm.invoiceApprove.label.typetransaction"> </label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.typeTransaction" class="" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices repeat="x in listTypeTransaction | filter:$select.search| limitTo: limitCbb"> {{x.code}} -
+														{{x.name}} </ui-select-choices></ui-select>
+													</div>
+												</div>
+												<div class="form-gropup" style="height:30px">												
+													<div class="col-md-12" style="text-align: center;">
+													</div>
+												</div>
+
+												<div class="form-gropup">
+													
+													<div class="col-md-12" style="text-align: center;">
+														<button style="width: 100px" class="btn btn-primary" ng-click="onSearch()">
+															<span class="glyphicon glyphicon-search"></span> <label translate="vnm.ExportToDealer.label.btn.search"></label>
+														</button>
+														
+													</div>
+												</div>
+												<div class="form-gropup" style="height:30px">												
+													<div class="col-md-12" style="text-align: center;">
+													</div>
+												</div>
+											</fieldset>
+
+
+											<div class="form-group">
+												<div class="col-md-6 md-height-550">
+													<fieldset class="fieldset-primary-1 ">
+														<legend class="lengend-primary">
+															<b translate="vnm.invoiceApprove.label.listinvoice"></b>
+
+														</legend>
+
+														<div class="form-group md-height-450">
+																<div class="table-scrollable ">
+																	<table id="tableOnSearch" class="table table-bordered" style="width: 100%">
+																		<thead class="ng-table-sort-header">
+																			<tr>
+																				<!-- <th width="30%"><label translate="vnm.invoiceApprove.label.invoiceno"> </label></th> -->
+																				<th width="30%"><label translate="vnm.invoiceApprove.label.invoiceno2"> </label></th>
+																				<th width="30%"><label translate="vnm.invoiceApprove.label.staffinvoice"> </label></th>
+																				<th width="30%"><label translate="vnm.invoiceApprove.label.createdatedate"> </label></th>
+																				<th width="30%"><label translate="vnm.invoiceApprove.label.moneynumber"> </label></th>
+																				<th width="8%"><input type="checkbox" id="checkAll"  ng-model="model.checkAll" value=""/></th>
+																			</tr>
+																		</thead>
+																		<tbody>
+																		</tbody>
+																	</table>
+																</div>
+														</div>
+														<div class="form-group">
+															<div class="col-md-12" style="text-align: center;">
+																<button class="btn btn-primary" style="width: 100px;" ng-disabled="disabledApprove" ng-click="onClickApprove()">
+																	<i class="glyphicon glyphicon-ok"></i> <label translate="vnm.invoiceApprove.label.btn.approve"></label>
+																</button>
+																<button style="width: 100px;" class="btn btn-primary" ng-click="onClickDesTroy()" ng-disabled="disabledDestroy">
+																	<i class="glyphicon glyphicon-remove"></i> <label translate="vnm.invoiceApprove.label.btn.destroy"></label>
+																</button>
+															</div>
+														</div>
+														<div class="form-group" style="heigth:50px">
+															<div class="col-md-12" style="text-align: center;">
+																
+															</div>
+														</div>
+														
+
+
+													</fieldset>
+												</div>
+
+
+												<div class=" form-group col-md-6 md-height-550"  style="padding-left: 2px;">
+
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b translate="vnm.invoiceApprove.label.detailinvoice"></b>
+
+														</legend>
+														<div  class="md-height-450 position-fixed"  >
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.invoiceno"> </label>
+
+															<div class="col-md-10">
+																<input style="color: red" type="text" data-toggle="tooltip" ng-disabled="disabledDetail" data-placement="top" title=""
+																	ng-model="model.invoiceNo" id="invoiceNo" class="form-control" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.createdate"> </label>
+
+															<div class="col-md-4">
+																<input ng-model="model.createDate" id="fromDate" ng-disabled="disabledDetail" ng-blur="onBlurCheckDate()" name="searchFromDate"
+																	datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" />
+															</div>
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.status"> </label>
+															<div class="col-md-4">
+																<ui-select ng-model="model.invoiceStatus" class="" ng-disabled="disabledDetail" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices repeat="x in listStatus | filter:$select.search"> {{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.shop"> </label>
+															<div class="col-md-3">
+																<input ng-disabled="disabledDetail" style="color: blue" type="text" class="form-control" ng-model="model.shopCode" id="fShopCode"
+																	data-toggle="tooltip" data-placement="top" title="" />
+															</div>
+															<div class="col-md-7">
+																<input type="text" class="form-control" style="color: red" ng-disabled="true" ng-model="model.shopName" id="fShopName"
+																	data-toggle="tooltip" data-placement="top" title="" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.staff"> </label>
+															<div class="col-md-3">
+																<input ng-disabled="disabledDetail" type="text" style="color: blue" class="form-control" ng-model="model.staffCode" id="fStaffCode"
+																	data-toggle="tooltip" data-placement="top" title="" />
+
+															</div>
+															<div class="col-md-7">
+																<input ng-disabled="disabledDetail" type="text" class="form-control" style="color: red" ng-model="model.staffName" id="fStaffName"
+																	data-toggle="tooltip" data-placement="top" title="" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.typetransaction"> </label>
+
+
+															<div class="col-md-3">
+																<input ng-disabled="disabledDetail" type="text" style="color: blue" class="form-control" ng-model="model.typeTransaction.code"
+																	id="fStaffCode" data-toggle="tooltip" data-placement="top" title="" />
+
+															</div>
+															<div class="col-md-7">
+																<input ng-disabled="disabledDetail" type="text" class="form-control" style="color: red" ng-model="model.typeTransaction.name"
+																	id="fStaffName" data-toggle="tooltip" data-placement="top" title="" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.people"> </label>
+
+															<div class="col-md-10">
+																<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.name" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.company"> </label>
+
+															<div class="col-md-4">
+																<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.company" />
+															</div>
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.address"> </label>
+															<div class="col-md-4">
+																<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.address" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.accountno"> </label>
+
+															<div class="col-md-4">
+																<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.account" />
+															</div>
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.tin"> </label>
+															<div class="col-md-4">
+																<input type="text" ng-model="model.tin" ng-disabled="disabledDetail" class="form-control" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.paymethod"> </label>
+
+															<div class="col-md-4">
+
+																<ui-select ng-model="model.payMethod" class="" ng-disabled="disabledDetail" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices repeat="x in listPayMeThod | filter:$select.search| limitTo: limitCbb"> {{x.code}} - {{x.name}}
+																</ui-select-choices></ui-select>
+															</div>
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.paymethod.type"> </label>
+															<div class="col-md-4">
+																<input type="text" ng-disabled="disabledDetail" ng-model="model.payMethod.type" class="form-control" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" title="Tiền chưa thuế" translate="vnm.invoiceApprove.label.amount"> </label>
+
+															<div class="col-md-4">
+																<input style="color: blue" type="text" class="form-control" ng-model="model.amount" ng-disabled="disabledDetail" />
+															</div>
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.promotion"> </label>
+															<div class="col-md-4">
+																<input type="text" class="form-control" style="color: blue" ng-disabled="disabledDetail" ng-model="model.promotion" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.discount"> </label>
+
+															<div class="col-md-4">
+																<input type="text" class="form-control" style="color: blue" ng-disabled="disabledDetail" ng-model="model.discount" />
+															</div>
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.tax"> </label>
+															<div class="col-md-4">
+																<input type="text" class="form-control" style="color: blue" ng-disabled="disabledDetail" ng-model="model.tax" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.amounttax"> </label>
+
+															<div class="col-md-4">
+																<input type="text" class="form-control" style="color: blue" ng-disabled="disabledDetail" ng-model="model.amountTax" />
+															</div>
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.orgtotal"> </label>
+															<div class="col-md-4">
+																<input type="text" class="form-control" style="color: blue" ng-disabled="disabledDetail" ng-model="model.orgTotal" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.grandtotal"> </label>
+
+															<div class="col-md-4">
+																<input style="color: red" type="text" ng-disabled="disabledDetail" class="form-control" ng-model="model.grandTotal" />
+															</div>
+															<label class="control-label col-md-2" translate=""> </label>
+															<div class="col-md-4">
+																<input type="text" class="form-control" ng-model="model.payMethod.name" ng-disabled="disabledDetail" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.note"> </label>
+
+															<div class="col-md-10">
+																<input type="text" ng-disabled="disabledDetail" class="form-control" ng-model="model.note" />
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.invoiceApprove.label.email"> </label>
+															<div class="col-md-10">
+																<input type="text" class="form-control" ng-disabled="disabledDetail" ng-model="model.email" />
+															</div>
+														</div>
+														</div>
+														<div class="form-group">
+															<div class="col-md-12" style="text-align: center;">
+
+																<button type="button" name="btnEdit" style="width: 120px;" class="btn btn-primary" ng-disabled="disabledPrintCInvoice"
+																	ng-click="onPrintCInvoice()">
+																	<i class="glyphicon glyphicon-print"></i> <label translate="vnm.invoiceApprove.label.btn.printcinvoice"></label>
+																</button>
+
+																<button type="button" name="btnDelete" style="width: 130px" class="btn btn-primary" ng-disabled="PrintConversionInvoice"
+																	ng-click="onPrintCInvoice2()">
+																	<i class="glyphicon glyphicon-print"></i> <label translate="vnm.invoiceApprove.label.btn.printconversioninvoice"></label>
+																</button>
+
+															</div>
+														
+
+														</div>
+														<div class="form-group" style="heigth:50px">
+															<div class="col-md-12" style="text-align: center;">
+																
+															</div>
+														</div>
+
+													</fieldset>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 1190 modal xem thong tin kho -->
+							<div class="modal fade" id="modalListShop" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListShop'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="modalListStaff" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListStaff'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 1190 modal xem thong tin kho -->
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

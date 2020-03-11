@@ -104,17 +104,17 @@ function run($rootScope, $http, $location, $localStorage, $window, $interval, $u
 		})
 	}
 
-	if ($localStorage.clientContext && $rootScope.expToken <= 0) {
+	/*if ($localStorage.clientContext && $rootScope.expToken <= 0) {
 		$window.location.href = '/account/login';
-	}
+	}*/
 
-	$rootScope.$on('$locationChangeStart', function(event, next, current) {
+	/*$rootScope.$on('$locationChangeStart', function(event, next, current) {
 		var publicPages = [ '/account/login' ];
 		var restrictedPage = publicPages.indexOf($location.path()) === -1;
 		if (restrictedPage && !$localStorage.clientContext) {
 			$window.location.href = '/account/login';
 		}
-	});
+	});*/
 	$rootScope.checAction = function(p_action) {
 		var result = false;
 		$.each($localStorage.clientContext.sitemaps, function(index, value) {
@@ -172,7 +172,7 @@ function run($rootScope, $http, $location, $localStorage, $window, $interval, $u
 
 	}
 
-	checktimeout = $interval(function() {
+	/*checktimeout = $interval(function() {
 		if ($rootScope.expToken() <= 60) {
 			if (!isRefToken) {
 				$http({
@@ -194,7 +194,7 @@ function run($rootScope, $http, $location, $localStorage, $window, $interval, $u
 				$window.location.href = '/account/login';
 			}
 		}
-	}, 1000);
+	}, 1000);*/
 }
 app_vnm.run(run);
 
@@ -245,9 +245,9 @@ app_vnm.controller('ctrl-topfragment', function($scope, $rootScope, $translate, 
 
 	$scope.show_flag = false;
 	$scope.show_alert = false;
-	$scope.fullName = $localStorage.clientContext.fullName;
-	$scope.shopName = $localStorage.clientContext.shopName;
-	$scope.organization = $localStorage.clientContext.organization;
+	$scope.fullName = 'vuongtn';
+	$scope.shopName = 'tnvuong';
+	$scope.organization = '6996';
 	$scope.logout = function() {
 		delete $localStorage.clientContext;
 		$http.defaults.headers.common.Authorization = '';

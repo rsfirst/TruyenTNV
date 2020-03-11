@@ -1,0 +1,423 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Quản lý hậu kiểm TB chuyển đến</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/mnp_violation/violation_port_in_controller.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctr-violation-portin" class="ng-cloak">
+
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							translate="vnm.mnp_message.mnp_violation_port_in.label.manage.violation.port.in"
+							class="caption-subject font-orange bold uppercase"></span>
+					</div>
+					<div class="actions">
+						<a class="btn btn-circle btn-icon-only btn-default fullscreen"
+							href="#" data-original-title="" title=""> </a>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_danhsachhk" class="form-horizontal  form-bordered"
+						method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<fieldset class="fieldsetcustom">
+										<legend class="legendcustom"
+											translate="vnm.mnp_message.mnp_violation_port_in.label.manage.violation.port.in"></legend>
+										<div class="form-body">
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.mnp_message.mnp_violation_port_in.label.transaction.code"></label>
+												<div class="col-md-3">
+													<input type="text" class="form-control"
+														ng-model="model.transactionID" name="transactionID" />
+												</div>
+
+												<label class="control-label col-md-2"
+													translate="vnm.mnp_message.mnp_violation_port_in.label.isdn"></label>
+												<div class="col-md-3">
+													<input type="text" class="form-control"
+														ng-model="model.msisdn" name="msisdn" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.mnp_message.mnp_violation_port_in.label.status"></label>
+												<div class="col-md-3">
+													<ui-select ng-model="model.violationActionStatus"
+														ng-init="model.violationActionStatus = ViolationActionSearchSource[3].Id"
+														class="" style="width: 100%;"> <ui-select-match
+														placeholder="Đồng ý hoàn trả/hậu kiểm....">{{$select.selected.Title}}</ui-select-match>
+													<ui-select-choices
+														repeat="x.Id as x in ViolationActionSearchSource | filter:$select.search">
+													{{x.Title}} </ui-select-choices> </ui-select>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-2"
+													translate="vnm.mnp_message.mnp_violation_port_in.label.from.date"></label>
+												<div class="col-md-3">
+													<input ng-model="model.startDate"
+														name="ngayDangKyChuyenMang" id="startDate"
+														datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+														class="form-control" placeholder=" / /" />
+												</div>
+												<label class="control-label col-md-2"
+													translate="vnm.mnp_message.mnp_violation_port_in.label.to.date"></label>
+												<div class="col-md-3">
+													<input ng-model="model.endDate" id="endDate"
+														name="ngayDKCMDen" datetime-picker="" date-only=""
+														date-format="DD/MM/YYYY" class="form-control"
+														placeholder=" / /" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<div class="col-md-7"></div>
+												<div class="col-md-5"
+													style="text-align: left; padding-top: 20px;">
+													<button type="button" class="btn btn-primary"
+														translate="vnm.mnp_message.mnp_violation_port_in.button.search"
+														style="height: 30px;" ng-click="searchViolationPortOut()">
+														<i class="fa fa-search"></i>
+													</button>
+
+												</div>
+											</div>
+										</div>
+
+										<div ng-show="searchResult.length>0">
+											<div class="form-group">
+												<fieldset class="fieldsetcustom">
+													<legend class="legendcustom"
+														translate="vnm.mnp_message.mnp_violation_port_in.label.list.violations"></legend>
+													<div class="col-md-12">
+														<div class="table-scrollable  table-padding-last-row">
+															<table ng-table="tableParams" class="table table-striped">
+																<tr ng-repeat="item in $data"
+																	ng-class="{true:'active', false:''}[item.cchTransId == rowHighlightNPR.cchTransId]">
+																	<td title="'STT'" sortable="''"><strong>{{$index+1}}</strong></td>
+																	<td title="'TransID'"
+																		ng-click="getListSubscriberInfo(item)"
+																		sortable="'cchTransId'">{{item.cchTransId}}</td>
+																	<td title="'Tên KH'"
+																		ng-click="getListSubscriberInfo(item)"
+																		style="min-width: 200px"
+																		sortable="'subdataSubscriberName'">{{item.subdataSubscriberName}}</td>
+																	<td title="'TB đại diện'"
+																		ng-click="getListSubscriberInfo(item)"
+																		sortable="'subdataContactNumber'">{{item.subdataContactNumber}}</td>
+																	<td title="'Thời gian chuyển mạng'" align="center"
+																		ng-click="getListSubscriberInfo(item)"
+																		sortable="'createdDateStr'">{{item.createdDateStr}}</td>
+																	<td title="'Trạng thái hậu kiểm DNO'" align="center"
+																		ng-click="getListSubscriberInfo(item)"
+																		sortable="'violationStatus'">{{item.violationStatus}}</td>
+
+																	<td title="'Trạng thái hậu kiểm VNM'" sortable="''"
+																		style="min-width: 150px"><ui-select
+																			ng-model="item.vnmViolationStatus" ng-disabled="true"
+																			class="" style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																		<ui-select-choices
+																			repeat="x.Id as x in ViolationActionSourceTest | filter:$select.search">
+																		{{x.Title}} </ui-select-choices> </ui-select></td>
+																</tr>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+										</div>
+
+										<div ng-show="searchResultSubscriberInfo.length>0">
+											<!-- table begin-->
+											<div class="form-group">
+												<fieldset class="fieldsetcustom">
+													<legend class="legendcustom"
+														translate="vnm.mnp_message.mnp_violation_port_in.label.list.isdns"></legend>
+													<div class="col-md-12">
+														<div class="table-scrollable  table-padding-last-row">
+															<table ng-table="tableParamsSubscriberInfo"
+																class="table table-striped table-bordered">
+																<tr ng-repeat="item in $data" ng-click="">
+																	<td title="'STT'" sortable="''"><strong>{{$index+1}}</strong></td>
+																	<td title="'Số thuê bao'" sortable="'msisdn'">{{item.msisdn}}</td>
+																	<td title="'Loại TB'" sortable="'accountTypeStr'">{{item.accountTypeStr}}</td>
+																	<td title="'Lý do'" sortable="'violationReason'"
+																		style="min-width: 200px"><ui-select
+																			ng-model="item.violationReason" ng-disabled="true"
+																			ng-init="item.violationReason = item.violationReason"
+																			class="" style="width: 100%;"
+																			on-select="onSubscriberViolationReasonChange(item)">
+																		<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																		<ui-select-choices
+																			repeat="x.Id as x in ViolationReasonSource | filter:$select.search">
+																		{{x.Title}} </ui-select-choices> </ui-select></td>
+																	<td title="'Thời gian chuyển mạng'" align="center"
+																		sortable="'createdDateNprStr'">{{item.createdDateNprStr}}</td>
+
+																	<td title="'Trạng thái HK TB DNO'" align="center"
+																		sortable="'violationStatus'">{{item.violationStatus}}</td>
+
+																	<td title="'Trạng thái hậu kiểm'" sortable="'comments'"
+																		style="min-width: 200px"><ui-select
+																			ng-disabled="item.isDisabled"
+																			ng-model="item.violationStatusIndex"
+																			ng-init="item.violationStatusIndex = item.vnmViolationStatus"
+																			class="" style="width: 100%;"
+																			on-select="onSubscriberViolationStatusChange(item)">
+																		<ui-select-match>{{$select.selected.Title}}</ui-select-match>
+																		<ui-select-choices
+																			repeat="x.Id as x in ViolationStatusSource | filter:$select.search">
+																		{{x.Title}} </ui-select-choices> </ui-select></td>
+																</tr>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+
+											<div class="form-group" style="padding-top: 20px;">
+												<fieldset class="fieldsetcustom">
+													<legend class="legendcustom"
+														translate="vnm.mnp_message.mnp_violation_port_in.label.list.violation.files"></legend>
+													<div class="col-md-10">
+														<div class="table-scrollable">
+															<table class="table table-hover">
+																<thead class="ng-table-sort-header">
+																	<tr>
+																		<th width=""
+																			translate="vnm.mnp_message.mnp_violation_port_in.number"></th>
+																		<th width=""
+																			translate="vnm.mnp_message.mnp_violation_port_in.file.name"></th>
+																		<th
+																			translate="vnm.mnp_message.mnp_violation_port_in.status"></th>
+																		<th
+																			translate="vnm.mnp_message.mnp_violation_port_in.button.delete"></th>
+
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr ng-repeat="item in uploader.queue">
+																		<td><strong>{{
+																				uploader.getIndexOfItem(item)+1 }}</strong></td>
+																		<td>
+																			<!-- 					                                                		  <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 40 }"></div> -->
+																			<!-- 															<strong>{{ item.file.name }}</strong>  -->
+																			<strong><a
+																				ng-click="downloadFileUploadClient(item)">{{
+																					item.file.name }}</a></strong>
+																		</td>
+																		<td class="text-center"><span
+																			ng-show="item.isSuccess"><i
+																				class="glyphicon glyphicon-ok"></i></span> <span
+																			ng-show="item.isCancel"><i
+																				class="glyphicon glyphicon-ban-circle"></i></span> <span
+																			ng-show="item.isError"><i
+																				class="glyphicon glyphicon-remove"></i></span></td>
+																		<td nowrap="">
+																			<button type="button" class="btn btn-danger btn-xs"
+																				translate="vnm.mnp_message.mnp_violation_port_in.button.delete"
+																				ng-click="removeElementAttachmenByItem(item)">
+																				<span class="glyphicon glyphicon-trash"></span>
+																			</button>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+															<div style="padding-top: 20px;">
+																<div class="col-md-3">
+																	<span class="btn blue-hoki  btn-file"> <span
+																		translate="vnm.mnp_message.mnp_violation_port_in.button.select.file"
+																		class="fileinput-new"></span> <input type="file"
+																		nv-file-select="" uploader="uploader" multiple="" />
+																	</span>
+																</div>
+
+																<div class="col-md-3">
+																	<button type="button" class="btn btn-danger btn-s"
+																		translate="vnm.mnp_message.mnp_violation_port_in.button.delete.all"
+																		ng-click="removeAllItem()"
+																		ng-disabled="!uploader.queue.length">
+																		<span class="glyphicon glyphicon-trash"></span>
+																	</button>
+																</div>
+
+															</div>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+
+											<div class="form-group">
+												<div class="col-md-12" align="center">
+													<div class="col-md-6" align="right"
+														style="padding-top: 10px; padding-bottom: 20px;">
+														<button type="button" class="btn btn-primary"
+															translate="vnm.mnp_message.mnp_violation_port_in.button.update"
+															ng-disabled="isDisabledReversed" style="height: 30px;"
+															ng-click="updateViolationStatus()">
+															<i class="fa fa-save"></i>
+														</button>
+													</div>
+
+													<div class="col-md-6" align="left"
+														style="padding-top: 10px; padding-bottom: 20px;">
+														<button type="button" class="btn btn-primary"
+															translate="vnm.mnp_message.mnp_violation_port_in.button.NP.commitment.response"
+															style="height: 30px;" ng-disabled="isDisabledReversed"
+															ng-click="callViolationCommitment('NP Commitment Response')">
+															<i class="glyphicon glyphicon-send"></i>
+														</button>
+													</div>
+
+													<div class="col-md-4"
+														style="padding-top: 10px; padding-bottom: 20px; display: none">
+														<button type="button" class="btn btn-primary"
+															translate="vnm.mnp_message.mnp_violation_port_in.button.NP.violation.response"
+															style="height: 30px;" ng-disabled="isDisabledReversed"
+															ng-click="callViolationCommitment('NP Violation Response')">
+															<i class="glyphicon glyphicon-send"></i>
+														</button>
+													</div>
+												</div>
+
+											</div>
+										</div>
+										<!-- table end -->
+
+										<div ng-show="searchNPRNewsResult.length>0">
+											<!-- table begin-->
+											<div class="form-group">
+												<fieldset class="fieldsetcustom">
+													<legend class="legendcustom"
+														translate="vnm.mnp_message.mnp_violation_port_in.label.violation.message"></legend>
+													<div class="col-md-12">
+														<div class="table-scrollable  table-padding-last-row">
+															<table ng-table="tableParamsNPRActionAuditPortIn"
+																class="table table-striped table-bordered">
+																<tr ng-repeat="item in $data">
+																	<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																	<td title="'Mã YCCM'" align="center"
+																		style="min-width: 200px" sortable="'logCchTransId'">{{item.logCchTransId}}</td>
+																	<td title="'Thời gian phản hồi'" align="center"
+																		sortable="'npgLogEventdateStr'">{{item.npgLogEventdateStr}}</td>
+
+																	<td title="'Loại bản tin HK'" align="center"
+																		sortable="'logMessageType'">{{item.logMessageType}}</td>
+
+																	<td title="'Nội dung bản tin'" align="center"
+																		sortable="'logViolationStatus'">{{item.logViolationStatus}}</td>
+
+																	<td title="'Mã phản hồi'" align="center"
+																		sortable="'npgLogReason'">{{item.npgLogReason}}</td>
+																</tr>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+										</div>
+
+										<div ng-show="dataTableAttacmentType.length>0"
+											style="padding-top: 20px;">
+											<!-- table begin-->
+											<div class="form-group">
+												<fieldset class="fieldsetcustom">
+													<legend class="legendcustom"
+														translate="vnm.mnp_message.mnp_violation_port_in.label.list.violation.files"></legend>
+													<div class="col-md-12">
+														<div class="table-scrollable">
+															<table ng-table="tableAttacmentType" class="table">
+																<tr ng-repeat="item in $data">
+																	<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																	<td title="'Tên file'" align="center"
+																		style="min-width: 200px" sortable="'fileName'">{{item.fileName}}</td>
+																	<td title="'Thời gian'" align="center"
+																		sortable="'createDateStr'">{{item.createDateStr}}</td>
+																	<td title="'Download'" sortable="'attachmentData'"
+																		align="center"><img
+																		src="/images/mnp_image_preview_icon.png"
+																		title="{{item.fileName}}" width="20px" height="25px"
+																		ng-click="downloadFileAttachMent(item)" /></td>
+
+																</tr>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+										</div>
+										<!-- table end -->
+										<!-- table end -->
+
+										<div class="modal fade" id="modalListSubscriberViolation"
+											role="dialog">
+											<div class="modal-dialog modal-md">
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4 class="modal-title"
+															translate="vnm.mnp_message.mnp_violation_port_in.label.list.violation.isdns"></h4>
+													</div>
+													<div class="modal-body">
+														<!-- 								<div ng-show="searchResultSubscriberInfo.length>0">table begin -->
+														<div class="form-group">
+															<!-- 								<fieldset class="fieldsetcustom"> -->
+															<legend class="legendcustom"
+																translate="vnm.mnp_message.mnp_violation_port_in.label.list.isdns"></legend>
+															<div class="col-md-12">
+																<div class="table-scrollable  table-padding-last-row">
+																	<table ng-table="tableListSubscriberPopup"
+																		class="table table-striped table-bordered">
+																		<tr ng-repeat="item in $data" ng-click="">
+																			<td title="'STT'" align="center" sortable="''"><strong>{{$index+1}}</strong></td>
+																			<td title="'Số thuê bao'" align="center"
+																				sortable="'msisdn'">{{item.msisdn}}</td>
+																			<td title="'Lý do'" align="center"
+																				sortable="'violationReason'">{{item.violationReason}}</td>
+																			<td title="'Trạng thái hậu kiểm'" align="center"
+																				sortable="'violationStatus'">{{item.violationStatus}}</td>
+
+																		</tr>
+																	</table>
+																</div>
+															</div>
+															<!-- 										</fieldset> -->
+														</div>
+														<!-- 								</div>table end -->
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn red" data-dismiss="modal"
+															translate="vnm.mnp_message.mnp_violation_port_in.button.close">
+															<i class="glyphicon"></i>
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<!-- 					</div> -->
+									</fieldset>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>

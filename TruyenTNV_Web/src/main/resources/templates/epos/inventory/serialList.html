@@ -1,0 +1,107 @@
+<div>
+	<fieldset class="fieldset-primary">
+		<legend class="lengend-primary">
+			<b translate="vnm.common.btn.search"></b>
+		</legend>
+
+		<div class="form-group" style="padding-bottom: 10px;">
+			<div class="col-md-6" align="center">
+				<label><input type="radio"
+					ng-model="model.ddSerialTypeSearch" value="single"
+					ng-change='serialTypeChangeFn(model.ddSerialTypeSearch)' /><span
+					class="label-radio-button"
+					translate="vnm.serial_list.label.search.single"></span></label>
+			</div>
+
+			<div class="col-md-6" align="center">
+				<label><input type="radio"
+					ng-model="model.ddSerialTypeSearch" value="strip"
+					ng-change='serialTypeChangeFn(model.ddSerialTypeSearch)' /><span
+					class="label-radio-button"
+					translate="vnm.serial_list.label.search.strip"></span></label>
+			</div>
+		</div>
+
+		<div class="form-group" style="padding-bottom: 10px;">
+			<label class="control-label col-md-1"><span
+				translate="vnm.serial_list.label.from.serial"></span></label>
+			<div class="col-md-3">
+				<input type="text" class="form-control"
+					ng-model="model.ddFromSerial" name="ddFromSerial" />
+			</div>
+
+			<label class="control-label col-md-1"><span
+				translate="vnm.serial_list.label.to.serial"></span></label>
+			<div class="col-md-3">
+				<input type="text" class="form-control" ng-model="model.ddToSerial"
+					name="ddToSerial" />
+			</div>
+
+			<label class="control-label col-md-1"><span
+				translate="vnm.serial_list.label.quantity"></span></label>
+			<div class="col-md-2">
+				<input type="text" class="form-control" ng-model="model.ddQuantity"
+					name="ddQuantity" onkeypress="return valid_numbers(event)" />
+			</div>
+
+			<div class="col-md-1" style="text-align: center;">
+				<button type="button" name="btnSearch" style="width: 60px"
+					ng-click="onddSearchSerialClick()" class="btn btn-primary">
+					<i class="fa fa-search"></i> <label translate="vnm.serial_list.label.btn.search.serial"></label>
+				</button>
+			</div>
+		</div>
+	</fieldset>
+
+	<!-- <fieldset class="fieldset-primary"> -->
+		<fieldset class="fieldset-primary">
+			<legend class="lengend-primary">
+				<b translate="vnm.common.label.in.stock"></b>
+			</legend>
+
+			<div class="form-group">
+				<div class="col-md-12 md-height-350" id="divTableDDSerialSingle">
+					<table id="tableDDSerialSingle" class="table-bordered"
+						style="width: 100%">
+						<thead class="ng-table-sort-header">
+							<tr>
+								<th width="50%" translate="vnm.common_table.column.serial"></th>
+								<th width="50%" translate="vnm.common_table.column.warranty.no"></th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="col-md-12 md-height-350" id="divTableDDSerialStrip">
+					<table id="tableDDSerialStrip" class="table-bordered"
+						style="width: 100%">
+						<thead class="ng-table-sort-header">
+							<tr>
+								<th width="40%" translate="vnm.common_table.column.from"></th>
+								<th width="40%" translate="vnm.common_table.column.to"></th>
+								<th width="20%" translate="vnm.common_table.column.quantity"></th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label col-md-2"><span
+					translate="vnm.serial_list.label.number.of.table"></span></label>
+				<div class="col-md-10">
+					<input type="text" class="form-control" ng-model="model.ddTotal"
+						name="ddTotal" ng-disabled="true" />
+				</div>
+			</div>
+		</fieldset>
+
+		<div class="form-group">
+			<div class="col-md-12" style="text-align: center;">
+				<button type="button" name="btnBack" style="width: 100px"
+					data-dismiss="modal" class="btn btn-primary">
+					<i class="fa fa-rotate-left"></i> <label translate="vnm.common.label.btn.back"></label>
+				</button>
+			</div>
+		</div>
+	<!-- </fieldset> -->
+</div>

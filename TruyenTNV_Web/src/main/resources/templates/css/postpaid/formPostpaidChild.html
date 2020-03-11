@@ -1,0 +1,626 @@
+<div id="postpaidChild">
+    <h3 class="form-section"
+        translate="vnm.postpaidManageCustomer.label.head"></h3>
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.cus.type"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildPersonType" class="" on-select="selectPersonType($item)" ng-disabled="disableChildType">
+                <ui-select-match>{{$select.selected.personTypeNameVn}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listPersonType | filter:$select.search">
+                    <span ng-bind-html="x.svPersonNoteTypeId | highlight: $select.search"></span>
+                    <span>-</span>
+                    <span ng-bind-html="x.personTypeNameVn | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.cus.layer"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildSegment" class="" on-select="" ng-disabled="disableSegment">
+                <ui-select-match>{{$select.selected.value}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listCustSeg | filter:$select.search">
+                    <span ng-bind-html="x.value | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.fullName"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control"
+                   ng-model="model.personChildSelected.familyName" name="firstName" ng-disabled="disableFirstName"/>
+        </div>
+
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.name"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control"
+                   ng-model="model.personChildSelected.givenName" name="givenName" ng-disabled="disableGivenName"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.sex"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildGender" class="" ng-disabled="disableChildGender">
+                <ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listComboGender | filter:$select.search">
+                    <span ng-bind-html="x.value | highlight: $select.search"></span>
+                    <span>-</span>
+                    <span ng-bind-html="x.glCodeValueVn | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.birthday"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.birthDate" id="dtBirthdayChild" ng-disabled="disableChildBirth"
+                   name="dtBirthdayChild" datetime-picker="" date-only=""
+                   date-format="DD/MM/YYYY" class="form-control"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.id"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control"
+                   ng-model="model.personChildSelected.socialSecurityNumber" name="socialSecurityNumber" ng-disabled="disableChildSocialSecurityNumber" maxlength="15"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.id.palace"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control"
+                   ng-model="model.personChildSelected.placeOfIssue" name="placeOfIssue" ng-disabled="disableChildPlaceIssue"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.id.date"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.dateOfIssue" id="dtDateOfIssue" ng-disabled="disableChildDateIssue"
+                   name="dtDateOfIssue" datetime-picker="" date-only=""
+                   date-format="DD/MM/YYYY" class="form-control"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.language"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildLang" class="" ng-disabled="disableChildLang">
+                <ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listComboLang | filter:$select.search">
+                    <span ng-bind-html="x.value | highlight: $select.search"></span>
+                    <span>-</span>
+                    <span ng-bind-html="x.glCodeValueVn | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.email"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control" ng-model="model.personChildSelected.emailAddress" ng-disabled="disableChildEmail"
+                   name="emailAddress"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.mobile"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control" ng-model="model.personChildSelected.mobilePhoneNr" ng-disabled="disableChildPhoneNr"
+                   name="mobilePhoneNr"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.company.name"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control" ng-model="model.personChildSelected.officialName" ng-disabled="disableChildOfficeName"
+                   name="officialName"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.company.tax"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control" ng-model="model.personChildSelected.taxCode"  ng-disabled="disableChildTaxcode"
+                   name="tax" maxlength="30"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.business.license"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control" ng-model="model.personChildSelected.bussinessLicense" ng-disabled="disableChildBussinessLicense"
+                   name="bussinessLicense"/>
+        </div>
+    </div>
+    <h3 class="form-section"
+        translate="vnm.postpaidManageCustomer.label.bill.adress"></h3>
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.bill.region"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildLivingRegion" class="" ng-disabled="true">
+                <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in regionList | filter:$select.search">
+                    <span ng-bind-html="x.name | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.bill.city"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildLivingProvince" class="" on-select="selectLivingProvince($item)" ng-disabled="disableChildProvince">
+                <ui-select-match>{{$select.selected.province}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listProvince | filter:$select.search">
+                    <span ng-bind-html="x.province | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.bill.district"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildLivingDistrict" class="" on-select="selectLivingDistrict($item)" ng-disabled="disableChildDistrict">
+                <ui-select-match>{{$select.selected.district}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listLivingDistrict | filter:$select.search">
+                    <span ng-bind-html="x.district | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.bill.ward"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.homeSuburb" name="homeSuburb" class="form-control" ng-disabled="disableChildHomeSuburb"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.bill.street"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.homeLine2" name="homeLine2" class="form-control" ng-disabled="disableChildHomeLine2"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.bill.number"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.homeLine1" name="homeLine1" class="form-control" ng-disabled="disableChildHomeLine1"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.bill.tower"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.homeGeneral3" name="homeGeneral3" class="form-control" ng-disabled="disableChildHomeGenaral3"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.bill.room"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.homeGeneral4" name="homeGeneral4" class="form-control" ng-disabled="disableChildHomeGeneral4"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.cus.parent"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.parentAccountNo" name="parentAccountNo" class="form-control" ng-disabled="disableChildParentAccountNo"/>
+        </div>
+    </div>
+    <h3 class="form-section"
+        translate="vnm.postpaidManageCustomer.label.charge.notice.adress"></h3>
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.charge.notice.region"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildBillRegion" class="" ng-disabled="true">
+                <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in regionList | filter:$select.search">
+                    <span ng-bind-html="x.name | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.charge.notice.city"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildBillProvince" class="" on-select="selectBillProvince($item)" ng-disabled="disableChildBillProvince" >
+                <ui-select-match>{{$select.selected.province}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listProvince | filter:$select.search">
+                    <span ng-bind-html="x.province | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.charge.notice.district"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildBillDistrict" class="" on-select="" ng-disabled="disableChildBillDistrict">
+                <ui-select-match>{{$select.selected.district}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listBillDistrict | filter:$select.search">
+                    <span ng-bind-html="x.district | highlight: $select.search" ></span></ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.charge.notice.ward"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.postalSuburb" name="postalSuburb" class="form-control" ng-disabled="disableChildPostalSuburb"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.charge.notice.street"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.postalLine2" name="postalLine2" class="form-control" ng-disabled="disableChildPostalLine2"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.charge.notice.number"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.postalLine1" name="postalLine1" class="form-control" ng-disabled="disableChildPostalLine1" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.charge.notice.tower"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.postalGeneral3" name="postalGeneral3" class="form-control" ng-disabled="disableChildPostalGeneral3" />
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.charge.notice.room"></label>
+        </label>
+        <div class="col-md-25">
+            <input ng-model="model.personChildSelected.postalGeneral4" name="postalGeneral4" class="form-control" ng-disabled="disableChildPostalGeneral4"/>
+        </div>
+    </div>
+    <h3 class="form-section"
+        translate="vnm.postpaidManageCustomer.label.info.account"></h3>
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.info.account.Httt"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildPaymentMethod" class="" ng-disabled="disableChildPaymentMethod">
+                <ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listPayMethod | filter:$select.search">
+                    <span ng-bind-html="x.value | highlight: $select.search"></span>
+                    <span>-</span>
+                    <span ng-bind-html="x.glCodeValueVn | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.info.account.method"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildPaymentLocation" class="" ng-disabled="disableChildPaymentLocation">
+                <ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listPayLocation | filter:$select.search">
+                    <span ng-bind-html="x.value | highlight: $select.search"></span>
+                    <span>-</span>
+                    <span ng-bind-html="x.glCodeValueVn | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.info.account.type"></label>
+        </label>
+        <div class="col-md-25">
+            <ui-select ng-model="model.detailChildPaymentType" class="" ng-disabled="disableChildPaymentType">
+                <ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+                <ui-select-choices style="width: auto;" repeat="x in listNoticeChargeType | filter:$select.search">
+                    <span ng-bind-html="x.value | highlight: $select.search"></span>
+                    <span>-</span>
+                    <span ng-bind-html="x.glCodeValueVn | highlight: $select.search"></span></ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.info.account.charge"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control"
+                   ng-model="model.personChildSelected.accountNo" name="accountCharge" ng-disabled="disableChildAccountCharge"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.info.account.debtcharge"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control"
+                   ng-model="model.personChildSelected.accountBalance" name="debtcharge" ng-disabled="disableChildDebtcharge"/>
+        </div>
+        <label class="control-label col-md-15"> <label
+                translate="vnm.postpaidManageCustomer.label.info.account.deposit"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control"
+                   ng-model="model.personChildSelected.depositAmount" name="deposit" ng-disabled="disableChildDeposit"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <!--<label class="control-label col-md-15"> <label-->
+                <!--translate="vnm.postpaidManageCustomer.label.info.account.note"></label>-->
+        <!--</label>-->
+        <!--<div class="col-md-25">-->
+            <!--<input type="text" class="form-control"-->
+                   <!--ng-model="model.note" name="note" ng-disabled="disableChildNote"/>-->
+        <!--</div>-->
+        <label class="control-label col-md-15"> <label translate="vnm.postpaidManageCustomer.label.info.account.status"></label>
+        </label>
+        <div class="col-md-25">
+            <input type="text" class="form-control"
+                   ng-model="model.personChildSelected.subcriberAccountStatus" name="subcriberAccountStatus" ng-disabled="disableSubcriberAccountStatus"/>
+        </div>
+    </div>
+
+    <h3 class="form-section-bg"
+        translate="vnm.prepaid.label.title.list.customer"></h3>
+    <div class="form-group">
+        <div class="col-md-12">
+            <table ng-table="tableChildSub"
+                   class="table table-striped table-bordered">
+                <tr ng-repeat="item in $data">
+                    <td title="'Số thuê bao'">{{item.msisdn}}</td>
+                    <td title="'Gói cước'">{{item.callPlan}}</td>
+                    <td title="'Trạng thái'">{{item.subcriberAccountStatus}}</td>
+                    <td title="'ICCID'">{{item.iccid}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!--<div class="col-md-15p">-->
+            <!--<table ng-table="tableService"-->
+                   <!--class="table table-striped table-bordered scroll-table hide-header-table">-->
+                <!--<tr ng-repeat="item in listDefaultService">-->
+                    <!--&lt;!&ndash;<td>{{item.serTypeId}}</td>&ndash;&gt;-->
+                    <!--<td>{{item.nameVn}}</td>-->
+                    <!--<td><input type="checkbox" ng-model="item.checked" ng-click="selectEntity()"/></td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        <!--</div>-->
+        <!--<div class="col-md-15p">-->
+            <!--<table ng-table="tableRegisterService"-->
+                   <!--class="table table-striped table-bordered scroll-table hide-header-table">-->
+                <!--<tr ng-repeat="item in listRegisterService">-->
+                    <!--&lt;!&ndash;<td>{{item.serTypeId}}</td>&ndash;&gt;-->
+                    <!--<td>{{item.nameVn}}</td>-->
+                    <!--<td><input type="checkbox" ng-model="item.checked" /></td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        <!--</div>-->
+
+        <div class="col-md-12" style="text-align: center;">
+            <button type="button" class="btn btn-primary"
+                    ng-click="newConnect()" ng-show="!model.showAddChild"><i class="fa glyphicon glyphicon-new-window"></i> Đấu nối
+            </button>
+            <button type="button" class="btn btn-primary"
+                    ng-click="openChangeSimPostpaid()" ng-show="!model.showAddChild" ng-disabled="model.disableChangeSim"><i class="fa glyphicon glyphicon-transfer"></i> Thay sim
+            </button>
+            <!--<button type="button" class="btn btn-primary"-->
+                    <!--ng-click="edit()" ng-show="!model.showAddChild">Chuyển CQ-->
+            <!--</button>-->
+            <!--<button type="button" class="btn btn-primary"-->
+                    <!--ng-click="edit()" ng-show="!model.showAddChild">Lịch sử - KH-->
+            <!--</button>-->
+            <!--<button type="button" class="btn btn-primary"-->
+                    <!--ng-click="edit()" ng-show="!model.showAddChild">Lịch sử - TB-->
+            <!--</button>-->
+            <button type="button" class="btn btn-primary"
+                    ng-click="editChild()" ng-show="!model.showAddChild"><i class="fa glyphicon glyphicon-pencil"></i>Sửa
+            </button>
+            <button type="button" name="showHis" class="btn btn-primary" ng-click="showHisChild()" ng-show="!model.showAddChild">
+                <i class="fa glyphicon glyphicon-time"></i> <label>Lịch sử KH</label>
+            </button>
+            <button type="button" name="showHisTB" class="btn btn-primary" ng-click="showHisChildTB()" ng-show="!model.showAddChild">
+                <i class="fa glyphicon glyphicon-time"></i> <label>Lịch sử TB</label>
+            </button>
+            <button type="button" name="commitAcceptChild" class="btn btn-primary" ng-click="commitAcceptChild()" ng-show="model.showAddChild">
+                <i class="fa glyphicon glyphicon-ok"></i> <label translate="vnm.form_postpaid.label.accept.person.btn"></label>
+            </button>
+            <button type="button" name="cancelCommitChild" class="btn btn-primary" ng-click="cancelCommitChild()" ng-show="model.showAddChild">
+                <i class="fa glyphicon glyphicon-remove"></i> <label translate="vnm.form_postpaid.label.cancel.person.btn"></label>
+            </button>
+        </div>
+        <div class="col-md-12">
+            <table ng-table="tableSub"
+                   class="table table-striped table-bordered">
+                <tr ng-repeat="item in $data" ng-click="getInfoSub(item)"
+                    ng-class="{true:'active', false:''}[selMdn==item.mdn.mdn]">
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalServiceDataPostPaid" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Đăng ký dịch vụ</h3>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="portlet-body form">
+                    <form name="editform" class="form-horizontal  form-bordered"
+                          method="post">
+                        <div class="form-body col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-2"> <label
+                                        translate="vnm.postpaidManageCustomer.label.shop"></label>
+                                </label>
+                                <div class="col-md-10">
+                                    <ui-select ng-model="model.selectedShop" class="" ng-disabled="true">
+                                        <ui-select-match>{{$select.selected.shopCode}} - {{$select.selected.shopName}}</ui-select-match>
+                                        <ui-select-choices style="width: auto;"
+                                                           repeat="x in listShop | filter:$select.search">
+                                            <span ng-bind-html="x.shopCode | highlight: $select.search"></span>
+                                            <span>-</span>
+                                            <span ng-bind-html="x.shopName | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2"> <label
+                                        translate="vnm.postpaidManageCustomer.label.packagetype"></label>
+                                </label>
+                                <div class="col-md-4">
+                                    <ui-select ng-model="model.selectedPackageClass" class="">
+                                        <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                                        <ui-select-choices style="width: auto;"
+                                                           repeat="x in listPackageClass | filter:$select.search">
+                                            <span ng-bind-html="x.value | highlight: $select.search"></span>
+                                            <span>-</span>
+                                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <label class="control-label col-md-2"> <label
+                                        translate="vnm.postpaidManageCustomer.label.status"></label>
+                                </label>
+                                <div class="col-md-4">
+                                    <ui-select ng-model="model.selectedStatus" class="" ng-disabled="true">
+                                        <ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+                                        <ui-select-choices style="width: auto;"
+                                                           repeat="x in listStatus | filter:$select.search">
+                                            <span ng-bind-html="x.value | highlight: $select.search"></span>
+                                            <span>-</span>
+                                            <span ng-bind-html="x.glCodeValueVn | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2"> <label
+                                        translate="vnm.postpaidManageCustomer.label.phone"></label>
+                                </label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control"
+                                           ng-model="model.mdn" name="mdn"/>
+                                </div>
+                                <label class="control-label col-md-2"> <label
+                                        translate="vnm.postpaidManageCustomer.label.simno"></label>
+                                </label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control"
+                                           ng-model="model.iccId" name="iccId"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2"> <label
+                                        translate="vnm.postpaidManageCustomer.label.prom"></label>
+                                </label>
+                                <div class="col-md-10">
+                                    <ui-select ng-model="model.selectedProm" class="">
+                                        <ui-select-match>{{$select.selected.glCodeValueVn}}</ui-select-match>
+                                        <ui-select-choices style="width: auto;"
+                                                           repeat="x in listProm | filter:$select.search">
+                                            <span ng-bind-html="x.value | highlight: $select.search"></span>
+                                            <span>-</span>
+                                            <span ng-bind-html="x.glCodeValueVn | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <!--h3 class="form-section-bg"></h3>
+                            <div class="form-group">
+
+                                <div class="col-md-6">
+                                    <table ng-table="tableService"
+                                           class="table table-striped table-bordered scroll-table hide-header-table">
+                                        <tr ng-repeat="item in listDefaultService">
+                                            <td class="col-md-12">{{item.nameVn}}</td>
+                                            <td><input type="checkbox" ng-model="item.checked" ng-click="selectEntity()"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <table ng-table="tableService"
+                                           class="table table-striped table-bordered scroll-table hide-header-table">
+                                        <tr ng-repeat="item in listRegisterService">
+                                            <td class="col-md-12">{{item.nameVn}}</td>
+                                            <td><input type="checkbox" ng-model="item.checked" /></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div-->
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a ng-click="acceptDialog()"
+                   class="btn  btn-primary  btn-default"> <i class="fa fa-check"></i>
+                    Chấp nhận </a>
+                <a data-dismiss="modal" class="btn  btn-default" href="javascript:;"
+                   ng-click="closeDialog()"><i class="fa fa-close"></i>
+                    Thoát </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogChangeSimPostpaid" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="width: 450px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thay sim</h4>
+            </div>
+            <div class="modal-body" align="center">
+                <div class="form-group">
+                    <label class="control-label col-md-4"> <label
+                            translate="vnm.form_postpaid.dialog.changeSim.oldICCID"></label>
+                    </label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control"
+                               ng-model="model.changeSimOldIccId" name="changeSimOldIccId" ng-disabled="true"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4"> <label
+                            translate="vnm.form_postpaid.dialog.changeSim.newICCID"></label>
+                    </label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" ng-change="changeIccIdNew()" maxlength="20"
+                               ng-model="model.changeSimNewIccId" name="changeSimNewIccId"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4"> <label
+                            translate="vnm.form_postpaid.dialog.changeSim.reason"></label>
+                    </label>
+                    <div class="col-md-8">
+                        <ui-select ng-model="model.changeSimReason">
+                            <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices style="width: auto;" repeat="x in listReasonChangeSim | filter:$select.search">
+                                <span ng-bind-html="x.name | highlight: $select.search"></span></ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a ng-click="acceptChangeSim()"
+                   class="btn  btn-primary  btn-default"> <i class="fa fa-check"></i>
+                    Chấp nhận </a>
+                <a data-dismiss="modal" class="btn  btn-default" href="javascript:;"
+                   ng-click="closeChangeSimPostpaid()"><i class="fa fa-close"></i>
+                    Thoát </a>
+            </div>
+        </div>
+    </div>
+</div>

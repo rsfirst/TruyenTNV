@@ -1,0 +1,105 @@
+<div>
+	<fieldset class="fieldset-primary">
+		<legend class="lengend-primary">
+			<b translate="vnm.dialog_input_serial.label.select.input.type"></b>
+		</legend>
+		<div class="form-group">
+			<div class="col-md-4" align="center">
+				<label><input type="radio" ng-model="model.asSerialTypeSearch" value="single" ng-change='serialTypeChangeFn(model.asSerialTypeSearch)' /><span
+					class="label-radio-button" translate="vnm.dialog_input_serial.label.radio.type.serial.single"></span></label>
+			</div>
+
+			<div class="col-md-4" align="center">
+				<label><input type="radio" ng-model="model.asSerialTypeSearch" value="strip" ng-change='serialTypeChangeFn(model.asSerialTypeSearch)' /><span
+					class="label-radio-button" translate="vnm.dialog_input_serial.label.radio.type.serial.strip"></span></label>
+			</div>
+
+			<div class="col-md-4" align="center">
+				<label><input type="radio" ng-model="model.asSerialTypeSearch" value="list" ng-change='serialTypeChangeFn(model.asSerialTypeSearch)' /><span
+					class="label-radio-button" translate="vnm.dialog_input_serial.label.radio.type.serial.list"></span></label>
+			</div>
+		</div>
+	</fieldset>
+
+	<fieldset class="fieldset-primary">
+		<legend class="lengend-primary">
+			<b translate="vnm.dialog_input_serial.label.input.serial"></b>
+		</legend>
+		<div class="form-group">
+			<label class="control-label col-md-2" translate="vnm.dialog_input_serial.label.goods"> </label>
+			<div class="col-md-2" align="center">
+				<input type="text" class="form-control" id="asGoodsCode" ng-model="model.asGoodsCode" ng-disabled="true" data-toggle="tooltip" data-placement="top" title="" />
+			</div>
+
+			<div class="col-md-2" align="center">
+				<input type="text" class="form-control" id="asGoodsName" ng-model="model.asGoodsName" ng-disabled="true" data-toggle="tooltip" data-placement="top" title="" />
+			</div>
+
+			<label class="control-label col-md-2" translate="vnm.dialog_input_serial.label.quantity"> </label>
+
+			<div class="col-md-3" align="center">
+				<input type="text" class="form-control text-right" ng-model="model.asQuantity" ng-disabled="true" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2" translate="vnm.dialog_input_serial.label.from.serial"> </label>
+
+			<div class="col-md-4" align="center">
+				<input type="text" class="form-control" ng-model="model.asFromSerial.serial" id="asFromSerial" ng-keyup="onF9ASFromSerial($event)" />
+			</div>
+
+			<label class="control-label col-md-2" translate="vnm.dialog_input_serial.label.to.serial"> </label>
+
+			<div class="col-md-3" align="center">
+				<input type="text" class="form-control" ng-model="model.asToSerial.serial" id="asToSerial" ng-disabled="disableASToSerial" ng-keyup="onF9ASToSerial($event)" />
+			</div>
+
+			<div class="col-md-1" align="center">
+				<button type="button" name="asAdd" style="width: 100%;" class="btn btn-primary" ng-click="btnASAddOnclick()">
+					<i class="fa fa-plus-circle"></i><label translate="vnm.common.btn.add"></label>
+				</button>
+			</div>
+		</div>
+	</fieldset>
+
+	<fieldset class="fieldset-primary-3">
+		<fieldset class="fieldset-primary-3">
+			<legend class="lengend-primary">
+				<b translate="vnm.dialog_input_serial.label.list.input.serial"></b>
+			</legend>
+
+			<div class="form-group">
+				<div class="col-md-12 md-height-350">
+					<table id="tableASInputSerial" class="table-bordered" style="width: 100%">
+						<thead class="ng-table-sort-header">
+							<tr>
+								<th width="50%" translate="vnm.dialog_input_serial.label.column.serial"></th>
+								<th width="50%" translate="vnm.dialog_input_serial.label.column.input.date"></th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</fieldset>
+		<div class="form-group">
+			<div class="col-md-12" align="right">
+				<button type="button" name="asDelete" class="btn btn-primary btn-primary-100" ng-click="btnASDeleteOnclick()"
+					style="margin-right: 15px">
+					<i class="fa fa-trash"></i><label translate="vnm.common.btn.delete"></label>
+				</button>
+			</div>
+		</div>
+	</fieldset>
+
+	<div class="form-group">
+		<div class="col-md-12" align="center">
+			<button type="button" name="asApprove" class="btn btn-primary btn-primary-100" ng-click="btnASApproveOnclick()">
+				<i class="fa fa-thumbs-o-up"></i><label translate="vnm.common.btn.approve"></label>
+			</button>
+			<button type="button" name="asCancel" class="btn btn-primary btn-primary-100" ng-click="btnASCancelOnclick()">
+				<i class="fa fa-long-arrow-left"></i><label translate="vnm.common.btn.cancel"></label>
+			</button>
+		</div>
+	</div>
+
+</div>

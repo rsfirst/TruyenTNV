@@ -1,0 +1,86 @@
+<div class="modal-header" style="height: 50px">
+	<button type="button" class="close red" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">×</button>
+	<h4 class="modal-title" id="modal-title">Xác thực OTP</h4>
+</div>
+<div class="modal-body" id="modal-body" style="padding: 5px;">
+	<div style="max-height: 200px; overflow: auto">
+		<div class="form-group ">
+			<input type="text" class="form-control" placeholder="OTP" id="otp" ng-model="otp" maxlength="8" /> Không nhận được mã ? <a ng-click="generateOTP()"
+				role="button">Gửi lại</a>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<a ng-click="confirm()" class="btn btn-sm" style="background-color: #f37e2d; color: black" href="javascript:;"> <i class="fa fa-check-circle"></i> Xác
+			nhận
+		</a>
+	</div>
+	<style>
+.list-shop {
+	
+}
+
+.list-shop .list-simple.ext-1.mt-list-container ul>.mt-list-item {
+	padding: 2px;
+	border-color: #90ffce #409fff #e7ecf1;
+}
+
+.list-shop .list-simple.ext-1.mt-list-container ul>.mt-list-item>.list-icon-container-mod {
+	padding-top: 2px;
+}
+
+.list-shop .list-simple.mt-list-container ul>.mt-list-item>.list-item-content {
+	padding: 0 5px 0 25px;
+}
+
+.list-shop .list-simple.mt-list-container ul>.mt-list-item>.list-item-content>h6>a:hover {
+	color: #f58232;
+}
+
+.list-shop .list-simple.mt-list-container ul>.mt-list-item:hover>.list-item-content>h6>a {
+	color: #f58232;
+}
+
+.list-shop .list-simple.ext-1.mt-list-container ul>.mt-list-item:hover {
+	border-color: #90ffce #f37e2d #e7ecf1;
+	cursor: pointer;
+}
+
+.list-shop .list-simple.ext-1.mt-list-container ul>.mt-list-item:hover i {
+	color: #f37e2d;
+}
+
+.list-shop .list-simple.ext-1.mt-list-container ul>.mt-list-item.item-checked  i {
+	color: #f37e2d;
+}
+
+.list-shop  .list-simple.ext-1.mt-list-container ul>.mt-list-item.item-checked {
+	border-color: #90ffce #f37e2d #e7ecf1;
+}
+
+.list-shop  .list-simple.mt-list-container ul>.mt-list-item.item-checked>.list-item-content>h6>a {
+	color: #f58232;
+}
+
+#partitioned {
+	padding-left: 15px;
+	letter-spacing: 42px;
+	border: 0;
+	background-image: linear-gradient(to left, black 70%, rgba(255, 255, 255, 0) 0%);
+	background-position: bottom;
+	background-size: 50px 1px;
+	background-repeat: repeat-x;
+	background-position-x: 35px;
+	width: 220px;
+	min-width: 220px;
+}
+
+#divInner {
+	left: 0;
+	position: sticky;
+}
+
+#divOuter {
+	width: 190px;
+	overflow: hidden
+}
+</style>

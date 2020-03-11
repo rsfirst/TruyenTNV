@@ -1,0 +1,259 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Danh mục Multi Shop Goods</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script type="text/ng-template" id="headerCheckboxAdd.html">
+   	 		<input type="checkbox" ng-model="model.checkboxListGoodItem" value="" ng-click="checkAllAdd()"/>
+  		</script>
+
+		<script type="text/ng-template" id="headerCheckboxAddGoodItemAssignMent.html">
+   	 		<input type="checkbox" ng-model="model.checkboxListGoodItemAssign" value="" ng-click="checkAllAddGoodItemAssignMent()"/>
+  		</script>
+
+		<script src="/views/css/prepaidService/listMultiShopGoods.js" type="text/javascript"></script>
+		<div ng-controller="ctr-listMultiShopGoods" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span class="caption-subject font-orange bold uppercase">Danh mục Multi Shop Goods</span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_prepaid" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<fieldset class="fieldsetcustom">
+										<h3 class="form-section" style="">
+											<span translate="vnm.form_multi_shop_goods.tilte.list.shop"></span>
+										</h3>
+										<div class="form-group">
+											<div class="col-md-4">
+												<span class="btn blue-hoki  btn-file"> <i class="fa fa-cloud-upload"></i> <span translate="vnm.form_multi_shop_goods.label.choose.file"></span><input
+													type="file" id="btnListSubscriberUploaderPrePaid" ng-click="uploadFileTemplateProvince(uploaderListShop, $event)" nv-file-select=""
+													uploader="uploaderListShop" multiple="" />
+												</span>
+
+												<button type="button" class="btn" style="background-color: blue; color: white;" ng-click="downloadFileTemplateServer()">
+													<span class="fa fa-download"></span><span translate="vnm.form_multi_shop_goods.label.download.template"></span>
+												</button>
+
+												<button type="button" class="btn btn-danger btn-s" ng-click="removeAllItemListShop()" ng-disabled="!uploaderListShop.queue.length">
+													<span class="glyphicon glyphicon-trash"></span> <span translate="vnm.form_multi_shop_goods.label.delete.file"></span>
+												</button>
+											</div>
+
+											<label class="control-label col-md-2"><span translate="vnm.form_multi_shop_goods.label.file.name"></span></label>
+											<div class="col-md-4">
+												<input type="text" ng-disabled="true" placeholder="File tải lên" class="form-control" ng-model="fileNameListProvinceShop"
+													name="FileNameListProvinceShop" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<h3 class="form-section"></h3>
+											<div class="col-md-12">
+												<div class="table-scrollabel">
+													<table ng-table="tableListShopTemplate" class="table table-striped table-bordered">
+														<colgroup>
+															<col width="10%" />
+															<col width="40%" />
+															<col width="30%" />
+															<col width="10%" />
+															<col width="10%" />
+														</colgroup>
+														<tr ng-repeat="item in $data">
+															<td title="'Mã cửa hàng'" filter="{ shopCode: 'text'}" sortable="'shopCode'">{{item.shopCode}}</td>
+															<td title="'Tên cửa hàng'" filter="{ name: 'text'}" sortable="'name'">{{item.name}}</td>
+															<td title="'Trạng thái'" sortable="'errorStatus'">{{item.errorStatus}}</td>
+
+															<td title="''">
+																<div ng-if="item.status != 1">
+																	<span class="red"><i class="glyphicon glyphicon-remove" /></span>
+																</div>
+																<div ng-if="item.status == 1">
+																	<span class="text-success"><i class="glyphicon glyphicon-ok" /></span>
+																</div>
+															</td>
+
+															<td title="'Xóa'" align="center" sortable="'msisdn'"><img src="/images/mnp_delete_icon.png" title="{{item.idRecord}}" width="20px"
+																height="25px" ng-click="deleteShopCodeByItem(item)" /></td>
+														</tr>
+													</table>
+												</div>
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-2"><span translate="vnm.form_multi_shop_goods.label.shop.code"></span></label>
+											<div class="col-md-2">
+												<input type="text" class="form-control" ng-blur="outFocusFunction($event)" ng-model="model.shopCodeIndividual" name="ShopCodeIndividual" />
+											</div>
+
+											<label class="control-label col-md-2"><span translate="vnm.form_multi_shop_goods.label.shop.name"></span></label>
+											<div class="col-md-2">
+												<input type="text" class="form-control" ng-disabled="true" ng-model="model.shopNameIndividual" name="ShopNameIndividual" />
+											</div>
+
+											<div class="col-md-4" align="right">
+												<button type="button" class="btn btn-primary" ng-click="getShopCodeDBWith1ShopFunction()">
+													<i class=""></i> <span translate="vnm.form_multi_shop_goods.label.btn.add"></span>
+												</button>
+											</div>
+										</div>
+									</fieldset>
+
+									<fieldset class="fieldsetcustom">
+										<h3 class="form-section" style="padding-top: 20px;">
+											<span translate="vnm.form_multi_shop_goods.tilte.list.item"></span>
+										</h3>
+										<div class="form-group">
+											<label class="control-label col-md-2"><span translate="vnm.form_multi_shop_goods.label.item.type"></span></label>
+
+											<div class="col-md-2" align="left">
+												<label><input type="radio" ng-model="model.goodItemType" value="SIM" ng-change='accountTypeChangeFn(model.goodItemType)' /><span
+													class="label-radio-button" translate="vnm.form_multi_shop_goods.label.item.type.sim"></span></label>
+											</div>
+
+											<div class="col-md-2" align="left">
+												<label><input type="radio" ng-model="model.goodItemType" value="CARD" ng-change='accountTypeChangeFn(model.goodItemType)' /><span
+													class="label-radio-button" translate="vnm.form_multi_shop_goods.label.item.type.card"></span></label>
+											</div>
+											<div class="col-md-2" align="left">
+												<label><input type="radio" ng-model="model.goodItemType" value="AIRTIME" ng-change='accountTypeChangeFn(model.goodItemType)' /><span
+													class="label-radio-button" translate="vnm.form_multi_shop_goods.label.item.type.airtime"></span></label>
+											</div>
+
+											<div class="col-md-2" align="left">
+												<label><input type="radio" ng-model="model.goodItemType" value="EVOUCHER" ng-change='accountTypeChangeFn(model.goodItemType)' /><span
+													class="label-radio-button" translate="vnm.form_multi_shop_goods.label.item.type.evoucher"></span></label>
+											</div>
+
+											<div class="col-md-2" align="left">
+												<label><input type="radio" ng-model="model.goodItemType" value="ALL" ng-change='accountTypeChangeFn(model.goodItemType)' /><span
+													class="label-radio-button" translate="vnm.form_multi_shop_goods.label.item.type.all"></span></label>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<h3 class="form-section"></h3>
+											<div class="col-md-12">
+												<div class="table-scrollabel">
+													<table ng-table="tableParamsGoodItem" class="table table-striped table-bordered">
+														<colgroup>
+															<col width="45%" />
+															<col width="50%" />
+															<col width="5%" />
+														</colgroup>
+														<tr ng-repeat="item in $data">
+															<td title="'Mã mặt hàng'" filter="{ goodCode: 'text'}" sortable="'goodCode'">{{item.goodCode}}</td>
+															<td title="'Tên mặt hàng'" filter="{ goodName: 'text'}" sortable="'goodName'">{{item.goodName}}</td>
+
+															<td header="'headerCheckboxAdd.html'" align="center"><input type="checkbox" ng-click="selectOrRemoveGoodItem(item)"
+																ng-model="item.typeCheckBox" /></td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="col-md-12" style="text-align: center;">
+												<button type="button" class="btn btn-primary" ng-click="btnAddGoodItemAssigment()" ng-disabled="!dataTableParamsGoodItemForAssignmentToAdd.length"
+													style="margin-right: 30px;">
+													<i class="fa glyphicon glyphicon-arrow-down"></i>
+												</button>
+
+												<button type="button" class="btn btn-primary" ng-disabled="!dataTableParamsGoodItemForAssignmentToRemove.length"
+													ng-click="btnRemoveGoodItemAssigment()">
+													<i class="fa glyphicon glyphicon-arrow-up"></i>
+												</button>
+											</div>
+										</div>
+										<h3 class="form-section" style="padding-top: 10px;">
+											<span translate="vnm.form_multi_shop_goods.tilte.list.item.assignment"></span>
+										</h3>
+
+										<div class="form-group">
+											<div class="col-md-12">
+												<div class="table-scrollabel">
+													<table ng-table="tableParamsGoodItemForAssignment" class="table table-striped table-bordered">
+														<colgroup>
+															<col width="40%" />
+															<col width="40%" />
+															<col width="20%" />
+														</colgroup>
+														<tr ng-repeat="item in $data">
+															<td title="'Mã mặt hàng'" filter="{ goodCode: 'text'}" sortable="'goodCode'">{{item.goodCode}}</td>
+															<td title="'Tên mặt hàng'" filter="{ goodName: 'text'}" sortable="'goodName'">{{item.goodName}}</td>
+															<td header="'headerCheckboxAddGoodItemAssignMent.html'" align="center"><input type="checkbox"
+																ng-click="selectOrRemoveGoodItemGoodAssignMent(item)" ng-model="item.typeCheckBox" /></td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="col-md-12" style="text-align: center;">
+												<button type="button" class="btn btn-primary" ng-click="addMultiGoodShopFunction()">
+													<i class="fa fa-save"></i> <span translate="vnm.form_multi_shop_goods.label.btn.assignment"></span>
+												</button>
+											</div>
+										</div>
+									</fieldset>
+
+									<fieldset class="fieldsetcustom">
+										<h3 class="form-section">
+											<span translate="vnm.form_multi_shop_goods.tilte.assignment.result"></span>
+										</h3>
+
+										<div class="form-group">
+											<div class="col-md-12">
+												<div class="table-scrollabel">
+													<table ng-table="tableParamsShopItemAssignmentResult" class="table table-striped table-bordered">
+														<colgroup>
+															<col width="40%" />
+															<col width="40%" />
+														</colgroup>
+														<tr ng-repeat="item in $data">
+															<td title="'Mã cửa hàng'" filter="{ shopCode: 'text'}" sortable="'shopCode'">{{item.shopCode}}</td>
+															<td title="'Tên cửa hàng'" filter="{ goodName: 'text'}" sortable="'name'">{{item.name}}</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+
+											<div class="col-md-12">
+												<div class="table-scrollabel">
+													<table ng-table="tableParamsGoodItemAssignmentResult" class="table table-striped table-bordered">
+														<colgroup>
+															<col width="40%" />
+															<col width="40%" />
+														</colgroup>
+														<tr ng-repeat="item in $data">
+															<td title="'Mã mặt hàng'" filter="{ goodCode: 'text'}" sortable="'goodCode'">{{item.goodCode}}</td>
+															<td title="'Tên mặt hàng'" filter="{ goodName: 'text'}" sortable="'goodName'">{{item.goodName}}</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

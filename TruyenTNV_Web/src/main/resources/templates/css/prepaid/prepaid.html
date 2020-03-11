@@ -1,0 +1,1116 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Đăng ký khách hàng trả trước</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/prepaid/prepaid.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-prepaid" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span class="caption-subject font-orange bold uppercase" translate="vnm.prepaid.page.title"> </span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_prepaid" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<ul class="nav nav-tabs ">
+									<li class="active"><a href="#tab_5_1" data-toggle="tab" aria-expanded="false"> <span translate="vnm.prepaid.label.tab.title.cus.info">
+										</span>
+									</a></li>
+									<li><a href="#tab_5_2" data-toggle="tab" aria-expanded="true"> <span translate="vnm.prepaid.label.tab.title.register.service"> </span></a></li>
+									<li><a href="#tab_5_3" data-toggle="tab" aria-expanded="true" ng-show="false"> <span translate="vnm.prepaid.label.tab.title.change.sim">
+										</span>
+									</a></li>
+									<li><a href="#tab_5_4" data-toggle="tab" aria-expanded="true" ng-show="false"> <span translate="vnm.prepaid.label.tab.title.change.owner">
+										</span>
+									</a></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.sub.number"></label>
+
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchMdn" name="searchMdn" ng-disabled="!disabledForm" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.cus.name"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchName" name="searchName" ng-disabled="!disabledForm" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.tax.code"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchTax" name="searchTax" ng-disabled="!disabledForm" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.id.card"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchCardId" name="searchCardId" ng-disabled="!disabledForm" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.serial.number"></label>
+											<div class="col-md-25">
+												<input type="text" ng-model="model.searchSimNumber" class="form-control" name="searchSimNumber" ng-disabled="!disabledForm" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.customer.type"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.searchCustomerType" ng-init="model.searchCustomerType=listCustomerTypeNew[0].customerId" ng-disabled="!disabledForm"
+													class="" style="width: 100%;"> <ui-select-match>{{$select.selected.customer}}</ui-select-match> <ui-select-choices
+													repeat="x.customerId as x in listCustomerTypeNew | filter:$select.search"> {{x.customer}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-actions">
+											<div class="col-md-12" style="text-align: right;">
+												<button type="button" class="btn btn-primary" ng-click="search()" ng-disabled="!disabledForm">
+													<i class="fa fa-search"></i> <label translate="vnm.common.btn.search"></label>
+												</button>
+											</div>
+										</div>
+										<div class="form-group" ng-show="searchResult.length>0">
+											<h3 class="form-section"></h3>
+											<div class="col-md-12">
+												<div class="table-scrollable">
+													<table ng-table="tableParams" class="table table-striped table-bordered" show-filter="false">
+														<tr ng-repeat="item in $data" ng-click="getInfo(item)" ng-class="{true:'active', false:''}[itemSelected.customerId==item.customerId]">
+															<td title="'Họ tên'">{{item.fullName}}</td>
+															<td title="'Ngày sinh'">{{item.dob.substring(0, 10)}}</td>
+															<td title="'CMT'">{{item.idCard}}</td>
+															<td title="'Loại khách hàng'">{{item.customerType === "1" ? "Cá nhân" :"Tổ chức" }}</td>
+															<td title="'Địa chỉ'">{{item.address}}</td>
+															<td title="'Quận/Huyện'">{{item.district}}</td>
+															<td title="'Tỉnh'">{{item.province}}</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+									
+										<div class="form-group" ng-show="showAddChildNew">
+										<h3 class="form-section" translate="vnm.prepaid.label.title.customer.info"></h3>
+										<div class="form-group">
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.customer.type"></label><span class="red"
+												ng-show="!customerTypeDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.customerType" ng-init="model.customerType=listCustomerTypeNew[-1].customerId" class=""
+													on-select="updateCustomerType($select.selected.customerId)" ng-disabled="customerTypeDisabledForm || disAddChild || changeChild" style="width: 100%;">
+												<ui-select-match>{{$select.selected.customer}}</ui-select-match> <ui-select-choices
+													repeat="x.customerId as x in listCustomerTypeNew | filter:$select.search"> {{x.customer}} </ui-select-choices> </ui-select>
+											</div>
+											
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.sur.name"></label> <span class="red"
+												ng-show="!lastNameDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.lastName" name="lastName" ng-disabled="lastNameDisabledForm || changeChild" ng-blur="checkblurLastName()" />
+											</div>
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.last.name"></label> <span class="red"
+												ng-show="!firtNameDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" maxlength="50" ng-model="model.firstName" name="firstName" ng-disabled="firtNameDisabledForm || changeChild"  ng-blur="checkblurFirstName()"/>
+											</div>
+										</div>
+
+										<div class="form-group">
+										<!--add  -->
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.cus.type.card"></label> <span class="red"
+												ng-show="!lastNameDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.cusTypeCard" ng-init="model.cusTypeCard=listCusTypeCard[-1].cusTypeCardId" class="" ng-disabled="lastNameDisabledForm || changeChild" style="width: 100%;">
+												<ui-select-match>{{$select.selected.cusTypeCardName}}</ui-select-match> <ui-select-choices repeat="x.cusTypeCardId as x in listCusTypeCard | filter:$select.search">
+												{{x.cusTypeCardName}} </ui-select-choices> </ui-select>
+											</div>
+										
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.issue.number"></label> <span class="red"
+												ng-show="!lastNameDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.cardId" name="cardId" ng-disabled="lastNameDisabledForm || changeChild" />
+											</div>
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.issue.place"></label> <span class="red"
+												ng-show="!lastNameDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.planceOfIssue" name="planceOfIssue" ng-disabled="lastNameDisabledForm || changeChild" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.issue.date"></label> <span class="red"
+												ng-show="!lastNameDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<input ng-model="model.dateOfIssue" id="dateOfIssue" name="dateOfIssue" datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" ng-disabled="lastNameDisabledForm || changeChild" />
+											</div>
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.birth.date"></label> <span class="red"
+												ng-show="!brithdayDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<input ng-model="model.birthday" id="birthday" name="birthday" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control"
+													ng-disabled="brithdayDisabledForm || changeChild"   />
+											</div>
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.gender"></label> <span class="red" ng-show="!sexDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.sex" ng-init="model.sex=listSex[-1].Id" class="" style="width: 100%;" ng-disabled="sexDisabledForm || changeChild" ng-change="checkblurSex()"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices repeat="x.Id as x in listSex | filter:$select.search"> {{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+											
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.country"></label> <span class="red"
+												ng-show="!countryDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.country" ng-init="model.country=listCountry[0].countryId" class="" style="width: 100%;"
+													ng-disabled="countryDisabledForm || disAddChild || changeChild" ng-change="checkblurCounty()"> <ui-select-match>{{$select.selected.country}}</ui-select-match> <ui-select-choices
+													repeat="x.countryId as x in listCountry | filter:$select.search"> {{x.country}} </ui-select-choices> </ui-select>
+											</div>										
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.company.name"></label> <span class="red"
+												ng-show="!companyNameDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.companyName" name="companyName" ng-disabled="companyNameDisabledForm || disAddChild || changeChild" />
+											</div>
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.province"></label> <span class="red"
+												ng-show="!provinceDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.province" ng-init="model.province=listProvince[0].proId" class="" on-select="updateDistrict($select.selected.proId)"
+													ng-disabled="provinceDisabledForm || changeChild" style="width: 100%;" ng-change="checkblurProvince()"> <ui-select-match>{{$select.selected.province}}</ui-select-match> <ui-select-choices
+													repeat="x.proId as x in listProvince | filter:$select.search"> {{x.province}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<!-- caott2 -->
+										<div class="form-group">
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.cus.type.card.company.code"></label> <span class="red"
+												ng-show="!taxCodeDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.typeCardCompany" ng-init="model.typeCardCompany=listTypeCardCompany[-1].typeCardCompanyId" class="" ng-disabled="companyNameDisabledForm || changeChild" style="width: 100%;">
+												<ui-select-match>{{$select.selected.typeCardCompanyName}}</ui-select-match> <ui-select-choices repeat="x.typeCardCompanyId as x in listTypeCardCompany | filter:$select.search">
+												{{x.typeCardCompanyName}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.tax.code"></label> <span class="red"
+												ng-show="!taxCodeDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.tax" name="tax" ng-disabled="taxCodeDisabledForm || disAddChild || changeChild" />
+											</div>											
+<!-- 											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.cus.type.card"></label> <span class="red"
+												ng-show="!addressDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.cusTypeCard" ng-init="" class="" ng-disabled="customerTypeCardDisabledForm" style="width: 100%;">
+												<ui-select-match>{{$select.selected.cusTypeCardName}}</ui-select-match> <ui-select-choices repeat="x.cusTypeCardId as x in listCusTypeCard | filter:$select.search">
+												{{x.cusTypeCardName}} </ui-select-choices> </ui-select>
+											</div> -->
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.district"></label> <span class="red"
+												ng-show="!dictrictDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.district" ng-init="model.district=listDistrict[0].disId" class="" ng-disabled="dictrictDisabledForm || changeChild" style="width: 100%;" ng-change="checkblurDistrict()">
+												<ui-select-match>{{$select.selected.district}}</ui-select-match> <ui-select-choices repeat="x.disId as x in listDistrict | filter:$select.search">
+												{{x.district}} </ui-select-choices> </ui-select>
+											</div>
+
+										</div>
+										<!--end  -->
+										<div class="form-group">
+											<label class="control-label col-md-15" ng-show="showSubParent"> <label translate="vnm.prepaid.label.address"></label> <span class="red"
+												ng-show="!addressDisabledForm">(*)</span>
+											</label>
+											<label class="control-label col-md-15" ng-show="!showSubParent"> <label translate="vnm.prepaid.label.sub.address"></label> <span class="red"
+												ng-show="!addressDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-65">
+												<textarea type="text" class="form-control" ng-model="model.address" name="address" ng-disabled="addressDisabledForm || changeChild"  style="width: 163%; height: 50px;" ng-blur="checkblurAddress()"/>
+											</div>
+										</div>
+										<div class="form-group" ng-show="showSubParent">
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.address.company"></label> <span class="red"
+												ng-show="!addressDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-65" >
+												<textarea type="text" class="form-control" ng-model="model.addressCompany" name="addressCompany" ng-disabled="addressDisabledForm || changeChild"  style="width: 163%; height: 50px;" ng-blur=""/>
+											</div>
+										</div>										
+										<div class="form-group" ng-show="commentDisabledForm">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.comment"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.comment" name="comment" ng-disabled="commentDisabledForm || changeChild" />
+											</div>
+										</div>
+									</div>
+									<div class="form-group" ng-show="showSubParent">
+										<h3 class="form-section" translate="vnm.prepaid.label.title.customer.sub.info"></h3>
+										<div class="form-group" ng-show="showChangeChild">
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.customer.type"></label><span class="red"
+												ng-show="!customerTypeDisabledForm">(*)</span>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.customerTypeChange" ng-init="model.customerTypeChange=listCustomerTypeNew[-1].customerId" class=""
+													on-select="updateCustomerTypeChange($select.selected.customerId)" ng-disabled="" style="width: 100%;">
+												<ui-select-match>{{$select.selected.customer}}</ui-select-match> <ui-select-choices
+													repeat="x.customerId as x in listCustomerTypeNew | filter:$select.search"> {{x.customer}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-group">
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.sur.name"></label> <span class="red" ng-show="!lastNameDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <input type="text" class="form-control" ng-model="model.subLastName" name="subLastName" ng-disabled="lastNameDisabledForm" />
+										    </div>
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.last.name"></label> <span class="red" ng-show="!firtNameDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <input type="text" class="form-control" ng-model="model.subFirstName" name="subFirstName" ng-disabled="firtNameDisabledForm" />
+										    </div>
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.gender"></label> <span class="red" ng-show="!sexDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <ui-select ng-model="model.subSex" ng-init="model.sex=listSex[-1].Id" class="" style="width: 100%;" ng-disabled="sexDisabledForm">
+										            <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+										            <ui-select-choices repeat="x.Id as x in listSex | filter:$select.search"> {{x.Title}} </ui-select-choices>
+										        </ui-select>
+										    </div>										    
+										</div>
+										
+										<div class="form-group">
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.cus.type.card"></label> <span class="red" ng-show="!subCustomerTypeCardDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <ui-select ng-model="model.subCusTypeCard" ng-init="" class="" ng-disabled="subCustomerTypeCardDisabledForm" style="width: 100%;">
+										            <ui-select-match>{{$select.selected.cusTypeCardName}}</ui-select-match>
+										            <ui-select-choices repeat="x.cusTypeCardId as x in listCusTypeCard | filter:$select.search">
+										                {{x.cusTypeCardName}} </ui-select-choices>
+										        </ui-select>
+										    </div>										
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.issue.number"></label> <span class="red" ng-show="!subcardIdDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <input type="text" class="form-control" ng-model="model.subIdCard" name="subIdCard" ng-disabled="subcardIdDisabledForm" />
+										    </div>
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.issue.place"></label> <span class="red" ng-show="!subcardIdDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <input type="text" class="form-control" ng-model="model.subPlanceOfIssue" name="subPlanceOfIssue" ng-disabled="subcardIdDisabledForm" />
+										    </div>
+
+										</div>
+										
+										<div class="form-group">
+											<label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.issue.date"></label> <span class="red" ng-show="!dateOfIssDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <input ng-model="model.subDateOfIssue" id="subDateOfIssue" name="subDateOfIssue" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" ng-disabled="dateOfIssDisabledForm" />
+										    </div>
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.birth.date"></label> <span class="red" ng-show="!brithdayDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <input ng-model="model.subBirthday" id="subBirthday" name="subBirthday" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" ng-disabled="brithdayDisabledForm" />
+										    </div>
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.province"></label> <span class="red" ng-show="!provinceDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <ui-select ng-model="model.subProvince" ng-init="model.subProvince=listProvince[0].proId" class="" on-select="subupdateDistrict($select.selected.proId)" ng-disabled="provinceDisabledForm" style="width: 100%;">
+										            <ui-select-match>{{$select.selected.province}}</ui-select-match>
+										            <ui-select-choices repeat="x.proId as x in listProvince | filter:$select.search"> {{x.province}} </ui-select-choices>
+										        </ui-select>
+										    </div>										    
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.country"></label> <span class="red" ng-show="!countryDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <ui-select ng-model="model.subCountry" ng-init="model.subCountry=listCountry[0].countryId" class="" style="width: 100%;" ng-disabled="countryDisabledForm ">
+										            <ui-select-match>{{$select.selected.country}}</ui-select-match>
+										            <ui-select-choices repeat="x.countryId as x in listCountry | filter:$select.search"> {{x.country}} </ui-select-choices>
+										        </ui-select>
+										    </div>
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.company.name"></label> <span class="red" ng-show="!companyNameDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <input type="text" class="form-control" ng-model="model.companyName" name="companyName" ng-disabled="true" />
+										    </div>
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.district"></label> <span class="red" ng-show="!dictrictDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-25">
+										        <ui-select ng-model="model.subDistrict" ng-init="model.subDistrict=listDistrictSub[0].disId" class="" ng-disabled="dictrictDisabledForm" style="width: 100%;">
+										            <ui-select-match>{{$select.selected.district}}</ui-select-match>
+										            <ui-select-choices repeat="x.disId as x in listDistrictSub | filter:$select.search">
+										                {{x.district}} </ui-select-choices>
+										        </ui-select>
+										    </div>
+										</div>
+
+										<div class="form-group">
+
+										    <label class="control-label col-md-15">
+										        <label translate="vnm.prepaid.label.sub.address"></label> <span class="red" ng-show="!addressDisabledForm">(*)</span>
+										    </label>
+										    <div class="col-md-65">
+										        <textarea type="text" class="form-control" ng-model="model.subAddress" name="subAddress" ng-disabled="addressDisabledForm" style="width: 163%; height: 50px;"/>
+										    </div>
+										</div>
+										
+										<div class="form-group" ng-show="commentDisabledForm">
+										    <label class="control-label col-md-15" translate="vnm.prepaid.label.comment"></label>
+										    <div class="col-md-25">
+										        <input type="text" class="form-control" ng-model="model.subComment" name="comment" ng-disabled="commentDisabledForm" />
+										    </div>
+										</div>
+									</div>									
+										
+										<div class="form-group" ng-show="!lastNameDisabledForm">
+											<div class="col-md-12">
+												<div class="note note-info">
+													<p>
+														<label translate="vnm.prepaid.label.title.text.required"></label> <span class="red" ng-show="!lastNameDisabledForm">(*)</span>
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="form-group lstpic6">
+											<div class="col-md-2" ng-show="imgBody!=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img id="myImg" ng-click="imgZoom($event)" class="img-responsive" ng-src="data:image/png;base64, {{imgBody}}" alt="Ảnh CMT mặt 1" />
+													</div>
+													<div class="title">
+														<span>CMT mặt 1</span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show="imgID_2_Body!=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{imgID_2_Body}}" alt="Ảnh CMT mặt 2" />
+													</div>
+													<div class="title">
+														<span>CMT mặt 2</span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show="contract_img1_Body!=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{contract_img1_Body}}" alt="Ảnh HĐ mặt 1" />
+													</div>
+													<div class="title">
+														<span>HĐ mặt 1</span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show="contract_img2_Body!=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{contract_img2_Body}}" alt="Ảnh HĐ mặt 2" />
+													</div>
+													<div class="title">
+														<span>HĐ mặt 2</span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show="authorized_img_Body!=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{authorized_img_Body}}" alt="Giấy ủy quyền" />
+													</div>
+													<div class="title">
+														<span>Giấy ủy quyền</span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show="bus_permit_no_img1_Body!=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{bus_permit_no_img1_Body}}" alt="Giấy ủy quyền mặt 1" />
+													</div>
+													<div class="title">
+														<span>Giấy phép KD mặt 1</span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show="bus_permit_no_img2!=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{bus_permit_no_img2}}" alt="Giấy ủy quyền mặt 2" />
+													</div>
+													<div class="title">
+														<span>Giấy phép KD mặt 2</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group lstpic6" ng-show="cust_img != ''">
+											<div class="col-md-2">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{cust_img}}" alt="Ảnh chân dung" />
+													</div>
+													<div class="title">
+														<span>Ảnh chân dung</span>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group lstpic6">
+
+											<div class="col-md-2" ng-show=" contract_img1_Body_SUB !=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{contract_img1_Body_SUB}}" alt="Ảnh HĐ mặt 1" />
+													</div>
+													<div class="title">
+														<span> HĐ mặt 1 </span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show=" contract_img2_Body_SUB !=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{contract_img2_Body_SUB}}" alt="Ảnh HĐ mặt 2" />
+													</div>
+													<div class="title">
+														<span> HĐ mặt 2 </span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show="fileBody !=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{fileBody}}" alt="Ảnh HS mặt 1" />
+													</div>
+													<div class="title">
+														<span> HS mặt 1</span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show=" file_id_2_Body !=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{file_id_2_Body}}" alt="Ảnh HS mặt 2" />
+													</div>
+													<div class="title">
+														<span> HS mặt 2 </span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show="cust_img_parent_d !='' ">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{cust_img_parent_d}}" alt="Ảnh chân dung" />
+													</div>
+													<div class="title">
+														<span> Ảnh đại diện</span>
+													</div>
+												</div>
+											</div>  
+											<div class="col-md-2" ng-show="imgBody_parent_d !=''  ">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{imgBody_parent_d}}" alt="Ảnh CMT mặt 1" />
+													</div>
+													<div class="title">
+														<span> Ảnh CMT đại diện mặt 1</span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-2" ng-show="imgID_2_Body_parent_d !=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{imgID_2_Body_parent_d}}" alt="Ảnh CMT mặt 1" />
+													</div>
+													<div class="title">
+														<span>Ảnh CMT đại diện mặt 2</span>
+													</div>
+												</div>
+											</div>  
+											<div class="col-md-2" ng-show="parent_img!=''">
+												<div class="portlet light">
+													<div class="photo">
+														<img width="100" height="70" id="myImg" ng-click="imgZoom($event)" ng-src="data:image/png;base64, {{parent_img}}" alt="Danh sách KH con" />
+													</div>
+													<div class="title">
+														<span>Danh sách KH con</span>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<h3 class="form-section" ng-show="disabledForm" translate="vnm.prepaid.label.title.list.customer"></h3>
+										<div class="form-group" ng-show="disabledForm">
+											<div class="col-md-12">
+												<table ng-table="tableSub" class="table table-striped table-bordered">
+													<tr ng-repeat="item in $data" ng-click="getInfoSub(item)" ng-class="{true:'active', false:''}[selMdn==item.mdn.mdn]">
+														<td title="'STT'">{{$index + 1}}</td>
+														<td title="'Số thuê bao'">{{item.mdn.mdn}}</td>
+														<td title="'Gói dịch vụ'">{{item.cos}}</td>
+														<td title="'Trạng thái'">{{item.currentState}}</td>
+														<td title="'Số sim'">{{item.serial}}</td>
+														<td title="'Đăng ký'">{{item.provisionning}}</td>
+														<td title="'Tài khoản'">{{item.preBalanceList.coreBalance.balance}}</td>
+														<td title="'Ngày đăng ký'">{{item.activeDate.substring(0, 10)}}</td>
+														<td title="'Ngày hết hạn'">{{item.preBalanceList.coreBalance.accountExpiration.substring(0, 10)}}</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+										<h3 class="form-section" ng-show="disabledForm" translate="vnm.prepaid.label.title.sub.infor"></h3>
+										<div class="form-group" ng-show="disabledForm">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.sub.number"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.mdn" name="mdn" ng-disabled="disabledFormSub" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.package.type"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.cosId" name="cosId" ng-disabled="disabledFormSub" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.main.account"> </label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.balance" name="pay" ng-disabled="disabledFormSub" />
+											</div>
+										</div>
+										<div class="form-group" ng-show="disabledForm">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.serial.number"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.serial" name="serial" ng-disabled="disabledFormSub" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.provider"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.store" name="store" ng-disabled="disabledFormSub" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.expired.date"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.endDate" name="endDate" ng-disabled="disabledFormSub" />
+											</div>
+										</div>
+										<!--add thong tin  -->
+										<div class="form-group" ng-show="disabledForm">
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.sub.user.type"></label>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.searchUserType" ng-init="model.searchUserType=listSubUserType[0].subUserTypeId" class="" ng-disabled="disabledFormSub" style="width: 100%;">
+												<ui-select-match>{{$select.selected.subUserTypeName}}</ui-select-match> <ui-select-choices repeat="x.subUserTypeId as x in listSubUserType | filter:$select.search">
+												{{x.subUserTypeName}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.sub.payment.type"></label>
+											</label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.searchPaymentType" ng-init="model.searchPaymentType=listSubPaymentType[-1].subPaymentTypeId" class="" ng-disabled="disabledFormSub" style="width: 100%;">
+												<ui-select-match>{{$select.selected.subPaymentTypeName}}</ui-select-match> <ui-select-choices repeat="x.subPaymentTypeId as x in listSubPaymentType | filter:$select.search">
+												{{x.subPaymentTypeName}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.sub.create.user"></label>
+											</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchCreateUser" name="searchCreateUser" ng-disabled="disabledFormSub" />
+											</div>
+										</div>
+										<div class="form-group" ng-show="disabledForm">
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.sub.shop.name"></label>
+											</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchShopName" name="searchShopName" ng-disabled="disabledFormSub" />
+											</div>										
+
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.sub.shop.code"></label>
+											</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchShopAddress" name="searchShopAddress" ng-disabled="disabledFormSub" />
+											</div>
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.sub.shop.address"></label>
+											</label>
+											<div class="col-md-25">
+											<input type="text" class="form-control" ng-model="model.searchShopProvice" name="searchShopProvice" ng-disabled="disabledFormSub" />
+											</div>											
+										</div>		
+										<div class="form-group" ng-show="disabledForm">
+											
+											<label class="control-label col-md-15"> <label translate="vnm.prepaid.label.sub.shop.phone"></label>
+											</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchShopPhone" name="searchShopPhone" ng-disabled="disabledFormSub" />
+											</div>
+										</div>						
+										<!--end  -->							
+										<h3 class="form-section" ng-show="!disabledForm" translate="vnm.prepaid.label.title.list.doc"></h3>
+										<div class="form-group" ng-show="!disabledForm">
+											<div class="col-md-12">
+												<span class="btn blue-hoki  btn-file"> <span class="fileinput-new"> Chọn tệp </span> <input type="file" nv-file-select="" uploader="uploader"
+													multiple="" />
+												</span>
+												<div class="table-scrollable">
+													<table class="table table-striped table-bordered">
+														<thead>
+															<tr>
+																<th width="50px" style="text-align: center;">STT</th>
+																<th width="250px" style="text-align: center;">Tên</th>
+																<th width="200px" style="text-align: center;">Loại giấy tờ</th>
+																<th width="200px" ng-show="uploader.isHTML5" style="text-align: center;">Kích thước File</th>
+																<th width="100px" style="text-align: center;">Trạng thái</th>
+																<th width="80px"></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="item in uploader.queue">
+																<td><strong>{{ uploader.getIndexOfItem(item) + 1}}</strong></td>
+																<td><strong>{{ item.file.name }}</strong></td>
+																<td nowrap=""><select class="form-control" ng-model="item.documentType"
+																	ng-options="value.Id as value.Title for value in DocumentTypeSource" ng-init="item.documentType=DocumentTypeSource[0].Id">
+																</select> <input type="text" style="display: none;" ng-model="item.attachMentId" class="form-control" /></td>
+																<td ng-show="uploader.isHTML5" nowrap="">{{ item.file.size/1024/1024|number:2 }} MB</td>
+
+																<td class="text-center"><span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span> <span ng-show="item.isCancel"><i
+																		class="glyphicon glyphicon-ban-circle"></i></span> <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span></td>
+																<td nowrap="">
+																	<button type="button" class="btn btn-danger btn-xs" ng-click="removeElementAttachmenByItem(item)">
+																		<span class="glyphicon glyphicon-trash"></span> Xóa
+																	</button>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+													<div>
+														<div>
+															<p></p>
+															<div class="progress" style="">
+																<div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }">{{uploader.progress}}%</div>
+															</div>
+														</div>
+														<button type="button" class="btn btn-success btn-s" ng-click="uploadAllFile(uploader)" ng-disabled="!uploader.getNotUploadedItems().length">
+															<span class="glyphicon glyphicon-upload"></span> <label translate="vnm.common.btn.upload.all"></label>
+														</button>
+														<button type="button" class="btn btn-danger btn-s" ng-click="removeAllItem()" ng-disabled="!uploader.queue.length">
+															<span class="glyphicon glyphicon-trash"></span> <label translate="vnm.common.btn.delete.all"></label>
+														</button>
+													</div>
+												</div>
+												<div class="note note-info">
+													<p>
+														<label translate="vnm.prepaid.label.title.doc.type.required"></label>
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="form-actions">
+											<div class="col-md-12" style="text-align: center;" ng-show="disabledForm">
+												<button type="button" class="btn btn-primary" ng-click="add()">Tạo mới</button>
+												<button type="button" class="btn btn-primary" ng-click="edit()" ng-disabled="showModifCus" ng-show="true">Sửa TTKH</button>
+												<button type="button" class="btn btn-primary" ng-click="addChild()" ng-disabled="disabledAddChild">
+													<label translate="vnm.prepaid.label.btn.create.sub"></label>
+												</button>
+
+												<button type="button" class="btn btn-primary" ng-click="createEformFn()" ng-disabled="isDisabledEfromBtn">
+													<label translate="vnm.prepaid.label.btn.eform"></label>
+												</button>
+
+												<button type="button" class="btn btn-primary" ng-click="createEformHDFn()" ng-disabled="isDisabledEfromHDBtn">
+													<label translate="vnm.prepaid.label.btn.eform.hd"></label>
+												</button>
+											</div>
+											<div class="col-md-12" style="text-align: center;" ng-show="!disabledForm">
+												<button type="button" class="btn btn-primary" ng-click="save()" ng-show="btnSave">
+													<i class="fa fa-save"></i> <label translate="vnm.prepaid.label.btn.save"></label>
+												</button>
+												<button type="button" class="btn btn-primary" ng-click="saveChild()" ng-show="!btnSave">
+													<i class="fa fa-save"></i> <label translate="vnm.prepaid.label.btn.save"></label>
+												</button>
+												<button type="button" class="btn btn-primary" ng-click="back()">
+													<i class="fa fa-arrow-left"></i> <label translate="vnm.prepaid.label.btn.back"></label>
+												</button>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane" id="tab_5_2">
+										<h3 class="form-section" translate="vnm.prepaid.label.wiring"></h3>
+										<div class="form-group">
+											<label class="control-label col-md-2" translate="vnm.prepaid.label.shop.name"></label>
+											<div class="col-md-4">
+												<div class="input-group ">
+													<span class="input-group-addon" id="sizing-addon1">{{shopIp}}</span> <input type="text" style="margin-left: 5px;" class="form-control"
+														ng-model="model.shopName" name="shopName" ng-disabled="true" />
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label translate="vnm.prepaid.label.package.type"></label><span class="red" ng-show="!customerId ==''">(*)</span></label>
+											<div class="col-md-4">
+												<ui-select ng-model="model.cos" ng-init="model.cos=listCOS[0].value" ng-disabled="customerId ==''"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices repeat="x.value as x in listCOS | filter:$select.search"> {{x.name}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-2" translate="vnm.prepaid.label.status"></label>
+											<div class="col-md-4">
+												<input type="text" class="form-control" ng-model="model.status" name="status" ng-disabled="true" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label translate="vnm.prepaid.label.sub.number"></label><span class="red" ng-show="!customerId ==''">(*)</span></label>
+											<div class="col-md-4">
+												<input type="text" class="form-control" ng-model="model.mdnNew" name="mdnNew" ng-disabled="customerId ==''" ng-blur="getSIMKit()" />
+											</div>
+											<label class="control-label col-md-2"> <label translate="vnm.prepaid.label.serial.number"></label> <span class="red"
+												ng-show="!customerId ==''">(*)</span></label>
+											<div class="col-md-4">
+												<input type="text" class="form-control" ng-model="model.serialNew" name="serialNew" ng-disabled="customerId ==''" />
+											</div>
+										</div>
+										<!--caott2 tab dk  -->
+										<div class="form-group">
+											<label class="control-label col-md-2"> <label translate="vnm.prepaid.label.sub.user.type"></label> <span class="red"
+												ng-show="!customerId ==''">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<ui-select ng-model="model.subUserType" ng-init="model.subUserType=listSubUserType[0].subUserTypeId" class="" ng-disabled="customerId ==''" style="width: 100%;">
+												<ui-select-match>{{$select.selected.subUserTypeName}}</ui-select-match> <ui-select-choices repeat="x.subUserTypeId as x in listSubUserType | filter:$select.search">
+												{{x.subUserTypeName}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-2"> <label translate="vnm.prepaid.label.sub.payment.type"></label> <span class="red"
+												ng-show="!customerId ==''"></span>
+											</label>
+											<div class="col-md-4">
+												<ui-select ng-model="model.subPaymentType" ng-init="model.subPaymentType=listSubPaymentType[0].subPaymentTypeId" class="" ng-disabled="true" style="width: 100%;">
+												<ui-select-match>{{$select.selected.subPaymentTypeName}}</ui-select-match> <ui-select-choices repeat="x.subPaymentTypeId as x in listSubPaymentType | filter:$select.search">
+												{{x.subPaymentTypeName}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+	<!-- 									<div class="form-group">
+											<label class="control-label col-md-2"> <label translate="vnm.prepaid.label.sub.create.user"></label> <span class="red"
+												ng-show="!customerId ==''">(*)</span>
+											</label>
+											<div class="col-md-4">
+												<input type="text" class="form-control" ng-model="model.createUser" name="createUser" ng-disabled="true" />
+											</div>
+										</div> -->
+										
+										<!-- end -->
+										<div class="form-group"></div>
+										<h3 class="form-section" ng-show="customerId !=''" translate="vnm.prepaid.label.title.attach.ment"></h3>
+
+										<div class="form-group" ng-show="customerId !=''">
+											<div class="col-md-12">
+												<span class="btn blue-hoki  btn-file"> <span class="fileinput-new"> Chọn tệp </span> <input type="file" nv-file-select=""
+													uploader="uploaderNew" multiple="" />
+												</span>
+												<div class="table-scrollable">
+													<table class="table table-striped table-bordered">
+														<thead>
+															<tr>
+																<th width="50px" style="text-align: center;">STT</th>
+																<th width="250px" style="text-align: center;">Tên</th>
+																<th width="200px" style="text-align: center;">Loại giấy tờ</th>
+																<th width="200px" ng-show="uploaderNew.isHTML5" style="text-align: center;">Kích thước File</th>
+																<th width="100px" style="text-align: center;">Trạng thái</th>
+																<th width="80px"></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="item in uploaderNew.queue">
+																<td><strong>{{ uploaderNew.getIndexOfItem(item) + 1}}</strong></td>
+																<td><strong>{{ item.file.name }}</strong></td>
+																<td nowrap=""><select class="form-control" ng-model="item.documentTypeNew"
+																	ng-options="value.Id as value.Title for value in DocumentTypeSourceNew" ng-init="item.documentTypeNew=DocumentTypeSourceNew[0].Id">
+																</select> <input type="text" style="display: none;" ng-model="item.attachMentId" class="form-control" /></td>
+																<td ng-show="uploaderNew.isHTML5" nowrap="">{{ item.file.size/1024/1024|number:2 }} MB</td>
+
+																<td class="text-center"><span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span> <span ng-show="item.isCancel"><i
+																		class="glyphicon glyphicon-ban-circle"></i></span> <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span></td>
+																<td nowrap="">
+																	<button type="button" class="btn btn-danger btn-xs" ng-click="removeElementAttachmenByItemNew(item)">
+																		<span class="glyphicon glyphicon-trash"></span> Xóa
+																	</button>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+													<div>
+														<div>
+															<p></p>
+															<div class="progress" style="">
+																<div class="progress-bar" role="progressbar" ng-style="{ 'width': uploaderNew.progress + '%' }">{{uploaderNew.progress}}%</div>
+															</div>
+														</div>
+														<button type="button" class="btn btn-success btn-s" ng-click="uploadAllFileNew(uploaderNew)"
+															ng-disabled="!uploaderNew.getNotUploadedItems().length">
+															<span class="glyphicon glyphicon-upload"></span> <label translate="vnm.common.btn.upload.all"></label>
+														</button>
+
+														<button type="button" class="btn btn-danger btn-s" ng-click="removeAllItemNew()" ng-disabled="!uploaderNew.queue.length">
+															<span class="glyphicon glyphicon-trash"></span> <label translate="vnm.common.btn.delete.all"></label>
+														</button>
+													</div>
+												</div>
+												<div class="note note-info">
+													<p>
+														<label translate="vnm.prepaid.label.title.doc.type.required.part2"></label>
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="form-actions">
+											<div class="col-md-12" style="text-align: center;">
+												<button type="button" class="btn btn-primary" ng-click="connectSub()" ng-disabled="customerId ==''">
+													<label translate="vnm.prepaid.label.btn.choose"></label>
+												</button>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane" id="tab_5_3">
+										<h3 class="form-section" translate="vnm.prepaid.label.tab.title.change.sim"></h3>
+										<div class="form-group">
+											<label class="control-label col-md-2" translate="vnm.prepaid.label.old.sim"></label>
+											<div class="col-md-4">
+												<input type="text" class="form-control" ng-model="model.oldSIM" name="oldSIM" ng-disabled="true" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2" translate="vnm.prepaid.label.new.sim"></label>
+											<div class="col-md-4">
+												<input type="text" class="form-control" ng-model="model.newSIM" name="newSIM" ng-disabled="subId ==''" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2" translate="vnm.prepaid.label.content"></label>
+											<div class="col-md-4">
+												<ui-select ng-model="model.reason" ng-init="model.reason=listReason[0].value" ng-disabled="subId ==''" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+												<ui-select-choices repeat="x.value as x in listReason | filter:$select.search"> {{x.name}} </ui-select-choices> </ui-select>
+											</div>
+											<div class="col-md-4" style="text-align: center;">
+												<button type="button" class="btn btn-primary" ng-click="requestChangeSIM()" ng-disabled="subId ==''">
+													<label translate="vnm.prepaid.label.btn.accept"></label>
+												</button>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane" id="tab_5_4">
+										<h3 class="form-section" translate="vnm.prepaid.label.tab.title.change.owner"></h3>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.sub.number"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchMdn1" name="searchMdn1" ng-disabled="subId ==''" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.cus.name">Tên khách hàng</label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchName1" name="searchName1" ng-disabled="subId ==''" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.tax.code"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchTax1" name="searchTax1" ng-disabled="subId ==''" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.id.card"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.searchCardId1" name="searchCardId1" ng-disabled="subId ==''" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.serial.number"></label>
+											<div class="col-md-25">
+												<input type="number" ng-model="model.searchSimNumber1" class="form-control" name="searchSimNumber1" ng-disabled="subId ==''" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.customer.type"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.searchCustomerType1" ng-init="model.searchCustomerType1=listcustomerType[0].customerId" ng-disabled="subId ==''" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.customer}}</ui-select-match> <ui-select-choices
+													repeat="x.customerId as x in listCustomerType | filter:$select.search"> {{x.customer}} </ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-actions">
+											<div class="col-md-12" style="text-align: right;">
+												<button type="button" class="btn btn-primary" ng-click="search1()" ng-disabled="subId ==''">
+													<i class="fa fa-search"></i> <label translate="vnm.common.btn.search"></label>
+												</button>
+											</div>
+										</div>
+										<div class="form-group" ng-show="searchResult1.length>0">
+											<h3 class="form-section"></h3>
+											<div class="col-md-12">
+												<div class="table-scrollable">
+													<table ng-table="tableParams1" class="table table-striped table-bordered" show-filter="false">
+														<tr ng-repeat="item in $data" ng-click="getInfo1(item)" ng-class="{true:'active', false:''}[itemSelected.customerId1==item.customerId]">
+															<td title="'Họ tên'">{{item.fullName}}</td>
+															<td title="'Ngày sinh'">{{item.dob.substring(0, 10)}}</td>
+															<td title="'CMT'">{{item.idCard}}</td>
+															<td title="'Loại khách hàng'">{{item.customerType === "1" ? "Cá nhân" : item.customerType === "2" ? "Người nước ngoài" : item.customerType
+																=== "3" ? "Doanh nghiệp" : "Nhân viên"}}</td>
+															<td title="'Địa chỉ'">{{item.address}}</td>
+															<td title="'Quận/Huyện'">{{item.district}}</td>
+															<td title="'Tỉnh'">{{item.province}}</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+										<h3 class="form-section" translate="vnm.prepaid.label.sub.infor.owner"></h3>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.customer.type"></label>
+
+											<div class="col-md-25">
+												<ui-select ng-model="model.customerTypeMastery" ng-init="model.customerTypeMastery=listcustomerType[0].customerId" ng-disabled="true" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.customer}}</ui-select-match> <ui-select-choices
+													repeat="x.customerId as x in listCustomerType | filter:$select.search"> {{x.customer}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.name.sub.owner"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.nameMastery" name="nameMastery" ng-disabled="true" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.id.card.cmtnd"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.cardIdMastery" name="cardIdMastery" ng-disabled="true" />
+											</div>
+										</div>
+										<h3 class="form-section" translate="vnm.prepaid.label.receive.infor"></h3>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.customer.type"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.customerTypeInput" ng-init="model.customerTypeInput=listcustomerType[0].customerId" ng-disabled="true" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.customer}}</ui-select-match> <ui-select-choices
+													repeat="x.customerId as x in listCustomerType | filter:$select.search"> {{x.customer}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.name.sub.owner"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.nameInput" name="nameInput" ng-disabled="true" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.id.card.cmtnd"> </label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.cardIdInput" name="cardIdInput" ng-disabled="true" />
+											</div>
+										</div>
+										<h3 class="form-section" translate="vnm.prepaid.label.title.sub.infor"></h3>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.sub.number"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.mdnMastery" name="mdnMastery" ng-disabled="true" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.package.type"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.cosIdMastery" name="cosIdMastery" ng-disabled="true" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.serial.number"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.serialMastery" name="serialMastery" ng-disabled="true" />
+											</div>
+										</div>
+										<div class="form-group" ng-show="disabledForm">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.main.account"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.balanceMastery" name="payMastery" ng-disabled="true" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.expired.date"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control" ng-model="model.endDateMastery" name="endDateMastery" ng-disabled="true" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.prepaid.label.comment"></label>
+											<div class="col-md-65">
+												<input type="text" class="form-control" ng-model="model.noteMastery" name="noteMastery" ng-disabled="subId ==''" />
+											</div>
+										</div>
+										<h3 class="form-section" ng-show="subId !=''" translate="vnm.prepaid.label.title.list.doc"></h3>
+										<div class="form-group" ng-show="subId !=''">
+											<div class="col-md-12">
+												<span class="btn blue-hoki  btn-file"> <span class="fileinput-new"> Chọn tệp </span> <input type="file" nv-file-select=""
+													uploader="uploader1" multiple="" />
+												</span>
+												<div class="table-scrollable">
+													<table class="table table-striped table-bordered">
+														<thead>
+															<tr>
+																<th width="50px" style="text-align: center;">STT</th>
+																<th width="250px" style="text-align: center;">Tên</th>
+																<th width="200px" style="text-align: center;">Loại giấy tờ</th>
+																<th width="200px" ng-show="uploader.isHTML5" style="text-align: center;">Kích thước File</th>
+																<th width="100px" style="text-align: center;">Trạng thái</th>
+																<th width="80px"></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="item in uploader1.queue">
+																<td><strong>{{ uploader1.getIndexOfItem(item) + 1}}</strong></td>
+																<td><strong>{{ item.file.name }}</strong></td>
+																<td nowrap=""><select class="form-control" ng-model="item.documentType1"
+																	ng-options="value.Id as value.Title for value in DocumentTypeSource1" ng-init="item.documentType1=DocumentTypeSource1[0].Id">
+																</select> <input type="text" style="display: none;" ng-model="item.attachMentId" class="form-control" /></td>
+																<td ng-show="uploader1.isHTML5" nowrap="">{{ item.file.size/1024/1024|number:2 }} MB</td>
+
+																<td class="text-center"><span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span> <span ng-show="item.isCancel"><i
+																		class="glyphicon glyphicon-ban-circle"></i></span> <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span></td>
+																<td nowrap="">
+																	<button type="button" class="btn btn-danger btn-xs" ng-click="removeElementAttachmenByItem1(item)">
+																		<span class="glyphicon glyphicon-trash"></span> Xóa
+																	</button>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+													<div>
+														<div>
+															<p></p>
+															<div class="progress" style="">
+																<div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader1.progress + '%' }">{{uploader1.progress}}%</div>
+															</div>
+														</div>
+														<button type="button" class="btn btn-success btn-s" ng-click="uploadAllFile1(uploader1)" ng-disabled="!uploader1.getNotUploadedItems().length">
+															<span class="glyphicon glyphicon-upload"></span> <label translate="vnm.common.btn.upload.all"></label>
+														</button>
+														<button type="button" class="btn btn-danger btn-s" ng-click="removeAllItem1()" ng-disabled="!uploader1.queue.length">
+															<span class="glyphicon glyphicon-trash"></span> <label translate="vnm.common.btn.delete.all"></label>
+														</button>
+													</div>
+												</div>
+												<div class="note note-info">
+													<p>
+														<label translate="vnm.prepaid.label.title.doc.type.required.part2"></label>
+													</p>
+												</div>
+											</div>
+
+											<div class="form-actions">
+												<div class="col-md-12" style="text-align: center;">
+													<button type="button" class="btn btn-primary" ng-click="changeSove()" ng-disabled="subId ==''">
+														<span translate="vnm.prepaid.label.tab.title.change.owner"> </span>
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-body">
+										<img src="" class="imagepreview" style="width: 100%;" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

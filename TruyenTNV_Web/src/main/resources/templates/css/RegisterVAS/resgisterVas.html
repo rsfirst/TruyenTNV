@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Đăng ký gói cam kết</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/RegisterVAS/resgisterVas.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-reportPrepaidDetail" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.register_vas.page.title" />
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_reportPrepaidDetail"
+						class="form-horizontal  form-bordered" method="post"
+						ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+										<div class="form-group" style="padding-bottom: 30px;">
+											<label class="control-label col-md-15"
+												translate="vnm.register_vas.mobile.phone" />
+											<div class="col-md-25" style="padding-right: 20px;">
+												<input ng-model="model.msisdn" id="msisdn" name="msisdn"
+													class="form-control" />
+											</div>
+											<label class="control-label col-md-1"
+												translate="vnm.register_vas.imsi.number" />
+											<div class="col-md-25">
+												<input ng-model="model.imsi" id="imsi" name="imsi"
+													class="form-control" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="">
+												<div ng-repeat="item in listRegisterVas">
+													<div class="col-md-3" style="padding-bottom: 10px;">
+														<label class="form-check-label"> <input
+															type="radio" ng-model="model.registerVas"
+															name="checkboxModelReasonValue2_radio"
+															value="{{item.value}}" /><span style="padding-left:5px;">{{item.name}}</span>
+														</label>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group" style="padding-top: 20px;">
+											<div style="text-align: center;">
+												<button type="button" class="btn btn-primary"
+													ng-click="executeRegisterVas()">
+													<i class="fa fa-save"></i> <label
+														translate="vnm.register_vas.btn.execute"></label>
+												</button>
+
+												<button type="button" class="btn btn-primary"
+													ng-click="resetForm()">
+													<i class="fa fa-trash"></i> <label
+														translate="vnm.register_vas.btn.clear.form"></label>
+												</button>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

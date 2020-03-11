@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Báo cáo tổng hợp đấu nối thuê bao trả trước</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/report/reportPrepaid.js" type="text/javascript"></script>
+		<div ng-controller="ctrl-reportPrepaid" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span class="caption-subject font-orange bold uppercase" translate="vnm.report.report_prepaid.label.page.title"/>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_reportPrepaid" class="form-horizontal  form-bordered" method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.report.common.label.fromDate"/>
+											<div class="col-md-25">
+												<input ng-model="model.fromDate" id="fromDate" name="fromDate" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+											<label class="control-label col-md-15" translate="vnm.report.common.label.toDate"/>
+											<div class="col-md-25">
+												<input ng-model="model.toDate" id="toDate" name="toDate" datetime-picker="" date-only="" date-format="DD/MM/YYYY" class="form-control" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-15" translate="vnm.report.common.label.brandedShop"/>
+											<div class="col-md-25">
+												<ui-select ng-model="model.listBS" ng-init="model.listBS=listBrandedShop[0].id" style="width: 100%;" on-select="getStaff($select.selected.id)">
+												<ui-select-match>{{$select.selected.text}}</ui-select-match> <ui-select-choices repeat="x.id as x in listBrandedShop | filter:$select.search ">
+												{{x.text}} </ui-select-choices> </ui-select>
+											</div>
+											<label class="control-label col-md-15" translate="vnm.report.common.label.staff"/>
+											<div class="col-md-25">
+												<ui-select ng-model="model.listSta" ng-init="model.listSta=listStaff[0].value" style="width: 100%;" ng-disabled = "disListStaff"> <ui-select-match>{{$select.selected.code
+												+ ' - ' + $select.selected.name}}</ui-select-match> <ui-select-choices repeat="x.value as x in listStaff | filter:$select.search"> {{x.code + ' -
+												' + x.name}} </ui-select-choices> </ui-select>
+											</div>
+											<div class="col-md-25" style="text-align: right;">
+												<button type="button" class="btn btn-primary" ng-click="exportPrePaid()">
+													<i class="fa fa-download"></i> <span
+																translate="vnm.report.common.button.export"></span>
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

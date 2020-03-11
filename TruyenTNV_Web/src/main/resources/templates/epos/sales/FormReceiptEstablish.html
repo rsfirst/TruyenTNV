@@ -1,0 +1,505 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/sales/FormReceiptEstablish.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-FormReceiptEstablish" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.FormReceiptEstablish.page.title"></b>
+						</legend>
+						<form name="frm_FormReceiptEstablish"
+							class="form-horizontal  form-bordered" method="post"
+							ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b
+														translate="vnm.FormReceiptEstablish.label.lg.condition.search"></b>
+												</legend>
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptEstablish.label.stocks">
+													</label>
+													<div class="col-md-1 " style="">
+														<input type="text" ng-change="onShopChange()"
+															ng-blur="onShopBlur()" class="form-control"
+															ng-model="model.shopCode" id="shopCode"
+															data-toggle="tooltip" data-placement="top" title=""  style="text-transform: uppercase;"/>
+													</div>
+													<div class="col-md-3" style="">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.shopName" id="shopName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptEstablish.label.staff">
+													</label>
+
+													<div class="col-md-1" style="">
+														<input type="text" ng-blur="onStaffChange()" style="text-transform: uppercase;"
+															class="form-control" ng-model="model.staffCode"
+															id="staffCode" data-toggle="tooltip" data-placement="top"
+															title="" />
+													</div>
+													<div class="col-md-3" style="">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.staffName" id="staffName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+
+													<div class="col-md-1">
+														<button type="button" name="fSearch" style="width: 100%; margin-top: -2px; margin-left: 10%;"
+															class="btn btn-primary" ng-click="searchInvoice()">
+															<i class="fa glyphicon glyphicon-search"></i> <label
+																translate="vnm.common.btn.search"></label>
+														</button>
+													</div>
+												</div>
+												<div class="form-group">
+
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptEstablish.label.type"> </label>
+
+													<div class="col-md-1" style="">
+														<ui-select id="
+																invoiceTypeCode"
+															ng-model="model.invoiceType" class=""
+															style="width: 100%;" ng-click="onChooseInvoiceType()"
+															remove-selected="false" theme="bootstrap"
+															data-toggle="tooltip" data-placement="top" title="">
+														<ui-select-match>{{$select.selected.code}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listInvoiceType | filter:$select.search | limitTo: limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices> </ui-select>
+													</div>
+													<div class="col-md-3" style="">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.invoiceTypeName" id="invoiceTypeName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+
+
+
+
+													<label class="control-label col-md-1 "
+														translate="vnm.FormReceiptEstablish.label.paymentMethod">
+													</label>
+
+													<div class="col-md-1 " style="">
+														<ui-select id="paymentMethodCode"
+															ng-model="model.paymentMethod" class=""
+															style="width: 100%;" ng-click="onChoosePaymentMethod()"
+															data-toggle="tooltip" data-placement="top" title=""
+															theme="bootstrap"> <ui-select-match>{{$select.selected.code}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listPaymentMethod | filter:$select.search | limitTo: limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+
+													</div>
+
+													<div class="col-md-3" style="">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.paymentMethodName" id="paymentMethodName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+
+
+												</div>
+												<div class="form-group">
+											
+
+															<label class="control-label col-md-1"
+																translate="vnm.FormReceiptEstablish.label.startDate">
+															</label>
+														<div class="col-md-4">
+																<input placeholder=" /  /  /" id="startDate" 
+																	ng-model="model.startDate" ng-blur="checkFromDate()"
+																	name="StartDate" datetime-picker="" date-only=""
+																	date-format="DD/MM/YYYY" class="form-control" />
+														</div>
+												
+															<label class="control-label col-md-1"
+																translate="vnm.FormReceiptEstablish.label.endDate">
+															</label>
+														<div class="col-md-4">
+																<input placeholder=" /  /  /" id="endDate" 
+																	ng-model="model.endDate" ng-blur="checktodate()"
+																	name="EndDate" datetime-picker="" date-only=""
+																	date-format="DD/MM/YYYY" class="form-control" />
+													
+													</div>
+												</div>
+
+												<div class="form-group">
+											
+												
+															<label class="control-label col-md-1"
+																translate="vnm.FormReceiptEstablish.label.agent">
+															</label>
+													
+																<div class="col-md-1 " style="">
+																	<input type="text" class="form-control"
+																		ng-model="model.agent" id="agentCode"
+																		data-toggle="tooltip" data-placement="top" title=""
+																		ng-disabled="agentDisable" />
+																</div>
+
+																<div class="col-md-3" style="">
+																	<input type="text" class="form-control"
+																		ng-disabled="true" ng-model="model.agentName"
+																		id="agentName" data-toggle="tooltip"
+																		data-placement="top" title=""  />
+																</div>
+														
+													
+												
+												</div>
+											</fieldset>
+
+											<div class="form-group">
+												<div class="col-md-5 md-height-500">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.FormReceiptEstablish.label.lg.list.invoice"></b>
+
+														</legend>
+														<div class="form-group md-height-450">
+															<div class="col-md-12 table-scrollable">
+																<table id="tableFListInvoice" class="table-bordered "
+																	style="width: 100%">
+																	<thead class="ng-table-sort-header">
+																		<tr>
+																			<th width="23%"
+																				translate="vnm.FormReceiptEstablish.table.column.invoice.code"></th>
+																			<th width="23%"
+																				translate="vnm.FormReceiptEstablish.table.column.staff"></th>
+																			<th width="23%"
+																				translate="vnm.FormReceiptEstablish.table.column.date"></th>
+																			<th width="23%"
+																				translate="vnm.FormReceiptEstablish.table.column.invoice.status"></th>
+																			<th width="8%"><input type="checkbox"
+																				id="checkAll" class="form-control"
+																				ng-model="model.checkAll" value="" style="width: 18px;margin-left: 7px;"/></th>
+																		</tr>
+																	</thead>
+																</table>
+															</div>
+														</div>
+													</fieldset>
+
+												</div>
+
+												<div class="col-md-7 md-height-500">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.FormReceiptEstablish.label.lg.receipt.info"></b>
+
+														</legend>
+														<div class="md-height-450 position-fixed">
+															<div class="form-group">
+																<label class="control-label col-md-2"
+																	translate="vnm.FormBankTransaction.table.sub.receiptType"></label>
+																<div class="col-md-4">
+																	<ui-select ng-model="model.invoiceReceiptType" class=""
+																		ng-disabled="disabledDetail" style="width: 100%;">
+																	<ui-select-match>{{$select.selected.name}}</ui-select-match>
+																	<ui-select-choices
+																		repeat="x in listReceiptType | filter:$select.search">
+																	{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+																</div>
+																<label class="control-label col-md-2"
+																	translate="vnm.FormBankTransaction.table.sub.status"></label>
+																<div class="col-md-4">
+																	<ui-select ng-model="model.receiptStatus" class=""
+																		ng-disabled="disabledDetail" style="width: 100%;">
+																	<ui-select-match>{{$select.selected.name}}</ui-select-match>
+																	<ui-select-choices
+																		repeat="x in listStatus | filter:$select.search">
+																	{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-2"
+																	translate="vnm.FormBankTransaction.table.sub.receiptNo"></label>
+																<div class="col-md-4">
+																	<input ng-model="model.invoiceReceiptNo"
+																		id="invoiceReceiptNo" name="invoiceReceiptNo"
+																		ng-disabled="true" class="form-control" />
+																</div>
+																<label class="control-label col-md-2"
+																	translate="vnm.FormBankTransaction.table.sub.createDate"></label>
+
+																<div class="col-md-4">
+																	<input ng-model="model.receiptCreateDate"
+																		id="createDate" ng-disabled="disabledDetail"
+																		ng-blur="onBlurCheckDate()" name="" datetime-picker=""
+																		date-only="" date-format="DD/MM/YYYY"
+																		class="form-control" />
+																</div>
+
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-2"
+																	translate="vnm.FormReceiptEstablish.detail.label.shop">
+																</label>
+
+
+																<div class="col-md-3">
+																	<input type="text" class="form-control"
+																		ng-model="model.invoiceShopCode" id="invoiceShopCode"
+																		data-toggle="tooltip" data-placement="top" title=""
+																		ng-blur="" ng-disabled="disabledDetail" />
+																</div>
+																<div class="col-md-7">
+																	<input type="text" class="form-control"
+																		ng-disabled="true" ng-model="model.invoiceShopName"
+																		id="invoiceShopName" data-toggle="tooltip"
+																		data-placement="top" title="" />
+																</div>
+
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-2"
+																	translate="vnm.FormReceiptEstablish.detail.label.agent">
+																</label>
+
+
+																<div class="col-md-3">
+																	<input type="text" class="form-control"
+																		ng-model="model.receiptAgentCode"
+																		id="receiptAgentCode" data-toggle="tooltip"
+																		data-placement="top" title="" ng-blur=""
+																		ng-disabled="disabledDetail" />
+																</div>
+																<div class="col-md-7">
+																	<input type="text" class="form-control"
+																		ng-disabled="true" ng-model="model.receiptAgentName"
+																		id="receiptAgentName" data-toggle="tooltip"
+																		data-placement="top" title="" />
+																</div>
+
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-2"
+																	translate="vnm.FormReceiptEstablish.detail.label.reason">
+																</label>
+
+
+																<div class="col-md-3">
+																	<input type="text" class="form-control"
+																		ng-model="model.receiptReason.code"
+																		id="invoiceShopCode" data-toggle="tooltip"
+																		data-placement="top" title="" ng-blur=""
+																		ng-disabled="disabledDetail" />
+																</div>
+																<div class="col-md-7">
+																	<input type="text" class="form-control"
+																		ng-disabled="true" ng-model="model.receiptReason.name"
+																		id="invoiceShopName" data-toggle="tooltip"
+																		data-placement="top" title="" />
+																</div>
+
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-2"
+																	translate="vnm.FormReceiptEstablish.detail.label.user.agent">
+																</label>
+
+
+																<div class="col-md-3">
+																	<input type="text" class="form-control"
+																		ng-model="model.receiptStaffCode" id="invoiceShopCode"
+																		data-toggle="tooltip" data-placement="top" title=""
+																		ng-blur="" ng-disabled="disabledDetail" />
+																</div>
+																<div class="col-md-7">
+																	<input type="text" class="form-control"
+																		ng-disabled="true" ng-model="model.receiptStaffName"
+																		id="" data-toggle="tooltip" data-placement="top"
+																		title="" />
+																</div>
+
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-2"
+																	translate="vnm.FormReceiptEstablish.detail.label.payment.method">
+																</label>
+																<div class="col-md-4">
+																	<input type="text"
+																		ng-model="model.receiptPaymentMethod.name"
+																		ng-disabled="disabledDetail" class="form-control" />
+																</div>
+
+																<label class="control-label col-md-2"
+																	translate="vnm.FormReceiptEstablish.detail.label.rate">
+																</label>
+																<div class="col-md-4">
+																	<input type="text" ng-model="model.rate"
+																		ng-disabled="disabledDetail" class="form-control" />
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-2"
+																	translate="vnm.FormReceiptEstablish.detail.label.amount.original">
+																</label>
+																<div class="col-md-4">
+																	<input type="text" ng-model="model.orgTotal"
+																		ng-disabled="disabledDetail" class="form-control" />
+																</div>
+
+																<label class="control-label col-md-2"
+																	translate="vnm.FormReceiptEstablish.detail.label.total.amount">
+																</label>
+																<div class="col-md-4">
+																	<input type="text" ng-model="model.grandTotal"
+																		ng-disabled="disabledDetail" class="form-control" />
+																</div>
+															</div>
+															<div class="form-group">
+																<label class="control-label col-md-2"
+																	translate="vnm.FormReceiptEstablish.detail.label.account.code"></label>
+
+																<div class="col-md-10">
+																	<input type="text" class="form-control"
+																		ng-model="model.account.name" id="invoiceNote"
+																		data-toggle="tooltip" data-placement="top"
+																		ng-disabled="disabledDetail" />
+																</div>
+
+															</div>
+															<div class="form-group">
+																<label class="control-label col-md-2"
+																	translate="vnm.FormReceiptEstablish.detail.label.note">
+																</label>
+
+																<div class="col-md-10">
+
+																	<input type="text" class="form-control"
+																		ng-model="model.note" id="invoiceNote"
+																		data-toggle="tooltip" data-placement="top"
+																		ng-disabled="checkDisabledDetail" />
+
+																</div>
+
+															</div>
+
+														</div>
+
+														<div class="form-group">
+
+															<div class="col-md-12" style="text-align: center;"
+																id="formGroupBtnCreate">
+																<button type="button" name="btnAdd" style="width: 120px"
+																	class="btn btn-primary" ng-disabled="" id="btnCreate"
+																	ng-click="btnCreateReceiptOnClick()">
+																	<i class="glyphicon glyphicon-paste"></i> <label
+																		translate="vnm.FormReceiptEstablish.btn.label.create"></label>
+																</button>
+																<button type="button" name="btnEdit"
+																	style="width: 120px" class="btn btn-primary"
+																	ng-disabled="disabledPrint"
+																	ng-click="btnAdjustOnclick()">
+																	<i class="glyphicon glyphicon-print"></i> <label
+																		translate="vnm.FormReceiptEstablish.btn.label.print"></label>
+																</button>
+
+															</div>
+
+															<div class="col-md-12" style="text-align: center;"
+																ng-hide="checkHideBtn" id="formGroupBtnReCreate">
+																<button type="button" name="btnAdd" style="width: 120px"
+																	class="btn btn-primary" ng-disabled="" id="btnReCreate"
+																	ng-click="btnReCreateOnclick()">
+																	<i class="glyphicon glyphicon-repeat"></i> <label
+																		translate="vnm.FormReceiptEstablish.btn.label.reCreate"></label>
+																</button>
+																<button type="button" name="btnEdit"
+																	style="width: 120px" class="btn btn-primary"
+																	ng-disabled="disablePrint" ng-click="print()">
+																	<i class="glyphicon glyphicon-print"></i> <label
+																		translate="vnm.FormReceiptEstablish.btn.label.print"></label>
+																</button>
+
+															</div>
+
+														</div>
+
+
+													</fieldset>
+
+													<div class="modal fade" id="modalListShop" role="dialog"
+														data-keyboard="false" data-backdrop="static">
+														<div class="modal-dialog" style="min-width: 1100px">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<button type="button" class="close"
+																		data-dismiss="modal">&times;</button>
+																	<h4 class="modal-title"
+																		translate="vnm.common.label.list.shop"></h4>
+																</div>
+																<div class="modal-body">
+																	<div ng-include="'/popup/dialogListShop'"></div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="modal fade" id="modalListStaff" role="dialog"
+														data-keyboard="false" data-backdrop="static">
+														<div class="modal-dialog" style="min-width: 1100px">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<button type="button" class="close"
+																		data-dismiss="modal">&times;</button>
+																	<h4 class="modal-title"
+																		translate="vnm.common.label.list.staff"></h4>
+																</div>
+																<div class="modal-body">
+																	<div ng-include="'/popup/dialogListStaff'"></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+							</div>
+
+						</form>
+
+					</fieldset>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

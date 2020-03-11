@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Tra cứu hóa đơn bán hàng</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/sales/formLookupInvoiceHistory.js" type="text/javascript"></script>
+		
+		<div ng-controller="formSearchInvoiceHistoryController" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.FormLookupInvoiceHistory.page.title"></b>
+						</legend>
+						<form name="frm_FormDestroyTransaction"
+							class="form-horizontal  form-bordered" method="post"
+							ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+
+									<div class="tab-content">
+
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.FormLookupInvoiceHistory.search.title"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormDestroyTransaction.search.sessionShop"></label>
+												<div class="col-md-1">
+													<input type="text" class="form-control" ng-model="model.shopCode" id="fShopCode" data-toggle="tooltip" data-placement="top" title="" maxlength="30"
+														ng-blur="checkF9Shop()" style="text-transform: uppercase;" />
+
+												</div>
+												<div class="col-md-3">
+													<input type="text" class="form-control" ng-model="model.shopName" id="fShopName" ng-disabled="true" data-toggle="tooltip" data-placement="top"
+														title="" />
+												</div>
+
+													<label class="control-label col-md-1"
+														translate="vnm.FormDestroyTransaction.search.lstStaff">
+													</label>
+												<div class="col-md-1">
+													<input type="text" class="form-control" ng-model="model.staffCode" id="fStaffCode" data-toggle="tooltip" data-placement="top" title=""
+														ng-blur="checkF9Staff()" style="text-transform: uppercase;"/>
+												</div>
+												<div class="col-md-3">
+													<input type="text" class="form-control" ng-model="model.staffName" id="fStaffName" ng-disabled="true" data-toggle="tooltip" data-placement="top"
+														title="" />
+												</div>
+													<button type="button" name="btnSearch"
+														style="width: 100px; height: 25px ; margin-top: 2px;margin-left: 3%;" class="btn btn-primary"
+														ng-click="btnSearchOnclick()"
+														ng-disabled="checkDisableBtnSearch">
+														<span class="glyphicon glyphicon-search"></span> <label
+															translate="vnm.common.btn.search"></label>
+													</button>
+												</div>
+
+
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormDestroyTransaction.search.fromDate"></label>
+													<div class="col-md-4">
+														<input ng-model="model.searchFromDate" id="fromDate"
+															name="searchFromDate" datetime-picker="" date-only=""
+															date-format="DD/MM/YYYY" class="form-control"
+															ng-disabled="" />
+													</div>
+													<label class="control-label col-md-1"
+														translate="vnm.FormDestroyTransaction.search.toDate"></label>
+													<div class="col-md-4">
+														<input ng-model="model.searchToDate" id="toDate"
+															name="searchToDate" datetime-picker="" date-only=""
+															date-format="DD/MM/YYYY" class="form-control"
+															ng-disabled="" />
+													</div>
+												</div>
+												<div class="form-group">
+
+													<label class="control-label col-md-1"
+														translate="vnm.FormLookupInvoiceHistory.invoice_no1"></label>
+													<div class="col-md-4">
+														<input ng-model="model.receiptNo" id="receiptNo"
+															name="receiptNo" class="form-control"
+															ng-disabled="" />
+													</div>
+
+													<div class="col-md-2" style="margin-left: 0.2%;"></div>
+
+
+												</div>
+
+
+
+
+											</fieldset>
+
+
+											<div class="form-group">
+												<fieldset class="fieldset-primary">
+													<legend class="lengend-primary">
+														<b translate="vnm.FormLookupInvoiceHistory.table.column.title"></b>
+													</legend>
+
+													<div class="form-group">
+														<div class="col-md-12">
+															<div class="table-scrollable">
+																<table id="resultSearchTableItems"
+																	class="table-bordered" style="width: 100%">
+																	<thead class="ng-table-sort-header">
+																		<tr>
+																			<th width="20%"
+																				translate="vnm.FormLookupInvoiceHistory.table.column.invoiceNo"></th>
+																			<th width="14%"
+																				translate="vnm.FormLookupInvoiceHistory.table.column.name"></th>
+																			<th width="14%"
+																				translate="vnm.FormLookupInvoiceHistory.table.column.company"></th>
+																			<th width="15%"
+																				translate="vnm.FormLookupInvoiceHistory.table.column.address"></th>
+																			<th width="15%"
+																				translate="vnm.FormLookupInvoiceHistory.table.column.tin"></th>
+																			<th width="14%"
+																				translate="vnm.FormLookupInvoiceHistory.table.column.status"></th>
+																			<th width="14%"
+																				translate="vnm.FormLookupInvoiceHistory.table.column.amount"></th>
+																		</tr>
+																	</thead>
+																</table>
+															</div>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+											<div class="form-group">
+												<fieldset class="fieldset-primary">
+													<legend class="lengend-primary">
+														<b translate="vnm.FormLookupInvoiceHistory.table.sub.title"></b>
+													</legend>
+													<div class="form-group">
+														<div class="col-md-12">
+															<table id="resultSubSearchTableItems"
+																class="table-bordered" style="width: 100%">
+																<thead class="ng-table-sort-header">
+																	<tr>
+																		<th width="10%"
+																			translate="vnm.FormLookupInvoiceHistory.table.sub.column.transId"></th>
+																		<th width="10%"
+																			translate="vnm.FormLookupInvoiceHistory.table.sub.column.good"></th>
+																		<th width="10%"
+																			translate="vnm.FormLookupInvoiceHistory.table.sub.column.quantity"></th>
+																		<th width="10%"
+																			translate="vnm.FormLookupInvoiceHistory.table.sub.column.cost"></th>
+																	
+																	</tr>
+																</thead>
+															</table>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						
+						<div class="modal fade" id="modalListShop" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 900px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="dialogListShopActionBack()">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListShop'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						
+							
+						<div class="modal fade" id="modalListStaff" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 900px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" ng-click="dialogListStaffActionBack()">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.staff"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListStaff'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,661 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/sales/FormReceiptExpenseFromShop.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-FormReceiptExpenseFromShop" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.FormReceiptExpenseFromShop.page.title"></b>
+						</legend>
+						<form name="frm_prepaid" class="form-horizontal  form-bordered"
+							method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b
+														translate="vnm.FormReceiptExpenseFromShop.fieldset.title.search"></b>
+												</legend>
+												<div class="form-group">
+													<!-- LOAI CHUNG TU -->
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptExpenseFromShop.label.receipt.type"></label>
+													<div class="col-md-3">
+														<ui-select ng-model="model.searchReceiptType" class=""
+															on-select="onSearchReceiptFn()"
+															ng-init="model.searchReceiptType = lstReceiveSource[0].code">
+														<ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices style="width: 100%;"
+															repeat="x.code as x in lstReceiveSource | filter:$select.search | limitTo: limitCbb">
+
+														<span ng-bind-html="x.code | highlight: $select.search"></span>-
+														<span ng-bind-html="x.name | highlight: $select.search"></span>
+														</ui-select-choices> </ui-select>
+													</div>
+
+													<!-- SO CHUNG TU -->
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptExpenseFromShop.label.receipt.number">
+													</label>
+													<div class="col-md-3">
+														<input type="text" class="form-control"
+															ng-model="model.searchReceiptCode"
+															name="SearchReceiptCode" />
+													</div>
+
+													<!-- Trang thai -->
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptExpenseFromShop.label.status"></label>
+													<div class="col-md-3">
+														<ui-select ng-model="model.searchStatus" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x.code as x in ListStatusSource | filter:$select.search">
+														<span ng-bind-html="x.code | highlight: $select.search"></span>-
+														<span ng-bind-html="x.name | highlight: $select.search"></span></ui-select-choices>
+														</ui-select>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<!-- Cua hang -->
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptExpenseFromShop.label.shop"></label>
+													<!-- <div class="col-md-1">
+														<ui-select ng-model="model.searchShop" class="">
+														<ui-select-match>{{$select.selected.shopCode}}</ui-select-match>
+														<ui-select-choices style="width: 100%;"
+															repeat="x in ShopSource | filter:$select.search | limitTo: limitCbb">
+														<span
+															ng-bind-html="x.shopName | highlight: $select.search"></span>
+														</ui-select-choices> </ui-select>
+													</div>
+
+													<div class="col-md-2">
+
+														<input ng-model="model.searchShop.shopName"
+															id="searchShopName" name="searchShopName"
+															class="form-control" ng-disabled="true" />
+													</div> -->
+
+													<div class="col-md-1">
+														<input type="text" class="form-control"
+															ng-model="model.searchShopCode" id="fSearchShopCode"
+															data-toggle="tooltip" data-placement="top" title=""
+															ng-blur="onblurSearchShopCode()" />
+													</div>
+													<div class="col-md-2">
+														<input type="text" class="form-control" ng-disabled="true"
+															tabindex="1" ng-model="model.searchShopName"
+															id="fSearchShopName" data-toggle="tooltip"
+															data-placement="top" title="" />
+													</div>
+
+													<!-- Nhan vien -->
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptExpenseFromShop.label.staff"></label>
+													<!-- <div class="col-md-1">
+														<ui-select ng-model="model.searchStaff" class="">
+														<ui-select-match>{{$select.selected.code}}</ui-select-match>
+														<ui-select-choices style="width: 100%;"
+															repeat="x in StaffSource | filter:$select.search | limitTo: limitCbb">
+														<span ng-bind-html="x.name | highlight: $select.search"></span>
+														</ui-select-choices> </ui-select>
+													</div>
+													<div class="col-md-2">
+
+														<input ng-model="model.searchStaff.name"
+															id="searchStaffName" name="SearchStaffName"
+															class="form-control" ng-disabled="true" />
+													</div> -->
+
+													<div class="col-md-1">
+														<input type="text" class="form-control" tabindex="3"
+															ng-model="model.searchStaffCode" id="fSearchStaffCode"
+															data-toggle="tooltip" data-placement="top" title=""
+															ng-blur="onblurSearchStaffCode()" />
+													</div>
+													<div class="col-md-2">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.searchStaffName" id="fSearchStaffName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+
+													<!-- HTTT -->
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptExpenseFromShop.label.payment.type"></label>
+													<div class="col-md-3" tabindex="2">
+
+														<ui-select ng-model="model.searchPaymentType" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x.code as x in ListPaymentSource | filter:$select.search">
+
+														<span ng-bind-html="x.code | highlight: $select.search"></span>-
+														<span ng-bind-html="x.name | highlight: $select.search"></span>
+														</ui-select-choices> </ui-select>
+													</div>
+
+													<!-- TKHT -->
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptExpenseFromShop.label.tkht"></label>
+													<div class="col-md-3">
+														<ui-select ng-model="model.searchTkhtType" class=""
+															ng-disabled="disablePanelDetail"> <ui-select-match>{{$select.selected.accountName}}</ui-select-match>
+														<ui-select-choices style="width: auto;"
+															repeat="x.accountCode as x in lstAccountType | filter:$select.search | limitTo: limitCbb">
+														<span
+															ng-bind-html="x.accountCode | highlight: $select.search"></span>-
+														<span
+															ng-bind-html="x.accountName | highlight: $select.search"></span>
+														</ui-select-choices> </ui-select>
+													</div>
+
+													<!-- LY DO -->
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptExpenseFromShop.label.reason"></label>
+													<div class="col-md-1">
+														<ui-select ng-model="model.searchReason" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x as x in ListReasonSource | filter:$select.search">
+														<span ng-bind-html="x.code | highlight: $select.search"></span>-
+														<span ng-bind-html="x.name | highlight: $select.search"></span>
+														</ui-select-choices> </ui-select>
+													</div>
+
+													<div class="col-md-2">
+
+														<input ng-model="model.searchReason.name"
+															id="searchReasonName" name="searchReasonName"
+															class="form-control" ng-disabled="true" />
+													</div>
+												</div>
+												<div class="form-group">
+													<!-- NGAY BAT DAU -->
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptExpenseFromShop.label.start.date">
+													</label>
+													<div class="col-md-3">
+														<input ng-model="model.searchStartDate"
+															id="searchFromDate" name="SearchStartDate"
+															datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+															class="form-control" ng-disabled="" />
+													</div>
+
+
+													<!-- NGAY KET THUC -->
+													<label class="control-label col-md-1"
+														translate="vnm.FormReceiptExpenseFromShop.label.end.date">
+													</label>
+													<div class="col-md-3">
+
+														<input ng-model="model.searchEndDate" id="searchEndDate"
+															name="SearchEndDate" datetime-picker="" date-only=""
+															date-format="DD/MM/YYYY" class="form-control"
+															ng-disabled="" />
+
+													</div>
+												</div>
+
+												<div class="form-group" style="padding-top: 10px">
+													<div class="col-md-12" style="text-align: center;"
+														id="pnlBtnSearch">
+														<button type="button" name="btnSearch"
+															class="btn btn-primary " ng-click="searchListReceiptFn()">
+															<i class="glyphicon glyphicon-search"></i> <label
+																translate="vnm.common.btn.search"></label>
+														</button>
+													</div>
+												</div>
+											</fieldset>
+
+											<div class="form-group">
+												<div class="col-md-6 md-height-500">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.FormReceiptExpenseFromShop.fieldset.title.list.receipt"></b>
+
+														</legend>
+														<div class="form-group">
+															<div class="col-md-12" style="height: 450px">
+																<table id="tableListReceipt" class="table-bordered"
+																	style="min-width: 700px; width: 100%">
+																	<thead class="ng-table-sort-header">
+																		<tr>
+																			<th width="30%"
+																				translate="vnm.common_table_sale.column.receipt.no"></th>
+																			<th width="15%"
+																				translate="vnm.common_table_sale.column.receipt.type"></th>
+																			<th width="20%"
+																				translate="vnm.common_table_sale.column.staff"></th>
+																			<th width="15%"
+																				translate="vnm.common_table_sale.column.create.date"></th>
+																			<th width="20%"
+																				translate="vnm.common_table_sale.column.status"></th>
+																			<th width="5%" style="text-align: center;"><input
+																				type="checkbox" id="checkAll"
+																				ng-model="model.checkAll" value="" /></th>
+																		</tr>
+																	</thead>
+																</table>
+															</div>
+														</div>
+
+														<!-- BUTTON DUYEN CHUNG TU, HUY CHUNG TU -->
+														<div class="form-group" style="text-align: center;">
+															<button type="button" name="btnApproveReceipt"
+																class="btn btn-primary "
+																ng-disabled="!isDisApproveButton()"
+																ng-click="btnApproveReceiptClick()">
+																<i class="fa fa-plus-circle"></i> <label
+																	translate="vnm.FormReceiptExpenseFromShop.label.btn.approve.receipt"></label>
+															</button>
+
+															<button type="button" name="btnDestroyReceipt"
+																class="btn btn-primary "
+																ng-disabled="!isDisApproveButton()"
+																ng-click="btnDestroyReceiptClick()">
+																<i class="fa fa-plus-circle"></i> <label
+																	translate="vnm.FormReceiptExpenseFromShop.label.btn.destroy.receipt"></label>
+															</button>
+														</div>
+													</fieldset>
+
+
+
+												</div>
+												<div class="col-md-6 md-height-500"
+													style="padding-left: 2px;">
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b
+																translate="vnm.FormReceiptExpenseFromShop.fieldset.title.receipt.detail"></b>
+														</legend>
+														<div class="form-group">
+															<!-- LOAI CHUNG TU -->
+															<label class="control-label col-md-2"
+																translate="vnm.FormReceiptExpenseFromShop.label.receipt.type"></label>
+															<div class="col-md-4">
+
+																<ui-select ng-model="model.detailReceiptType" class=""
+																	ng-disabled="true"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices style="width: 100%;"
+																	repeat="x.code as x in lstReceiveSource | filter:$select.search | limitTo: limitCbb">
+
+																<span ng-bind-html="x.name | highlight: $select.search"></span>
+																</ui-select-choices> </ui-select>
+															</div>
+
+															<!-- Trang thai -->
+															<label class="control-label col-md-2"
+																translate="vnm.FormReceiptExpenseFromShop.label.status"></label>
+															<div class="col-md-4">
+																<ui-select ng-model="model.detailStatus" class=""
+																	ng-disabled="true" style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x.code as x in ListStatusSource | filter:$select.search">
+																{{x.name}} </ui-select-choices> </ui-select>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<!-- SO PHIEU THU -->
+															<label class="control-label col-md-2">{{labelReceiptNo}}</label>
+															<div class="col-md-4">
+																<input type="text" class="form-control"
+																	ng-disabled="true" ng-model="model.detailReceiptCode"
+																	name="DetailReceiptCode" />
+															</div>
+
+															<!-- NGAY LAP -->
+															<label class="control-label col-md-2"
+																translate="vnm.FormReceiptExpenseFromShop.label.create.date"></label>
+															<div class="col-md-4">
+																<input type="text" class="form-control"
+																	ng-disabled="true" ng-model="model.detailDateCreate"
+																	id="DetailDateCreate" name="DetailDateCreate" />
+															</div>
+														</div>
+
+														<div class="form-group">
+															<!-- DON VI THU -->
+															<label class="control-label col-md-2">{{labelUnitReceipt}}</label>
+
+															<div class="col-md-3">
+																<input type="text" class="form-control"
+																	ng-disabled="true"
+																	ng-model="model.detailReceiptUnitCode"
+																	name="DetailDateCreate" />
+															</div>
+															<div class="col-md-7">
+																<input type="text" class="form-control"
+																	ng-disabled="true"
+																	ng-model="model.detailReceiptUnitName"
+																	name="DetailDateCreate" />
+															</div>
+														</div>
+
+														<div class="form-group">
+															<!-- NGUOI THU TIEN, NGUOI CHI TIEN -->
+															<label class="control-label col-md-2">{{labelReceipterMoney}}</label>
+
+															<div class="col-md-3">
+																<input type="text" class="form-control"
+																	ng-disabled="true" ng-model="model.detailReceipterCode"
+																	name="DetailReceipterCode" />
+															</div>
+
+															<div class="col-md-7">
+																<input type="text" class="form-control"
+																	ng-disabled="true" ng-model="model.detailReceipterName"
+																	name="DetailReceipterName" />
+															</div>
+														</div>
+
+														<div class="form-group">
+															<!-- LY DO THU -->
+															<label class="control-label col-md-2">{{labelReceipterReason}}</label>
+															<div class="col-md-3" ng-show="!isDisCreate">
+																<ui-select ng-model="model.detailReceiptReason" class=""
+																	on-select="onSelectReasonReceipt()"
+																	style="width: 100%;"> <ui-select-match>{{$select.selected.code}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x in ListReasonSourceDetail | filter:$select.search">
+																{{x.name}} </ui-select-choices> </ui-select>
+															</div>
+
+															<div class="col-md-3" ng-show="isDisCreate">
+																<input type="text" class="form-control"
+																	ng-disabled="true" ng-model="model.detailReceiptReason" />
+															</div>
+
+															<div class="col-md-7">
+																<input type="text" class="form-control"
+																	ng-disabled="true"
+																	ng-model="model.detailReceiptReasonName" />
+															</div>
+														</div>
+
+														<div class="form-group">
+															<!-- NGUOI NOP -->
+															<label class="control-label col-md-2">{{labelPayer}}</label>
+
+															<div class="col-md-10">
+																<input type="text" class="form-control"
+																	ng-disabled="isDisCreate" ng-model="model.detailPayer"
+																	name="DetailPayer" />
+															</div>
+														</div>
+
+														<div class="form-group">
+															<!-- DIA CHI -->
+															<label class="control-label col-md-2"
+																translate="vnm.FormReceiptExpenseFromShop.label.address"></label>
+
+															<div class="col-md-10">
+																<input type="text" class="form-control"
+																	ng-disabled="isDisUpdate"
+																	ng-model="model.detailAddress" name="DetailAddress" />
+															</div>
+														</div>
+
+														<div class="form-group">
+															<!-- HTTT -->
+															<label class="control-label col-md-2"
+																translate="vnm.FormReceiptExpenseFromShop.label.payment.type"></label>
+
+															<div class="col-md-4">
+
+																<ui-select ng-model="model.detailPaymentType" class=""
+																	ng-disabled="isDisCreate" style="width: 100%;">
+																<ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x.code as x in ListPaymentSource | filter:$select.search">
+																{{x.name}} </ui-select-choices> </ui-select>
+															</div>
+
+															<!-- TY GIA -->
+															<label class="control-label col-md-2"
+																translate="vnm.FormReceiptExpenseFromShop.label.exchange.rate"></label>
+
+															<div class="col-md-4">
+																<input type="text" class="form-control"
+																	ng-disabled="true" ng-model="model.detailExchangeRate"
+																	name="DetailExchangeRate" />
+
+															</div>
+														</div>
+
+														<div class="form-group">
+															<!-- TIEN NGUYEN TE -->
+															<label class="control-label col-md-2"
+																translate="vnm.FormReceiptExpenseFromShop.label.currency.money"></label>
+
+															<div class="col-md-4">
+
+																<input type="text" class="form-control"
+																	ng-disabled="isDisCreate" numbers-only=""
+																	ng-blur="setDataTotalMoney()"
+																	ng-model="model.detailCurrencyMoney"
+																	name="DetailCurrencyMoney" />
+															</div>
+
+															<!-- TONG TIEN -->
+															<label class="control-label col-md-2"
+																translate="vnm.FormReceiptExpenseFromShop.label.total.money"></label>
+
+															<div class="col-md-4">
+																<input type="text" class="form-control"
+																	ng-disabled="true" ng-model="model.detailTotalMney"
+																	name="DetailTotalMney" />
+															</div>
+														</div>
+
+														<div class="form-group">
+															<!-- TAI KHOAN HACH TOAN -->
+															<label class="control-label col-md-2"
+																translate="vnm.FormReceiptExpenseFromShop.label.account"></label>
+															<div class="col-md-10">
+																<ui-select ng-model="model.detailAccount" class=""
+																	ng-disabled="true"> <ui-select-match>{{$select.selected.accountName}}</ui-select-match>
+																<ui-select-choices style="width: auto;"
+																	repeat="x.accountCode as x in lstAccountType | filter:$select.search | limitTo: limitCbb">
+																<span
+																	ng-bind-html="x.accountName | highlight: $select.search"></span>
+																</ui-select-choices> </ui-select>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<!-- GHI CHU -->
+															<label class="control-label col-md-2"
+																translate="vnm.FormReceiptExpenseFromShop.label.comments"></label>
+
+															<div class="col-md-10">
+																<input type="text" class="form-control"
+																	ng-disabled="isDisUpdate"
+																	ng-model="model.detailComments" name="DetailComments" />
+															</div>
+
+														</div>
+
+														<div class="form-group" style="padding-top: 10px">
+															<div class="col-md-12" style="text-align: center;"
+																id="pnlButtonAction" ng-show="isShowPnlButtonAction">
+																<button type="button" name="btnCreateReceipt"
+																	ng-disabled="isDisabledBtnCreateReceipt"
+																	class="btn btn-primary "
+																	ng-click="createReasonPopupFn()">
+																	<i class="fa fa-plus-circle"></i> <label
+																		translate="vnm.FormReceiptExpenseFromShop.label.btn.create.new.receipt"></label>
+																</button>
+																<button type="button" name="btnUpdateReceipt"
+																	ng-disabled="isDisabledBtnUpdateReceipt"
+																	class="btn btn-primary " ng-click="onClickUpdateBtn()">
+																	<i class="fa fa-edit"></i> <label
+																		translate="vnm.FormReceiptExpenseFromShop.label.btn.update.receipt"></label>
+																</button>
+
+																<button type="button" name="btnPrint"
+																	ng-disabled="isDisabledBtnPrint"
+																	class="btn btn-primary " ng-click="printReceiptFn()">
+																	<i class="fa fa-print"></i> <label
+																		translate="vnm.FormReceiptExpenseFromShop.label.btn.print.receipt"></label>
+																</button>
+															</div>
+
+															<div class="col-md-12" style="text-align: center;"
+																id="pnlButtonAcceptUpdate"
+																ng-show="isShowPnlButtonAcceptUpdate">
+																<button type="button" name="btnAcceptUpdate"
+																	class="btn btn-primary"
+																	ng-click="updateReceiptInfoDB()">
+																	<i class="fa fa-thumbs-o-up"></i> <label
+																		translate="vnm.common.btn.approve"></label>
+																</button>
+																<button type="button" name="btnCancelUpdate"
+																	class="btn btn-primary btn-primary-70"
+																	ng-click="btnCancelUpdateOnclick()">
+																	<i class="fa fa-long-arrow-left"></i> <label
+																		translate="vnm.common.btn.cancel"></label>
+																</button>
+															</div>
+
+															<div class="col-md-12" style="text-align: center;"
+																id="pnlButtonAcceptCreate"
+																ng-show="isShowPnlButtonAcceptCreate">
+																<button type="button" name="btnAcceptUpdate"
+																	class="btn btn-primary"
+																	ng-click="acceptCreateReceipt()">
+																	<i class="fa fa-thumbs-o-up"></i> <label
+																		translate="vnm.common.btn.approve"></label>
+																</button>
+																<button type="button" name="btnCancelUpdate"
+																	class="btn btn-primary btn-primary-70"
+																	ng-click="cancelCreateReceipt()">
+																	<i class="fa fa-long-arrow-left"></i> <label
+																		translate="vnm.common.btn.cancel"></label>
+																</button>
+															</div>
+
+														</div>
+													</fieldset>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalReasonReceiptNew" role="dialog"
+								data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 200px; width: 400px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title"
+												translate="vnm.FormReceiptExpenseFromShop.popup.title.reason"></h4>
+										</div>
+										<div class="modal-body">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b
+														translate="vnm.FormReceiptExpenseFromShop.fieldset.title.popup.reason"></b>
+												</legend>
+
+												<div class="form-group">
+													<!-- POPUP LOAI CHUNG TU -->
+													<label class="control-label col-md-3"
+														translate="vnm.FormReceiptExpenseFromShop.label.receipt.type"></label>
+													<div class="col-md-8">
+														<ui-select ng-model="model.popupReceiptType" class=""
+															on-select="onSelectReceiptyPopupFn()"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices style="width: 100%;"
+															repeat="x.code as x in lstReceiveSource | filter:$select.search | limitTo: limitCbb">
+														<span ng-bind-html="x.name | highlight: $select.search"></span>
+														</ui-select-choices> </ui-select>
+													</div>
+												</div>
+
+
+												<div class="form-group">
+													<!-- POPUP  TKHT -->
+													<label class="control-label col-md-3"
+														translate="vnm.FormReceiptExpenseFromShop.label.tkht"></label>
+													<div class="col-md-8">
+														<ui-select ng-model="model.popupTkhtType" class="">
+														<ui-select-match>{{$select.selected.accountCode}}
+														- {{$select.selected.accountName}}</ui-select-match> <ui-select-choices
+															style="width: auto;"
+															repeat="x.accountCode as x in lstAccountType | filter:$select.search | limitTo: limitCbb">
+														<span
+															ng-bind-html="x.accountCode | highlight: $select.search"></span>-
+														<span
+															ng-bind-html="x.accountName | highlight: $select.search"></span>
+														</ui-select-choices> </ui-select>
+													</div>
+												</div>
+												<div class="form-group" style="padding-top: 10px">
+													<div class="col-md-12" style="text-align: center;"
+														id="pnlBtnSearch">
+
+														<button type="button" class="btn btn-primary "
+															ng-click="onClickGetReason()">
+															<i class="fa fa-edit"></i> <label
+																translate="vnm.FormReceiptExpenseFromShop.label.btn.get.reason"></label>
+														</button>
+
+														<button type="button" name="btnSearch"
+															class="btn btn-primary " ng-click="exitPopupReason()">
+															<i></i> <label translate="vnm.common.btn.exit"></label>
+														</button>
+
+													</div>
+												</div>
+
+											</fieldset>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal fade" id="modalListShop" role="dialog"
+								data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close"
+												ng-click="dialogListShopActionBack()"></button>
+											<h4 class="modal-title"
+												translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListShop'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

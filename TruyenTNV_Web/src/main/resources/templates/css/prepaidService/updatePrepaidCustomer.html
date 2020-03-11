@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Cập nhật thông tin khách hàng</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/prepaidService/updatePrepaidCustomer.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-prepaidSV" id="contentMain" class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.update_cus_info.page.title"></span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_prepaid" class="form-horizontal  form-bordered"
+						method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<ul class="nav nav-tabs ">
+									<li class="active"><a href="#tab_5_1" data-toggle="tab"
+										aria-expanded="false"
+										translate="vnm.update_cus_info.tab.title"></a></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.update_cus_info.label.msisdn"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.searchMdn" name="searchMdn"
+													my-enter="enterFunctionSearch(this)" />
+											</div>
+											<div class="col-md-25" style="text-align: right;">
+												<button type="button" class="btn btn-primary"
+													ng-click="searchInformationSubscriber()">
+													<i class="fa fa-search"></i> <label
+														translate="vnm.update_cus_info.label.btn.search"></label>
+												</button>
+											</div>
+										</div>
+
+										<div ng-show="isShowSubscriberInfor">
+											<h3 class="form-section" style="margin-top: 40px;"
+												translate="vnm.update_cus_info.label.cus.info"></h3>
+											<div class="form-group">
+												<label class="control-label col-md-15"
+													translate="vnm.update_cus_info.label.msisdn.type"></label>
+												<div class="col-md-25">
+													<input type="text" class="form-control" ng-disabled="true"
+														ng-model="model.msisdnType" name="msisdnType" />
+												</div>
+
+												<label class="control-label col-md-15"
+													translate="vnm.update_cus_info.label.msisdn.status"></label>
+												<div class="col-md-25">
+													<input type="text" class="form-control" ng-disabled="true"
+														ng-model="model.statusMsisdn" name="statusMsisdn" />
+												</div>
+												<label class="control-label col-md-15"
+													translate="vnm.update_cus_info.label.idcard"></label>
+												<div class="col-md-25">
+													<input type="text" class="form-control" ng-disabled="true"
+														ng-model="model.cardIdInfo" name="cardId" />
+												</div>
+											</div>
+										</div>
+
+										<div ng-show="isShowVerifySubscriber">
+											<h3 class="form-section" style="margin-top: 40px;"
+												translate="vnm.update_cus_info.label.title.verify.msisdn"></h3>
+											<div class="form-group">
+												<table class="table" id="tableVerifySubscriber">
+													<thead>
+														<tr>
+															<th translate="vnm.update_cus_info.label.stt"></th>
+															<th translate="vnm.update_cus_info.label.msisdn"></th>
+															<th ng-show="msisdnShowExpand"
+																translate="vnm.update_cus_info.label.stt"></th>
+															<th ng-show="msisdnShowExpand"
+																translate="vnm.update_cus_info.label.msisdn"></th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>1</td>
+															<td>
+																<!-- 															<input type="text" class="form-control" -->
+																<!-- 																ng-blur="outFocusFunction($event)" style="width: 200px;" -->
+																<!-- 																ng-model="model.msisdnCheckOne" name="msisdnCheckOne" /> -->
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckOne" name="msisdnCheckOne" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+
+															<td ng-show="msisdnShowExpand">6</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckSix" name="msisdnCheckSix" />
+																	</div>
+																</div>
+																<div></div>
+															</td>
+														</tr>
+														<tr>
+															<td>2</td>
+															<td>
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckTwo" name="msisdnCheckTwo" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+															<td ng-show="msisdnShowExpand">7</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckSeven"
+																			name="msisdnCheckSeven" />
+																	</div>
+																</div>
+																<div></div>
+															</td>
+														</tr>
+														<tr>
+															<td>3</td>
+															<td>
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckThree"
+																			name="msisdnCheckThree" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+															<td ng-show="msisdnShowExpand">8</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckEight"
+																			name="msisdnCheckEight" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+														</tr>
+														<tr>
+															<td ng-show="msisdnShowExpand">4</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckFour"
+																			name="msisdnCheckFour" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+															<td ng-show="msisdnShowExpand">9</td>
+															<td ng-show="msisdnShowExpand">
+
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckNine"
+																			name="msisdnCheckNine" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+														</tr>
+														<tr>
+															<td ng-show="msisdnShowExpand">5</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckFive"
+																			name="msisdnCheckFive" />
+																	</div>
+																</div>
+
+
+																<div></div>
+															</td>
+															<td ng-show="msisdnShowExpand">10</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckTen" name="msisdnCheckTen" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+														</tr>
+
+													</tbody>
+												</table>
+											</div>
+
+											<div class="form-actions">
+												<div class="col-md-3"></div>
+												<div class="col-md-3" style="text-align: right;">
+													<button type="button" class="btn btn-primary"
+														ng-click="verifyUpdateCustomerInfo()">
+														<i class="fa fa-save"></i> <label
+															translate="vnm.update_cus_info.label.btn.verify"></label>
+													</button>
+												</div>
+
+												<div class="col-md-3" style="text-align: right:;">
+													<button type="button" class="btn btn-primary"
+														ng-click="clearNumberVerifySubscriber()">
+														<i class="glyphicon glyphicon-plus"></i> <label
+															translate="vnm.update_cus_info.label.btn.create.new"></label>
+													</button>
+												</div>
+												<div class="col-md-3"></div>
+											</div>
+										</div>
+
+										<div ng-if="isShowUpdateCusInfo">
+											<div ng-include="'/popup/bs/updateCustomerPanel'"></div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<img src="" class="imagepreviewZoom" style="width: 100%;" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

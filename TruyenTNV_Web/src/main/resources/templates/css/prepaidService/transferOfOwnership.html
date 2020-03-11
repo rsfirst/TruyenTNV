@@ -1,0 +1,505 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Chuyển chủ quyền</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/css/prepaidService/transferOfOwnership.js"
+			type="text/javascript"></script>
+		<div ng-controller="ctrl-transferOfOwnerShip" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-plus font-orange"></i> <span
+							class="caption-subject font-orange bold uppercase"
+							translate="vnm.form_ownership.label.page.title"></span>
+					</div>
+				</div>
+				<div class="portlet-body form">
+					<form name="frm_prepaid" class="form-horizontal  form-bordered"
+						method="post" ng-validate="validationOptions">
+						<div class="form-body">
+							<div class="tabbable-custom ">
+								<ul class="nav nav-tabs ">
+									<li class="active"><a href="#tab_5_1" data-toggle="tab"
+										aria-expanded="false"
+										translate="vnm.form_ownership.label.active.tab.header"></a></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_5_1">
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.form_ownership.label.msisdn.number"></label>
+											<div class="col-md-25">
+												<input type="text" class="form-control"
+													ng-model="model.searchMdn" name="searchMdn"
+													my-enter="enterFunctionSearch(this)" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.form_ownership.label.status.request"></label>
+											<div class="col-md-25">
+												<ui-select ng-model="model.statusRequest" class=""
+													style="width: 100%;"> <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+												<ui-select-choices
+													repeat="x.Id as x in RequestStatusSource | filter:$select.search">
+												{{x.Title}} </ui-select-choices> </ui-select>
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-15"
+												translate="vnm.form_ownership.label.from.date"></label>
+											<div class="col-md-25">
+												<input ng-model="model.startDate" id="idStartDate"
+													datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" />
+											</div>
+
+											<label class="control-label col-md-15"
+												translate="vnm.form_ownership.label.to.date"></label>
+											<div class="col-md-25">
+												<input ng-model="model.endDate" id="idEndDate"
+													datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+													class="form-control" />
+											</div>
+
+										</div>
+
+										<div class="form-group">
+											<div class="col-md-15"></div>
+											<div class="col-md-25"></div>
+											<div class="col-md-15"></div>
+											<div class="col-md-25">
+												<button type="button" class="btn btn-primary"
+													ng-click="searchInformationSubscriber()">
+													<i class="fa fa-search"></i> <label
+														translate="vnm.form_ownership.label.btn.search"></label>
+												</button>
+											</div>
+										</div>
+
+										<div ng-show="isShowSubscriberInfor">
+											<h3 class="form-section" style="margin-top: 40px;"
+												translate="vnm.form_ownership.label.tab.title"></h3>
+											<div class="form-group">
+												<label class="control-label col-md-15"
+													translate="vnm.form_ownership.label.number.type"> </label>
+												<div class="col-md-25">
+													<input type="text" class="form-control" ng-disabled="true"
+														ng-model="model.msisdnType" name="msisdnType" />
+												</div>
+
+												<label class="control-label col-md-15"
+													translate="vnm.form_ownership.label.status.number"></label>
+												<div class="col-md-25">
+													<input type="text" class="form-control" ng-disabled="true"
+														ng-model="model.statusMsisdn" name="statusMsisdn" />
+												</div>
+												<label class="control-label col-md-15"
+													translate="vnm.form_ownership.label.number.doc.issue"></label>
+												<div class="col-md-25">
+													<input type="text" class="form-control" ng-disabled="true"
+														ng-model="model.cardIdInfo" name="cardId" />
+												</div>
+											</div>
+										</div>
+
+										<div class="col-md-12"
+											style="margin-top: 30px; margin-bottom: 30px;">
+											<div class="table-scrollable">
+												<table ng-table="tableParams"
+													class="table table-striped table-bordered"
+													show-filter="false">
+													<tr ng-repeat="item in $data" ng-click="getInfo(item)"
+														ng-class="{true:'active', false:''}[item.requestId == rowHighlightRequestService.requestId]">
+														<td title="'Mã yêu cầu'" sortable="'requestId'"
+															ng-click="getRowHighLight(item)">{{item.requestId}}</td>
+
+														<td title="'MSISDN'" sortable="'msisdn'"
+															ng-click="getRowHighLight(item)">{{item.msisdn}}</td>
+
+														<td title="'Trạng Thái'" sortable="'status'"
+															ng-click="getRowHighLight(item)">{{item.status ===
+															"0" ? "Tạo mới" : item.status === "1" ? "Từ chối" :
+															item.status === "2" ? "Đã thực hiện" : item.status ===
+															"3" ? "Hủy" : item.status === "4" ? "Đã cộng hoa hồng":
+															"Đã review" }}</td>
+
+														<!-- 	<td title="'Sim cũ'" sortable="'oldSimNumber'" ng-click ="getRowHighLight(item)">{{item.oldSimNumber}}</td>
+
+														<td title="'Sim mới'" sortable="'newSimNumber'" ng-click ="getRowHighLight(item)">{{item.newSimNumber}}</td> -->
+
+														<td title="'Loại số'" sortable="'type'"
+															ng-click="getRowHighLight(item)">{{item.type ===
+															"CHPRE" ? "Trả trước" : "Trả sau"}}</td>
+
+														<td title="'Người thực hiện'" sortable="'executer'"
+															ng-click="getRowHighLight(item)">{{item.executer}}</td>
+
+														<td title="'Ngày thực hiện'" sortable="'executeDate'"
+															ng-click="getRowHighLight(item)">{{item.executeDate}}</td>
+
+														<td title="'Lý do thực hiện'" sortable="'cmt'"
+															ng-click="getRowHighLight(item)">{{item.cmt}}</td>
+
+														<td title="'Chi tiết'" align="center">
+															<button type="button" class="btn btn-info"
+																ng-disabled="{{item.isDisabledDetail}}"
+																ng-click="detailInformationTBLChangeService(item,$index)">
+																<span class="glyphicon glyphicon-info-sign"></span>
+															</button>
+														</td>
+													</tr>
+													<tr ng-if="$data.length == 0">
+														<td colspan="7">Không có dữ liệu</td>
+													</tr>
+													<tr>
+														<td colspan="11" align="right">
+															<h3 class="form-section">Số
+																lượng:{{tableParams.total()}}</h3>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+										<div ng-show="isShowTypeOfService">
+											<h3 class="form-section" style="margin-top: 40px;">Loại
+												dịch vụ</h3>
+											<div class="form-group">
+												<!-- 												<div class="col-md-6"> -->
+												<!-- 													<input type="radio" ng-model="model.typeOfService" -->
+												<!-- 														value="1" onchange="angular.element(this).scope().typeOfServiceChange(event)" /> Thay sim -->
+												<!-- 												</div> -->
+
+												<!-- 												<div class="col-md-6"> -->
+												<!-- 													<input type="radio" ng-model="model.typeOfService" -->
+												<!-- 														value="2" onchange="angular.element(this).scope().typeOfServiceChange(event)" /> Chuyển chủ -->
+												<!-- 													quyền -->
+												<!-- 												</div> -->
+
+												<!-- 												<div class="col-md-6"> -->
+												<!-- 													<input type="radio" ng-model="model.typeOfService" ng-checked="true" -->
+												<!-- 														value="3" onchange="angular.element(this).scope().typeOfServiceChange(event)"/> Cập nhật thông -->
+												<!-- 													tin cá nhân -->
+												<!-- 												</div> -->
+
+												<!-- 												<div class="col-md-6"> -->
+												<!-- 													<input type="radio" ng-model="model.typeOfService" -->
+												<!-- 														value="4" onchange="angular.element(this).scope().typeOfServiceChange(event)" /> Chặn 1 -->
+												<!-- 													chiều do mất máy -->
+												<!-- 												</div> -->
+
+												<!-- 												<div class="col-md-6"> -->
+												<!-- 													<input type="radio" ng-model="model.typeOfService" -->
+												<!-- 														value="5" onchange="angular.element(this).scope().typeOfServiceChange(event)" /> Nối lại -->
+												<!-- 													thông tin (mở lại mạng) -->
+												<!-- 												</div> -->
+
+												<!-- 												<div class="col-md-6"> -->
+												<!-- 													<input type="radio" ng-model="model.typeOfService" -->
+												<!-- 														value="6" onchange="angular.element(this).scope().typeOfServiceChange(event)" /> Chuyển -->
+												<!-- 													thuê bao sang trả sau -->
+												<!-- 												</div> -->
+
+
+												<!-- 												<div class="col-md-6"> -->
+												<!-- 													<input type="radio" ng-model="model.typeOfService" -->
+												<!-- 														value="7" onchange="angular.element(this).scope().typeOfServiceChange(event)" /> Thay đổi -->
+												<!-- 													dịch vụ VAS -->
+												<!-- 												</div> -->
+
+
+												<!-- 												<div class="col-md-6"> -->
+												<!-- 													<input type="radio" ng-model="model.typeOfService" -->
+												<!-- 														value="8" onchange="angular.element(this).scope().typeOfServiceChange(event)" /> Dịch vụ -->
+												<!-- 													khác -->
+												<!-- 												</div> -->
+
+												<!-- 												<div class="col-md-6"> -->
+												<!-- 													<input type="radio" ng-model="model.typeOfService" -->
+												<!-- 														value="21" onchange="angular.element(this).scope().typeOfServiceChange(event)" /> Thay đổi -->
+												<!-- 													số thuê bao -->
+												<!-- 												</div> -->
+											</div>
+
+										</div>
+										<div ng-if="isShowChangeSIM">
+											<div ng-include="'/popup/bs/prepaidChangeSIMPanel'"></div>
+										</div>
+
+										<div ng-show="isShowVerifySubscriber">
+											<h3 class="form-section" style="margin-top: 40px;"
+												translate="vnm.form_ownership.label.verify.title"></h3>
+											<div class="form-group">
+												<table class="table" id="tableVerifySubscriber">
+													<thead>
+														<tr>
+															<th><span
+																translate="vnm.form_ownership.panel.verify.stt"></span></th>
+															<th><span
+																translate="vnm.form_ownership.label.msisdn.number"></span>
+															</th>
+															<th ng-show="msisdnShowExpand"><span
+																translate="vnm.form_ownership.panel.verify.stt"></span>
+															</th>
+															<th ng-show="msisdnShowExpand"><span
+																translate="vnm.form_ownership.label.msisdn.number"></span></th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>1</td>
+															<td>
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckOne" name="msisdnCheckOne" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+
+															<td ng-show="msisdnShowExpand">6</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckSix" name="msisdnCheckSix" />
+																	</div>
+																</div>
+																<div></div>
+															</td>
+														</tr>
+														<tr>
+															<td>2</td>
+															<td>
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckTwo" name="msisdnCheckTwo" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+															<td ng-show="msisdnShowExpand">7</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckSeven"
+																			name="msisdnCheckSeven" />
+																	</div>
+																</div>
+																<div></div>
+															</td>
+														</tr>
+														<tr>
+															<td>3</td>
+															<td>
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckThree"
+																			name="msisdnCheckThree" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+															<td ng-show="msisdnShowExpand">8</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckEight"
+																			name="msisdnCheckEight" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+														</tr>
+														<tr>
+															<td ng-show="msisdnShowExpand">4</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckFour"
+																			name="msisdnCheckFour" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+															<td ng-show="msisdnShowExpand">9</td>
+															<td ng-show="msisdnShowExpand">
+
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckNine"
+																			name="msisdnCheckNine" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+														</tr>
+														<tr>
+															<td ng-show="msisdnShowExpand">5</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckFive"
+																			name="msisdnCheckFive" />
+																	</div>
+																</div>
+
+
+																<div></div>
+															</td>
+															<td ng-show="msisdnShowExpand">10</td>
+															<td ng-show="msisdnShowExpand">
+																<div class="form-group">
+																	<div class="col-md-5">
+																		<input type="text" class="form-control"
+																			ng-blur="outFocusFunction($event)"
+																			ng-model="model.msisdnCheckTen" name="msisdnCheckTen" />
+																	</div>
+																</div>
+
+																<div></div>
+															</td>
+														</tr>
+
+													</tbody>
+												</table>
+											</div>
+
+											<div ng-show="isShowSecondInfomation">
+												<h3 class="form-section" style="margin-top: 40px;">
+													<input type="checkbox" ng-model="model.checkBoxSecondInfo"
+														ng-click="onclickSecondCheckBox()" /><span
+														translate="vnm.form_ownership.label.second.infor"></span>
+												</h3>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.form_ownership.label.date.resgisted"></label>
+													<div class="col-md-3">
+														<input ng-model="model.formChangeSim_dateOfRegistration"
+															id="idDateOfRegistration"
+															ng-disabled="isDisDateOfRegistration"
+															name="ChangeSimDateOfRegistration" datetime-picker=""
+															date-only="" date-format="DD/MM/YYYY"
+															class="form-control" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.form_ownership.label.last.card"></label>
+													<div class="col-md-3">
+														<input type="text" class="form-control"
+															ng-disabled="isDisLastCardLoaded"
+															ng-model="model.formChangeSim_lastCardLoaded"
+															name="ChangeSimLastCardLoaded" />
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.form_ownership.label.account.main"></label>
+													<div class="col-md-3">
+														<input type="text" class="form-control"
+															ng-disabled="isDisMainAccount"
+															ng-model="model.formChangeSim_mainAccount"
+															name="ChangeSimMainAccount" />
+													</div>
+												</div>
+											</div>
+
+											<div class="form-actions" style="margin-top: 20px">
+												<div class="col-md-3"></div>
+												<div class="col-md-3" style="text-align: right;">
+													<button type="button" class="btn btn-primary"
+														ng-click="verifyIdChange()">
+														<i class="fa fa-save"></i><label
+															translate="vnm.form_ownership.label.btn.create.request"></label>
+													</button>
+												</div>
+												<div class="col-md-3"></div>
+											</div>
+
+										</div>
+
+										<div ng-if="isShowUpdateCusInfo">
+											<div ng-include="'/popup/bs/transferOfOwnershipPanel'"></div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="modalDetailChangeRequest"
+							role="dialog">
+							<div class="modal-dialog" style="min-width: 1100px">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4 class="modal-title"
+											translate="vnm.form_ownership.popup.header"></h4>
+									</div>
+									<div class="modal-body">
+										<div ng-if="isShowInformationDetail">
+											<div ng-include="'/popup/bs/detailTranferOfOwnerShipPanel'"></div>
+										</div>
+									</div>
+
+									<div class="modal-footer">
+										<button type="button" class="btn red" data-dismiss="modal">
+											<i class="glyphicon"></i> Close
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</form>
+
+				</div>
+			</div>
+			<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<img src="" class="imagepreviewZoom" style="width: 100%;" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

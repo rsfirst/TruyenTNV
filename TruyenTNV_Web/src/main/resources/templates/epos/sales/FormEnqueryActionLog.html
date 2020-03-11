@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/sales/FormEnqueryActionLog.js"
+			type="text/javascript"></script>
+		<div ng-controller="FormEnqueryActionLogController" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.formEnqueryActionLog.page.title"></b>
+						</legend>
+						<form name="frm_prepaid" class="form-horizontal  form-bordered"
+							method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+
+									<div class="tab-content">
+
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.formEnqueryActionLog.label.search.info"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.formEnqueryActionLog.label.shop"></label>
+													<div class="col-md-1">
+														<input  type="text" ng-change="onShopChange()" ng-blur="onShopBlur()" class="form-control" ng-model="model.shopCode" id="shopCode" data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+													<div class="col-md-2">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.shopName" id="shopName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+													<div class="col-md-1"></div>
+
+													<label class="control-label col-md-2"
+														translate="vnm.formEnqueryActionLog.label.staff"></label>
+													<div class="col-md-1">
+														<input ng-disabled = "model.staffDisable"  type="text"  ng-blur="onstaffBlur()"  class="form-control" ng-model="model.staffCode" id="staffCode" data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+
+													<div class="col-md-2">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.staffName" id="staffName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.formEnqueryActionLog.label.start.date"></label>
+													<div class="col-md-3">
+														<input ng-model="model.fromDate" id="fromDate"
+															ng-blur="onBlurCheckDate()" name="searchFromDate"
+															datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+															class="form-control" />
+													</div>
+
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-2"
+														translate="vnm.formEnqueryActionLog.label.end.date"></label>
+													<div class="col-md-3">
+														<input ng-model="model.toDate" id="toDate"
+															ng-blur="onBlurCheckDate()" name="searchFromDate"
+															datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+															class="form-control" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-2"
+														translate="vnm.formEnqueryActionLog.label.action.type"></label>
+
+													<div class="col-md-1">
+														<ui-select id="actionType" ng-model="model.actionType"
+															class="" data-toggle="tooltip" data-placement="top"
+															style="width: 100%;" ng-click="onChooseActionType()">
+														<ui-select-match>{{$select.selected.code}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listActionType | filter:$select.search| limitTo: limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+													<div class="col-md-2">
+														<input type="text" class="form-control" ng-disabled="true"
+															ng-model="model.actionName" id="actionName"
+															data-toggle="tooltip" data-placement="top" title="" />
+													</div>
+													<div class="col-md-1"><button style="width: 100px; float: right;display: none;" class="btn btn-primary">
+															<span class="glyphicon glyphicon-search"></span> <label
+																translate="vnm.ExportToDealer.label.btn.search"></label>
+														</button></div>
+													<div class="col-md-5">
+														<button style="width: 100px; float: right" class="btn btn-primary"
+															ng-click="onSearch()">
+															<span class="glyphicon glyphicon-search"></span> <label
+																translate="vnm.ExportToDealer.label.btn.search"></label>
+														</button>
+													</div>
+												</div>
+											</fieldset>
+
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.formEnqueryActionLog.label.search.result"></b>
+												</legend>
+
+												<div class="form-group">
+													<div class="col-md-12 md-height-500">
+														<table id="tableActionLogsForm" class="table-bordered"
+															style="width: 100%">
+															<thead class="ng-table-sort-header">
+																<tr>
+																	<th width="20%"
+																		translate="vnm.formEnqueryActionLog.table.column.action.type"></th>
+																	<th width="15%"
+																		translate="vnm.formEnqueryActionLog.table.column.date"></th>
+																	<th width="15%"
+																		translate="vnm.formEnqueryActionLog.table.column.staff"></th>
+																	<th width="15%"
+																		translate="vnm.formEnqueryActionLog.table.column.address"></th>
+																	<th width="15%"
+																		translate="vnm.formEnqueryActionLog.table.column.status"></th>
+																	<th width="20%"
+																		translate="vnm.formEnqueryActionLog.table.column.description"></th>
+																</tr>
+															</thead>
+														</table>
+													</div>
+												</div>
+											</fieldset>
+
+											<div class="form-group"
+												style="padding-top: 0px; padding-bottom: 20px;">
+												<div class="col-md-12" style="text-align: center;">
+													<button type="button" name="btnExportExcel"
+														style="width: 100px" class="btn btn-primary "
+														ng-click="btnExportExcelOnclick()"
+														ng-disabled="disableBtnExportExcel">
+														<label
+															translate="vnm.formEnqueryActionLog.btn.export.excel"></label>
+													</button>
+												</div>
+											</div>
+
+											<div class="modal fade" id="modalListShop" role="dialog"
+												data-keyboard="false" data-backdrop="static">
+												<div class="modal-dialog" style="min-width: 1100px">
+													<div class="modal-content">
+														<div class="modal-header">
+															<button type="button" class="close" data-dismiss="modal">&times;</button>
+															<h4 class="modal-title"
+																translate="vnm.common.label.list.shop"></h4>
+														</div>
+														<div class="modal-body">
+															<div ng-include="'/popup/dialogListShop'"></div>
+														</div>
+													</div>
+												</div>
+											</div>
+											
+											<div class="modal fade" id="modalListStaff" role="dialog"
+												data-keyboard="false" data-backdrop="static">
+												<div class="modal-dialog" style="min-width: 1100px">
+													<div class="modal-content">
+														<div class="modal-header">
+															<button type="button" class="close" data-dismiss="modal">&times;</button>
+															<h4 class="modal-title"
+																translate="vnm.common.label.list.staff"></h4>
+														</div>
+														<div class="modal-body">
+															<div ng-include="'/popup/dialogListStaff'"></div>
+														</div>
+													</div>
+												</div>
+											</div>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

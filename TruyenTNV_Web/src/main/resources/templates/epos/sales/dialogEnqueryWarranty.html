@@ -1,0 +1,172 @@
+<div>
+	<fieldset class="fieldset-primary">
+		<legend class="lengend-primary">
+			<b translate="vnm.FormWarTransaction.DialogEnqueryWarranty.button.search"></b>
+		</legend>
+		<div class="form-group" style="padding-right: 3px;">
+			<label class="control-label col-md-1" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.txtWarrantyNo"> </label>
+			<div class="col-md-3p6">
+				<input type="text" class="form-control" ng-model="model.dlgWarrantyNo" id="fDlgWarrantyNo" data-toggle="tooltip" data-placement="top" title="" />
+
+			</div>
+
+			<label class="control-label col-md-1" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.txtSerial"></label>
+			<div class="col-md-3p6">
+				<input type="text" class="form-control" ng-model="model.dlgSerial" id="fDlgSerial" data-toggle="tooltip" data-placement="top" title="" />
+			</div>
+			<div>
+				<button type="button" name="search" class="btn btn-primary btn-primary-100" ng-click="searchDialog()">
+					<i class="fa fa-search"></i> <label translate="vnm.common.btn.search"></label>
+				</button>
+			</div>
+		</div>
+	</fieldset>
+	<div class="form-group">
+		<div class="col-md-5">
+			<fieldset class="fieldset-primary-1">
+				<legend class="lengend-primary">
+					<b translate="vnm.FormExportToSuperior.fieldset.title.list.item"></b>
+				</legend>
+				<div class="form-group" style="padding-right: 3px;">
+					<div class="col-md-12 md-height-474" style="overflow: scroll;">
+						<table id="tableDlgListItem" class="table-bordered" style="min-width: 1000px">
+							<thead class="ng-table-sort-header">
+								<tr>
+									<th width="11%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.txtWarrantyNo"></th>
+									<th width="11%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.txtSerial"></th>
+									<th width="13%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.EffectDate"></th>
+									<th width="11%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.Status"></th>
+									<th width="11%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.Serial1"></th>
+									<th width="11%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.Serial2"></th>
+									<th width="11%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.Serial3"></th>
+									<th width="11%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.Serial4"></th>
+									<th width="10%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.Serial5"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+
+		<div class="col-md-7">
+			<fieldset class="fieldset-primary-1">
+				<legend class="lengend-primary">
+					<b translate="vnm.FormWarTransaction.DialogEnqueryWarranty.pnlGoodsDetail"></b>
+				</legend>
+
+				<div class="form-group" style="padding-right: 3px;">
+					<label class="control-label col-md-2" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.lovGoods"></label>
+					<div class="col-md-3">
+						<input type="text" class="form-control" ng-model="model.dlgGoodsCode" ng-disabled="dDlgGoodsCode" id="fDlgGoodsCode" data-toggle="tooltip"
+							data-placement="top" title="" />
+					</div>
+					<div class="col-md-7">
+						<input type="text" class="form-control" ng-model="model.dlgGoodsName" ng-disabled="dDlgGoodsName" id="fDlgGoodsName" data-toggle="tooltip"
+							data-placement="top" title="" />
+					</div>
+				</div>
+
+				<div class="form-group" style="padding-right: 3px;">
+					<label class="control-label col-md-2" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.cboUnit"></label>
+					<div class="col-md-4">
+						<ui-select ng-model="model.dlgUnit" class="" ng-disabled="disableDlgUnit"> <ui-select-match>{{$select.selected.name}}</ui-select-match> <ui-select-choices
+							repeat="x.code as x in lstDlgUnit | filter:$select.search | limitTo: limitCbb"> {{x.code}} - {{x.name}} </ui-select-choices> </ui-select>
+					</div>
+					<label class="control-label col-md-2" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.txtWarrantyTime"></label>
+					<div class="col-md-4">
+						<input placeholder="dd/MM/yyyy" id="fDlgWarrantyTime" ng-model="model.dlgWarrantyTime" maxlength="10" name="dlgWarrantyTime" datetime-picker=""
+							date-only="" date-format="DD/MM/YYYY" class="form-control" ng-disabled="dDlgWarrantyTime" />
+					</div>
+				</div>
+
+				<div class="form-group" style="padding-right: 3px;">
+					<label class="control-label col-md-2" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.txtSparePart"></label>
+					<div class="col-md-4">
+						<textarea name="Text1" class="form-control" rows="2" ng-model="model.dlgSparePart" id="fDlgSparePart" data-toggle="tooltip" data-placement="top" title=""
+							ng-disabled="dDlgSparePart"></textarea>
+					</div>
+					<label class="control-label col-md-2" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.txtWarrantyParameter"></label>
+					<div class="col-md-4">
+						<textarea name="Text1" class="form-control" rows="2" ng-model="model.dlgWarrantyParameter" id="fDlgWarrantyParameter" data-toggle="tooltip"
+							data-placement="top" title="" ng-disabled="dDlgWarrantyParameter"></textarea>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="fieldset-primary-1">
+				<legend class="lengend-primary">
+					<b translate="vnm.FormWarTransaction.DialogEnqueryWarranty.tblWarrantyHistory"></b>
+				</legend>
+				<div class="form-group" style="padding-right: 3px;">
+					<div class="col-md-12 md-height-170" style="overflow: scroll;">
+						<table id="tableDlgTblWarrantyHistory" class="table-bordered" style="min-width: 650px">
+							<thead class="ng-table-sort-header">
+								<tr>
+									<th width="17%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.ReceiptDate"></th>
+									<th width="17%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.Receipver"></th>
+									<th width="17%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.Customer"></th>
+									<th width="17%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.Level"></th>
+									<th width="17%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.AppointmentDate"></th>
+									<th width="15%" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.ReturnDate"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="fieldset-primary-1">
+				<legend class="lengend-primary">
+					<b translate="vnm.FormWarTransaction.DialogEnqueryWarranty.pnlWarHistoryDetail"></b>
+				</legend>
+
+				<div class="form-group" style="padding-right: 3px;">
+					<label class="control-label col-md-2" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.txtReceipt"></label>
+					<div class="col-md-10">
+						<textarea name="Text1" class="form-control" rows="2" ng-model="model.dlgReceipt" id="fDlgReceipt" data-toggle="tooltip" data-placement="top" title=""
+							ng-disabled="dDlgReceipt"></textarea>
+					</div>
+				</div>
+				<div class="form-group" style="padding-right: 3px;">
+					<label class="control-label col-md-2" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.lovProcessor"></label>
+					<div class="col-md-10p6">
+						<input type="text" class="form-control" ng-model="model.dlgLovProcessorCode" ng-disabled="dDlgLovProcessorCode" id="fDlgLovProcessorCode"
+							data-toggle="tooltip" data-placement="top" title="" />
+					</div>
+					<div class="col-md-22p6">
+						<input type="text" class="form-control" ng-model="model.dlgLovProcessorName" ng-disabled="dDlgLovProcessorName" id="fDlgLovProcessorName"
+							data-toggle="tooltip" data-placement="top" title="" />
+					</div>
+					<label class="control-label col-md-2" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.dtProcessDate"></label>
+					<div class="col-md-4">
+						<input placeholder="dd/MM/yyyy" id="fDlgProcessDate" ng-model="model.dlgProcessDate" maxlength="10" name="dlgProcessDate" datetime-picker="" date-only=""
+							date-format="DD/MM/YYYY" class="form-control" ng-disabled="dDlgProcessDate" />
+					</div>
+				</div>
+
+				<div class="form-group" style="padding-right: 3px;">
+					<label class="control-label col-md-2" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.txtResult"></label>
+					<div class="col-md-4">
+						<textarea name="Text1" class="form-control" rows="2" ng-model="model.dlgResult" id="fDlgResult" data-toggle="tooltip" data-placement="top" title=""
+							ng-disabled="dDlgResult"></textarea>
+					</div>
+					<label class="control-label col-md-2" translate="vnm.FormWarTransaction.DialogEnqueryWarranty.txtNote"></label>
+					<div class="col-md-4">
+						<textarea name="Text1" class="form-control" rows="2" ng-model="model.dlgNote" id="fDlgNote" data-toggle="tooltip" data-placement="top" title=""
+							ng-disabled="dDlgNote"></textarea>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div>
+			<div style="text-align: center;">
+				<button type="button" name="search" class="btn btn-primary btn-primary-100" ng-click="dlgAccept()">
+					<i class="fa fa-thumbs-o-up"></i> <label translate="vnm.FormWarTransaction.DialogEnqueryWarranty.btnAccept"></label>
+				</button>
+				<button type="button" name="search" class="btn btn-primary btn-primary-100" ng-click="dlgReturn()">
+					<i class="fa fa-trash"></i> <label translate="vnm.FormWarTransaction.DialogEnqueryWarranty.btnReturn"></label>
+				</button>
+			</div>
+		</div>
+	</div>
+
+</div>

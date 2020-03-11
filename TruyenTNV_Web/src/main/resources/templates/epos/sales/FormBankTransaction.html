@@ -1,0 +1,415 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:include="layout/layout :: layout">
+<head th:include="layout/layout :: header">
+<title id="pageTitle">Lập chứng từ tiền gửi ngân hàng</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="page-content" th:fragment="content">
+		<script src="/views/epos/sales/FormBankTransaction.js"
+			type="text/javascript"></script>
+		<div ng-controller="formBankTransactionController" id="contentMain"
+			class="ng-cloak">
+			<div class="portlet light bordered">
+				<div class="portlet-body form">
+					<fieldset class="fieldset-primary">
+						<legend class="lengend-primary">
+							<b translate="vnm.FormBankTransaction.page.title"></b>
+						</legend>
+						<form name="frm_prepaid" class="form-horizontal  form-bordered"
+							method="post" ng-validate="validationOptions">
+							<div class="form-body">
+								<div class="tabbable-custom ">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_5_1">
+											<fieldset class="fieldset-primary">
+												<legend class="lengend-primary">
+													<b translate="vnm.FormBankTransaction.search.title"></b>
+												</legend>
+
+												<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormBankTransaction.search.shopType">
+													</label>
+													<div class="col-md-1p9">
+														<input type="text" class="form-control" ng-model="model.ShopCode" id="ShopCode" data-toggle="tooltip" data-placement="top" title="" 
+															ng-blur="checkF9Shop()" style="text-transform: uppercase;"/>
+													</div>
+													<div class="col-md-2p9">
+														<input type="text" class="form-control" ng-disabled="true" ng-model="model.ShopName" id="ShopName" data-toggle="tooltip" data-placement="top"
+															title="" />
+													</div>
+													<div class="col-md-1"></div>
+
+													<label class="control-label col-md-1"
+														translate="vnm.FormBankTransaction.search.staffSorce"></label>
+													<div class="col-md-1p9">
+														<input type="text" class="form-control" ng-model="model.StaffCode" id="StaffCode" data-toggle="tooltip" data-placement="top" title="" 
+															ng-blur="checkF9Staff()"  style="text-transform: uppercase;"/>
+													</div>
+													<div class="col-md-2p9">
+														<input type="text" class="form-control" ng-disabled="true" ng-model="model.StaffName" id="StaffName" data-toggle="tooltip" data-placement="top"
+															title="" />
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.FormBankTransaction.search.receiptType"></label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.receiptType" class="" ng-change ="demoChange()"
+															data-toggle="tooltip" data-placement="top"
+															style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listReceiptType | filter:$select.search| limitTo: limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+													<div class="col-md-1"></div>
+
+													<label class="control-label col-md-1" translate="vnm.FormBankTransaction.search.payMethod"></label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.payMethod" class=""
+															style="width: 100%;"> <ui-select-match>{{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in  listPayMethod | filter:$select.search| limitTo: limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.FormBankTransaction.search.account"></label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.account" class=""
+															data-toggle="tooltip" data-placement="top"
+															style="width: 100%;"> <ui-select-match>{{$select.selected.accountName}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in listAccount | filter:$select.search| limitTo: limitCbb">
+														{{x.accountCode}} - {{x.accountName}} </ui-select-choices></ui-select>
+													</div>
+													<div class="col-md-1"></div>
+
+													<label class="control-label col-md-1" translate="vnm.FormBankTransaction.search.reason"></label>
+													<div class="col-md-4">
+														<ui-select ng-model="model.reason" class="" ng-disabled="true"
+															style="width: 100%;"> <ui-select-match>{{$select.selected.code}} - {{$select.selected.name}}</ui-select-match>
+														<ui-select-choices
+															repeat="x in  listReason | filter:$select.search| limitTo: limitCbb">
+														{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="control-label col-md-1" translate="vnm.FormBankTransaction.search.fromDate"></label>
+													<div class="col-md-4">
+														<input ng-model="model.fromDate" id="fromDate"
+															ng-blur="onBlurCheckDate()" name="searchFromDate"
+															datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+															class="form-control" />
+													</div>
+
+													<div class="col-md-1"></div>
+													<label class="control-label col-md-1" translate="vnm.FormBankTransaction.search.toDate"></label>
+													<div class="col-md-4">
+														<input ng-model="model.toDate" id="toDate"
+															ng-blur="onBlurCheckDate()" name="searchFromDate"
+															datetime-picker="" date-only="" date-format="DD/MM/YYYY"
+															class="form-control" />
+													</div>
+												</div>
+
+											<div class="form-group">
+													<label class="control-label col-md-1"
+														translate="vnm.FormBankTransaction.search.ReceiptNo"></label>
+													<div class="col-md-10">
+														<input ng-model="model.ReceiptNo" id="ReceiptNo"
+															name="ReceiptNo"  class="form-control"  />
+													</div>
+												</div>
+
+												<div class="form-gropup">
+													<div class="col-md-5"></div>
+													<div class="col-md-7">
+													<button style="width: 100px;display:none;" class="btn btn-primary" >
+															<span class="glyphicon glyphicon-search"></span> <label
+																translate="vnm.ExportToDealer.label.btn.search"></label>
+														</button>
+														<button style="width: 100px" class="btn btn-primary" ng-disabled="checkbtnSearch" id="btnOnSearch"
+															ng-click="btnSearchOnclick()">
+															<span class="glyphicon glyphicon-search"></span> <label
+																translate="vnm.ExportToDealer.label.btn.search"></label>
+														</button>
+													</div>
+												</div>
+											</fieldset>
+
+
+										 <div class="form-group">
+												<div class="col-md-6 md-height-500">
+													<fieldset class="fieldset-primary-1 ">
+														<legend class="lengend-primary">
+															<b translate="vnm.FormBankTransaction.result.sub.title"></b>
+
+														</legend>
+
+														<div class="form-group">
+
+															<div class="col-md-12">
+																<div class="table-scrollable ">
+																	<table id="resultSearchTableItems" class="table table-bordered"
+																		style="width: 100%">
+																		<thead class="ng-table-sort-header">
+
+																			<tr>
+																				<th width="23%"><label translate="vnm.FormBankTransaction.result.sub.ReceiptNo">
+																						 </label></th>
+																				<th width="23%"><label translate="vnm.FormBankTransaction.result.sub.price">
+																						</label></th>
+																				<th width="23%"><label translate="vnm.FormBankTransaction.result.sub.staff">
+																						</label></th>
+																				<th width="23%"><label translate="vnm.FormBankTransaction.result.sub.createDate">
+																						</label></th>
+																			<th width="8%" id="checkAlls" style="width: 13px;"><input
+																				type="checkbox"
+																				style="width: 15px; margin-left: 8px;" id="checkAll"
+																				class="form-control" ng-model="model.checkAll"
+																				ng-click="checkAllCheckBox()"
+																				ng-disabled="checkDisabledCheckBox" value=""></input></th>
+
+																			</tr>
+
+																		</thead>
+																		<tbody>
+																		</tbody>
+																	</table>
+																</div>
+
+															</div>
+
+														</div>
+													</fieldset>
+												</div>
+
+
+												<div class="col-md-6 md-height-500"
+													style="padding-left: 2px;">
+
+													<fieldset class="fieldset-primary-1">
+														<legend class="lengend-primary">
+															<b translate="vnm.FormBankTransaction.table.sub.title"></b>
+
+														</legend>
+
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.receiptType"></label>
+															<div class="col-md-4">
+																<ui-select ng-model="model.invoiceReceipt" class=""
+																	ng-disabled="disabledDetail" style="width: 100%;">
+																<ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x in listReceipt | filter:$select.search">
+																{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+															</div>
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.status"></label>
+															<div class="col-md-4">
+																<ui-select ng-model="model.invoiceStatus" class=""
+																	ng-disabled="disabledDetail" style="width: 100%;">
+																<ui-select-match>{{$select.selected.name}}</ui-select-match>
+																<ui-select-choices
+																	repeat="x in listStatus | filter:$select.search">
+																{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.receiptNo"></label>
+															<div class="col-md-4">
+																<input ng-model="model.invoiceReceiptNo" id="invoiceReceiptNo" name="invoiceReceiptNo" ng-disabled="true" class="form-control"  />
+															</div>
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.createDate"></label>
+
+															<div class="col-md-4">
+																<input ng-model="model.createDate" id="createDate"
+																	ng-disabled="disabledDetail"
+																	ng-blur="onBlurCheckDate()" name=""
+																	datetime-picker="" date-only=""
+																	date-format="DD/MM/YYYY" class="form-control" />
+															</div>
+
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.shop2"> </label>
+
+														
+														<div class="col-md-3">
+															<input type="text" class="form-control" ng-model="model.invoiceShopCode" id="invoiceShopCode" data-toggle="tooltip" data-placement="top" title="" 
+																ng-blur=""  ng-disabled="disabledDetail"/>
+														</div>
+														<div class="col-md-7">
+															<input type="text" class="form-control" ng-disabled="true" ng-model="model.invoiceShopName" id="invoiceShopName" data-toggle="tooltip" data-placement="top"
+																title="" />
+														</div>
+														
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.pnlReceiverAmount2"></label>
+
+														<div class="col-md-3">
+															<input type="text" class="form-control" ng-model="model.receiverAmountCode" id="receiverAmountCode" data-toggle="tooltip" data-placement="top" title="" 
+																ng-blur="onChangeReceiver()"  style="text-transform: uppercase;" ng-disabled="checkDisabledDetail"/>
+														</div>
+														<div class="col-md-7">
+															<input type="text" class="form-control" ng-disabled="true" ng-model="model.receiverAmountName" id="receiverAmountName" data-toggle="tooltip" data-placement="top"
+																title="" />
+														</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.txtBankStaff"></label>
+															<div class="col-md-10">
+															<input type="text" class="form-control" ng-model="model.bankStaff" id="bankStaff" data-toggle="tooltip" data-placement="top" title="" 
+																 ng-disabled="checkDisabledDetail"/>	
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.pnlBank"> </label>
+														<div class="col-md-10">
+																<ui-select ng-model="model.invoiceBankName" class="" onkeypress="return valid_numbers(event)"
+																	ng-disabled="checkDisabledDetail" style="width: 100%;">
+																<ui-select-match>{{$select.selected.bank_name}}</ui-select-match> <ui-select-choices
+																	repeat="x in listBankName | filter:$select.search">
+																{{x.row_num}} - {{x.bank_name}} </ui-select-choices></ui-select>
+															
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.pnlBankAccount"></label>
+														<div class="col-md-10">
+																<ui-select ng-model="model.invoiceBankAccount" class=""
+																	ng-disabled="checkDisabledDetail" style="width: 100%;" >
+																<ui-select-match>{{$select.selected.bank_account_no}}</ui-select-match> <ui-select-choices
+																	repeat="x in listBankAccount | filter:$select.search">
+																{{x.bank_account_id}} - {{x.bank_account_no}} </ui-select-choices></ui-select>
+															
+															</div>
+											
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.pnlReason2"></label>
+
+															<div class="col-md-10">
+																<ui-select ng-model="model.invoiceReason" class=""
+																	ng-disabled="disabledDetail" style="width: 100%;">
+																<ui-select-match>{{$select.selected.code}}
+																- {{$select.selected.name}}</ui-select-match> <ui-select-choices
+																	repeat="x in listReasonPnl | filter:$select.search">
+																{{x.code}} - {{x.name}} </ui-select-choices></ui-select>
+															</div>
+
+														</div>
+														<div class="form-group">
+														<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.AmountOriginal"> </label>
+															<div class="col-md-4">
+																<input type="text" ng-model="model.invoiceAmountOriginal"
+																	ng-disabled="disabledDetail" class="form-control" />
+															</div>
+															
+															<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.sum"> </label>
+															<div class="col-md-4">
+																<input type="text" ng-model="model.invoiceSum"
+																	ng-disabled="disabledDetail" class="form-control" />
+															</div>
+														</div>
+															<div class="form-group">
+														<label class="control-label col-md-2" translate="vnm.FormBankTransaction.table.sub.Note">
+															</label>
+
+															<div class="col-md-10">
+	
+															<input type="text" class="form-control" ng-model="model.invoiceNote" id="invoiceNote" data-toggle="tooltip" data-placement="top" 
+																  ng-disabled="checkDisabledDetail"/>
+								
+															</div>
+
+														</div>
+		
+
+														<div class="form-group" style="padding-top: 10px" >
+														
+															<div class="col-md-12" style="text-align: center;" id="formGroupBtnCreate">
+																<button type="button" name="btnAdd" style="width: 120px"
+																	class="btn btn-primary" ng-disabled="" id="btnCreate"
+																	ng-click="btnCreateOnclick()">
+																	<i class="glyphicon glyphicon-paste"></i> <label
+																		translate="vnm.FormBankTransaction.button.title.create"></label>
+																</button>
+																<button type="button" name="btnEdit"
+																	style="width: 120px" class="btn btn-primary"
+																	ng-disabled="disabledPrint"
+																	ng-click="btnAdjustOnclick()">
+																	<i class="glyphicon glyphicon-print"></i> <label
+																		translate="vnm.FormBankTransaction.button.title.print"></label>
+																</button>
+
+															</div>
+															
+															<div class="col-md-12" style="text-align: center;" ng-hide="checkHideBtn"  id="formGroupBtnReCreate">
+																<button type="button" name="btnAdd" style="width: 120px"
+																	class="btn btn-primary" ng-disabled=""  id="btnReCreate"
+																	ng-click="btnReCreateOnclick()">
+																	<i class="glyphicon glyphicon-repeat"></i> <label
+																		translate="vnm.FormBankTransaction.button.title.reCreate"></label>
+																</button>
+																<button type="button" name="btnEdit"
+																	style="width: 120px" class="btn btn-primary"
+																	ng-disabled="disabledPrint"
+																	ng-click="btnPrint()">
+																	<i class="glyphicon glyphicon-print"></i> <label
+																		translate="vnm.FormBankTransaction.button.title.print"></label>
+																</button>
+
+															</div>
+
+														</div>
+													</fieldset>
+												</div>
+											</div>
+										
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 1190 modal xem thong tin kho -->
+							<div class="modal fade" id="modalListShop" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.shop"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListShop'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						<div class="modal fade" id="modalListStaff" role="dialog" data-keyboard="false" data-backdrop="static">
+								<div class="modal-dialog" style="min-width: 1100px">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" translate="vnm.common.label.list.staff"></h4>
+										</div>
+										<div class="modal-body">
+											<div ng-include="'/popup/dialogListStaff'"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- 1190 modal xem thong tin kho -->
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
